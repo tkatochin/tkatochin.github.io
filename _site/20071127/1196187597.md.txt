@@ -1,0 +1,2 @@
+　<del datetime="2009-07-17T12:02:12+09:00">nifty解約で古い自分のサイトをつぶれたままにしていたが、まだDelphiコンポーネントの問い合わせがくるので＠ｗｉｋｉに移転した。http://www29.atwiki.jp/katochin/ </del>
+今はGoogle Sitesです。http://sites.google.com/site/tkatochin/

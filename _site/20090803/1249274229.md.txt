@@ -1,0 +1,5 @@
+ 以前書いた以下ですが、
+>http://d.hatena.ne.jp/t-katochin/20090428/1240905985:title>
+GAEの<del datetime="2009-08-03T13:37:09+09:00">クライアント</del>ローカルでは、<include path="**.css" /> があってもなくてもなぜか 末尾に"/"を付けてwelcomeFileにforwardしようとする。本番では起きないのだが。逆に本番ではresource-filesが指定されていないとサーブレット内からファイルが見れなくなるのでおっかない。mayaa内から最初「/index.html Not Found」となったときには、何のことやら分からなかった。ローカルGAEは無くても動作する曲者なので余計に混乱する。
+<<
+Google App Engine SDK for Java 1.2.2で解消済みです。ローカルでもサーバーデプロイ結果でも正しくcssファイルなどが当たることを確認しました。mayaaのサーブレットパスが /* でも問題ないようです。

@@ -1,0 +1,136 @@
+　昨日から色々試行錯誤中。やりたいことは、XmlブロックがネストするNameValueCollectionの保存・復元。たぶん http://msdn.microsoft.com/ja-jp/library/system.configuration.configurationconverterbase.aspx がゴールかとは思うが。
+　Xmlでの保存([global::System.Configuration.SettingsSerializeAs(global::System.Configuration.SettingsSerializeAs.Xml)]をプロパティに添付)はTypeConverterではなく、XmlSerializerが使われるようだ。Xmlで保存しようとすると、SerializedValueがnullとなり保存されない。これはNameValueCollectionがXmlSerializerに対応できないということだろうか。
+　調べたところ、ICollection派生のクラスNameValueCollectionにAdd(String)の実装が必要という例外になった。XmlSerializerが単純な文字列リストとしか扱ってくれないということのようだ。この例外がキャッチされてSerializedValueをnullのまま続行しているということがNameValueCollectionをXmlで保存できない原因だった。
+　IDictionaryでも怒られるし（参考：https://www.microsoft.com/japan/msdn/community/gdn/ShowPost-39617.htm）、結局どうすりゃいいのさーと思ってたんだけど、IDictionaryではない同様機能を実現できるクラスを作ってしまえばいいやということにした。具体的にはこんなの。
+>|cs|
+    public class MyMap
+    {
+        public MyMap()
+        {
+            Keys = new StringCollection();
+            Values = new StringCollection();
+        }
+
+        public StringCollection Keys
+        {
+            get;
+            set;
+        }
+
+        public StringCollection Values
+        {
+            get;
+            set;
+        }
+
+        public void Add(string key, string value)
+        {
+            int index = Keys.IndexOf(key);
+            if (index >= 0)
+            {
+                Values[index] = value;
+            }
+            else
+            {
+                Keys.Add(key);
+                Values.Add(value);
+            }
+        }
+
+        public bool Remove(string key)
+        {
+            int index = Keys.IndexOf(key);
+            if (index >= 0)
+            {
+                Keys.RemoveAt(index);
+                Values.RemoveAt(index);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public string this[string key]
+        {
+            get
+            {
+                int index = Keys.IndexOf(key);
+                if (index >= 0)
+                {
+                    return Values[index];
+                }
+                return null;
+            }
+            set
+            {
+                Add(key, value);
+            }
+        }
+    }
+||<
+　で、publicなプロパティであるKeysとValuesがシリアライズ・デシリアライズの対象になるのでうまくいく。
+*** 保存・復元テストコード
+>|cs|
+        private void saveXml(object value)
+        {
+            XmlSerializerFactory factory = new XmlSerializerFactory();
+            XmlSerializer serializer = factory.CreateSerializer(value.GetType());
+            
+            string fileName = @"C:\Users\katochin\Documents\";
+            using (FileStream stream = File.Create(fileName + "SerializeTest_" + value.GetType().FullName + ".xml"))
+            {
+                serializer.Serialize(stream, value);
+                stream.Close();
+            }
+        }
+
+        private object loadXml(Type type)
+        {
+            XmlSerializerFactory factory = new XmlSerializerFactory();
+            XmlSerializer serializer = factory.CreateSerializer(type);
+            object result = null;
+            string fileName = @"C:\Users\katochin\Documents\";
+            using (FileStream stream = File.Open(fileName + "SerializeTest_" + type.FullName + ".xml", FileMode.Open))
+            {
+                result = serializer.Deserialize(stream);
+                stream.Close();
+            }
+            return result;
+        }
+
+        private void buttonSave_Click(object sender, RoutedEventArgs e)
+        {
+            MyMap map = new MyMap();
+            map.Add("name1", "value1");
+            map.Add("name2", "value2");
+            map.Add("name3", "value3");
+            saveXml(map);
+        }
+
+        private void buttonLoad_Click(object sender, RoutedEventArgs e)
+        {
+            MyMap map = loadXml(typeof(MyMap)) as MyMap;
+            foreach (string key in map.Keys) {
+                System.Diagnostics.Debug.WriteLine("key=" + key + " value=" + map[key]);
+            }
+        }
+||<
+*** 保存されたXml
+>|xml|
+<?xml version="1.0"?>
+<MyMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Keys>
+    <string>name1</string>
+    <string>name2</string>
+    <string>name3</string>
+  </Keys>
+  <Values>
+    <string>value1</string>
+    <string>value2</string>
+    <string>value3</string>
+  </Values>
+</MyMap>
+||<
+　というわけで、NameValueCollectionを使わずにMyMap（名前はもうちっとまともにするが）を使うことに決定。…といいながらXmlのネストが解決してないじゃん。次はValuesのMap配列化に挑戦だ。

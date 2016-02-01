@@ -1,0 +1,34 @@
+ BuildLog.htmはたくさんできている。
+>|sh|
+katochin@zuwai ~/arcwork/WebKit
+$ find . -name BuildLog.htm
+./WebKitBuild/obj/DumpRenderTree/Release/BuildLog.htm
+./WebKitBuild/obj/FindSafari/Release/BuildLog.htm
+./WebKitBuild/obj/ImageDiff/Release/BuildLog.htm
+./WebKitBuild/obj/Interfaces/Release/BuildLog.htm
+./WebKitBuild/obj/InterfacesGenerated/Release/BuildLog.htm
+./WebKitBuild/obj/JavaScriptCore/Release/BuildLog.htm
+./WebKitBuild/obj/JavaScriptCoreGenerated/Release/BuildLog.htm
+./WebKitBuild/obj/jsc/Release/BuildLog.htm
+./WebKitBuild/obj/QTMovieWin/Release/BuildLog.htm
+./WebKitBuild/obj/record-memory-win/Release/BuildLog.htm
+./WebKitBuild/obj/testapi/Release/BuildLog.htm
+./WebKitBuild/obj/TestNetscapePlugin/Release/BuildLog.htm
+./WebKitBuild/obj/WebCore/Release/BuildLog.htm
+./WebKitBuild/obj/WebCoreGenerated/Release/BuildLog.htm
+./WebKitBuild/obj/WebKit/Release/BuildLog.htm
+./WebKitBuild/obj/WebKitGUID/Release/BuildLog.htm
+./WebKitBuild/obj/WinLauncher/Release/BuildLog.htm
+./WebKitBuild/obj/WTF/Release/BuildLog.htm
+||<
+　WebKitBuild/buildfailureにあった、XXQTMovieWinXXをヒントに、WebKitBuild/obj/QTMovieWin/Release/BuildLog.htmを開いたところ以下のコンパイルエラーが原因だった。
+>||
+QTMovieWin.cpp
+..\platform\graphics\win\QTMovieWin.cpp(32) : fatal error C1083: include ファイルを開けません。'Movies.h': No such file or directory
+||<
+WebCore\platform\graphics\win\QTMovieWin.cppを開くと、
+>|c|
+// Put Movies.h first so build failures here point clearly to QuickTime
+#include <Movies.h>
+||<
+ということだが、どこからそんなの持ってくりゃいいんだ？と思っていたら、BuildLog.htmにコンパイル時の引数があり「/I "F:\Program Files/QuickTime SDK/cincludes"」なんて存在しないパスが指定されていた。なるほど[http://developer.apple.com/quicktime/download/:title=QuickTime SDK]なるものが必要だったのね((http://webkit.org/building/tools.htmlの、4.を見落としていただけ))。インストールしたら確かにあった。リトライ開始。

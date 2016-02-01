@@ -1,0 +1,39 @@
+　というか、アプリのコードからはrealmに指定など出来ない（それこそappengineに組み込まれた機能だし）ので、どうしようもない感じ。ちゃんとApplication settingsの「Application Identifier」と一致させているんだけどなー。「まいあぷり」も「http://まいあぷり.appspot.com」も「https://まいあぷり.appspot.com」もOpenIdRealmとして試したが、どれもスキップできない。URLの作成が間違っているのかな？
+>|java|
+// SSO fadarated login
+String loginUrl =
+  userService.createLoginURL(
+    returnTo,
+    domain,
+    applicationIdentifier,
+    Sets.newHashSet(
+      "openid.mode=checkid_immediate",
+      "openid.ns=http://specs.openid.net/auth/2.0",
+      "openid.return_to=" + returnTo));
+resp.sendRedirect(loginUrl);
+||<
+上が正解かと思うんだけど、これだとウンともスンともいわず白画面。どうも最後に「204 No Content」が、http://www.google.com/gen_xxx?reason=EmptyURL にリダイレクトされて終わっている。
+App engineのログを見ると、
+>>
+/_ah/xrds 404
+No handlers matched this URL.
+<<
+というのが出ている。 /_ah/ はじまりはappengineがやってくれるはずだよね？うーん。
+
+>|java|
+// SSO fadarated login
+String loginUrl =
+  userService.createLoginURL(
+    returnTo,
+    "",
+    domain,
+    Sets.newHashSet(
+      "openid.mode=checkid_immediate",
+      "openid.ns=http://specs.openid.net/auth/2.0",
+      "openid.return_to=" + returnTo));
+resp.sendRedirect(loginUrl);
+||<
+上だとスキップはできないけど確認OKしたら動くのでどこが悪いのかイマイチつかめない。
+*** 追記
+あ、id:knj77さんがAppsの場合はfederatedIdentifierがドメインになるって教えてくれてますね。http://d.hatena.ne.jp/knj77/20100612/1276328107
+となると残る第２引数がrealmと関係させられる何かになるとか？？？とりあえず 「まいあぷり」も「http://まいあぷり.appspot.com」でもスキップはできなかった。

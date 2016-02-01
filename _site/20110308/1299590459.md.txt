@@ -1,0 +1,2 @@
+　xoauth_requestor_idでApps管理者を指定しても更新系のAPIは怒られる。Marketplaceではreadonlyとなっているが、ドメインの直接のConsumerKey/Secretを指定してもやはり更新系はダメ。
+　ユーザーやグループを更新するには、Apps管理者のUser Credentialでのアクセスしかできないようだ。

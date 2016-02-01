@@ -1,0 +1,2 @@
+　WPFToolkitをインストールするとSilverlightや.NET4.0にしか無い、VisualStateManagerが.NET3.5のWPFでも使えるようになるはずだが、Visual StudioのXamlエディタでは「アタッチ可能なプロパティVisualStateGroupsが、型VisualStateManagerに見つかりませんでした。」というエラーが出て全くXamlのGUIデザインができなくなる。実はビルド結果としては動くが。
+　この問題は、http://support.microsoft.com/kb/958017 に記述があるが、解決するためのアップデートファイルが見つからない。ここへのリンク元である、http://code.msdn.microsoft.com/KB958017 に行くとパッチがダウンロードできる。　困っていたところを同僚が見つけてくれた。辿り着くのに相当苦労したとのこと。

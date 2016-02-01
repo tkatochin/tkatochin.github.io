@@ -1,0 +1,6 @@
+　アセンブリに埋め込まれたXAML（格納されているのはバイナリ形式のBAMLね）を見るには、以下の手順でいける。
++[http://www.aisto.com/roeder/DotNet/:title=Lutz Roeder's Reflector for .NET]をダウンロード。
++Reflector用の[http://www.codeplex.com/reflectoraddins/Wiki/View.aspx?title=BamlViewer&referringTitle=Home:title=BamlViewerプラグイン]をダウンロード。dllはReflectorの隣にでも置いておく。
++Reflectorを実行し、[View]-[Add-Ins]からBamlViewerを選択してAddする。
++[Tools]-[BAML Viewer]を実行する。
++後はBAMLが含まれるアセンブリをOpenで追加すればBamlViewer内にツリーノードが表示される。

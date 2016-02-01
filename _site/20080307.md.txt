@@ -1,0 +1,18 @@
+<!--NDAの縛りがあるのでよしておく。
+*1204881172*[iPod touch開発] SDKのincludeではAPIが隠蔽されまくっている？
+　iPhone SDK βをインストールして作られるiPhone用SDKは、Aspen1.2.sdkというディレクトリになるのだが、erika女史などハッカーが見つけたAPIセットに比べると激減している。
+　たとえばUIKitのAPIは、/Developer/Platforms/Aspen.platform/Developer/SDKs/Aspen1.2.sdk/System/Library/Frameworks/UIKit.framework の中の、Headersというディレクトリ内にincludeファイルがあり、UIKitというバイナリがライブラリになるのだが、nm UIKitで出力されるクラスやメソッドの方がincludeファイルに比べて多い。
+　UIKit.frameworkのうち、includeファイルに出現するクラス数は83、nmで拾える外部公開クラスシンボルは126、隠蔽されているクラスの幾つかは以下のとおり有用なものばかりだ。
+>|objc|
+UIHardware
+UIPreferencesTable
+UIPreferencesTableCell
+UIScroller
+UIScrollAnimation
+UISearchField
+UITile
+UITiledView
+UIFrameAnimation
+||<
+　メソッドの多くも隠蔽されている。UITextFieldに、willAttachFieldEditorできないし、これは只単に最初のβであって、随時追加されていくということなのだろうか？
+-->

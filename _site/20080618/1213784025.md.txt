@@ -1,0 +1,2 @@
+　CrystalMark2004R3というものを試したところ、iMac bootcamp Vistaでは、crystalmark09.exeがCPU50%近くのままでGUIが一向に表示されない。CrystalMark09.logを見ると、「SysInfo.dll Init Start」のまま固まっている。
+　別のXpマシンでは、その後 「SysInfo.dll Init OK!!」と記録されてちゃんとGUIが表示される。システム情報が取れないってどういうことだろう。

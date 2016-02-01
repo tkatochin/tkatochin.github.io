@@ -1,0 +1,5 @@
+　自身のネームスペースからの相対クラス名と他のライブラリのルートのネームスペースが被ってしまい、どうすりゃいいのか保留していたけど、自動生成されるSettings.csをいじっていて解決方法を知った。
+　絶対指定するためには、global:: をつければ良くて、これをつけると、usingしていてもルートから書くことが強制させられる。名前空間エイリアスの一種でルートを示す特殊なものとしてglobalが予約されているとのこと。
+***参考：
+[http://msdn.microsoft.com/ja-jp/library/c3ay4x3d(VS.80).aspx]
+[http://msdn.microsoft.com/ja-jp/library/dfb3cx8s(VS.80).aspx]

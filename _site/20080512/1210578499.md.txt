@@ -1,0 +1,1 @@
+　周りのコンピュータから、net view と ping の組み合わせで１つ１つIP調べるのはキツイな〜と思って、ググッたら良さげなツール（[http://www.wackyfactory.net/domvw/:title=WackeyFactoryさんのDomainView]）発見。便利すねー。

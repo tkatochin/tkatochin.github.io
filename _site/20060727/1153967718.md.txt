@@ -1,0 +1,1 @@
+　ワークスペースの切り替えを多用している私は、うっかり削除済みのワークスペースを選択して開いてしまうことがある。ちょっと調べたところ、eclipse/configuration/.settings/org.eclipse.ui.ide.prefs というファイル内のRECENT_WORKSPACES= を編集すれば良いだけということが判明。

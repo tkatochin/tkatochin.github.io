@@ -1,0 +1,1 @@
+　右クリの[maven2]-[Add Dependency]でdependency追加したら、antrunの記述が消えうせた。相当やばい。

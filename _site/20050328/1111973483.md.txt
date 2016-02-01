@@ -1,0 +1,32 @@
+　普通にプロパティを文字列比較する際、
+>||
+condition="ognl:strProp == 'A'"
+||<
+…でも
+>||
+condition="ognl:strProp eq 'A'"
+||<
+…でも、エラーになります。</p>
+>>
+http://www.ognl.org/2.6.7/Documentation/html/LanguageGuide/apa.html
+<<
+　ココをよく読むと、信じがたいことに、数値型でしか評価しない！？…そうです。ありえん。JavaScript程度ぐらいの式評価やってくれよーと文句を言いながら、
+>||
+condition="ognl:strProp.equals('A')"
+||<
+…としたところ、やっぱりtrueになりません。しかしステップ実行する分には、getStrProp() は "A" を返しています。
+　ここからいろんな旅がはじまり、Spindleが勝手に割り込むライブラリがOGNLのソース添付ができずにステップ実行して原因を追うことさえできず、試行錯誤の結果、自分で用意したにも関らず、Spindleの予約ライブラリにOGNLが含まれる
+からやっぱりソースが見えないという恐ろしい状況です。
+　仕方なくようやくOGNL追っかけをあきらめ、最後の手段で、
+>|java|
+public boolean strPropEquals(String value) {
+    return getStrProp().equals(value);
+}
+||<
+…という関数を作って
+>||
+condition="ognl:strPropEquals('A')"
+||<
+　に変更してみました。value にはちゃんと "A" が渡されて、true が返され、ようやく別のエラー（笑）に進みました。
+　…OGNLが悪いのかTapestry-OGNL連携が悪いのか知りませんが、もしこんなんが仕様なら、理解に苦しみます。
+　だれか「日本語で書かれたOGNLの解説本」たのむ。それか私の記述の仕方がそもそも悪いなら、どう書けば良かったのか解説希望。日曜に終わるはずの進捗目標がこのせいで終わらなかった…。残念。

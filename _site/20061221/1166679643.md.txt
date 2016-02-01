@@ -1,0 +1,6 @@
+Thunderbirdでも、[ツール]-[オプション]-[詳細]-[一般]の、「設定エディタ」ボタンで、about:configできるんですね。
+
+そこから、mail.thread_without_re をfalseにして、C:\Document and Settings\{ログインアカウント名}\Application Data\Thunderbird\Profiles 下の全ての *.msf をファイル検索して削除したところ、解決できました。
+[http://www.ganaware.jp/archives/2005/01/thunderbird.html:title=ＧＡＮＡさん（と元ネタ提供のENhJPLE0さん）]、どうも。
+
+…ああ、でもやっぱりBeckyのようにスレッドツールが欲しい。

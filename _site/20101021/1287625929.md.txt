@@ -1,0 +1,2 @@
+　原因はKeyRemap4Macbookを使っているからだった。KeyRemap4Macbookの設定のKeyrepeatで細かく調整できる。すばらしい！
+　ぼくの好みは、Initial Wait 200ms, Wait 20ms

@@ -1,0 +1,1 @@
+　PasswordAuthentication no になっていただけだった。なんてことはなかった。そもそもLAN内の自分のマシンの中だけなのでsshである必要さえないけど。

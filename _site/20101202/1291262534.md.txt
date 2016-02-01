@@ -1,0 +1,24 @@
+　GoogleとAppsのログインが統合されての影響。ガジェットに渡されるparentパラメータの中身が変わってしまい、parentの示すURLが不正になってしまった。新しいURLがパラメータ付きになってしまったことによる不具合。ガジェットへの他のパラメータと同列になって渡されてしまうので問題。
+　例えば今までは以下のようだった。
+>|html|
+  <iframe src="ガジェットプロキシ?url=ガジェットURL&container=コンテナの種別(ig,gm,calendarなど)&parent=
+https://mail.google.com/a/マイドメイン&他にもいろいろなパラメータ..." >
+||<
+　google.gadget.util.getUrlParameters()で分解された個々のパラメータが取得できるが、新しいparentのURLは、https://mail.google.com/a/マイドメイン/html&pid=マイドメイン#c=gm のようになってしまった((もしかしたら他にもパラメータが含まれているかもしれないが、ガジェットパラメータと区別がつかない))。この結果ガジェットには以下のように展開されてしまう。
+
+>|html|
+  <iframe src="ガジェットプロキシ?url=ガジェットURL&container=コンテナの種別(ig,gm,calendarなど)&parent=
+https://mail.google.com/a/マイドメイン/html&pid=マイドメイン#c=gm&他にもいろいろなパラメータ..." >
+||<
+　このせいでガジェットへのパラメータとparent URLのパラメータが区別がつかなくなってしまう。google.gadget.util.getUrlParameters()を紐解くと以下のようになっていた。
+>|javascript|
+  {
+    url: ガジェットURL,
+    container: コンテナの種別(ig,gm,calendarなど),
+    parent: https://mail.google.com/a/マイドメイン/html,
+    pid: マイドメイン,
+    c: gm,
+    他にもいろいろなパラメータ...
+  }
+||<
+　＃まで&と同じように分解されてしまっている。

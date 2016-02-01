@@ -1,0 +1,233 @@
+　仕事の機会で、３日前に情報収集した内容です。javaに限らないとは思いますが、java前提で書いてます。
+
+**開発上のプラクティス
+
+-SCM,ITS(BTS),JUnit,Jcoverage,check-style,FindBugs
+--これらをIDEやCIに統合する。
+-負荷テスト,プロファイラ,監視ツール
+--人の手を介さないとならないかな。
+
+**項目詳細
+<table border>
+<tr>
+	<th class="report">タイトル</th>
+	<th class="report">製品例</th>
+</tr>
+<tr>
+	<th class="report">
+	SCM
+	</th>
+	<td class="report">
+	<b>OSS</b>
+:Concurrent Versions System (CVS):OSSでは標準的な存在。
+--IDEプラグイン：Eclipse, NetBeans, JBuilder
+:Subversion (SVN):　
+--IDEプラグイン：Eclipse, NetBeans
+	<b>プロプライエタリ</b>
+:Microsoft Visual Source Safe (VSS):強制ロックがデフォルト。異なる場所の共有リンクといった機能がある。IDEプラグインはVisual Studio以外では、個人ユーザがEclipse用に作成したプラグインがある。
+:IBM Rational ClearCase:標準的な機能に加えて、ビルドとリリース管理、メインフレーム（IBM System Z）対応がある（LT版以外）
+--IDEプラグイン：WebSphere Studio, Eclipse, Microsoft Visual Studio 2005
+:Perforce:Perforce Software, Inc.（代理店：東陽テクニカ）製。Webコンテンツ管理機能も含む。
+--IDEプラグイン：MicroSoft Visual Studioのみ
+	</td>
+</tr>
+<tr>
+	<th class="report">
+	IDE
+	</th>
+	<td class="report">
+	<b>OSS</b>
+:Eclipse:　
+:NetBeans:　
+	<b>プロプライエタリ</b>
+:SUN Java Studio Creator:　
+:Oracle JDeveloper:　
+:IBM WebSphere Studio:　
+:Borland JBuilder:　
+	</td>
+</tr>
+<tr>
+	<th class="report">
+	ITS(BTS)
+	</th>
+	<td class="report">
+	<b>OSS</b>
+:Mantis:次の特徴を持つ。
+--マルチプロジェクト管理
+--Eメールによる通知
+--カスタム項目追加
+--操作履歴管理
+--CSV,WORD,Excel形式出力
+--Wikiとの統合
+--構成：Apache(or IIS)、PHP、MySQL
+
+:影舞:ruby製国産ITS。次の特徴を持つ。
+--簡単にインストールできる
+--簡単に使える
+---Webベースでのプロジェクトの作成・設定変更・削除
+---新規アーティクルの投稿、リプライ、状態・カテゴリ管理もWebから
+---投稿・リプライをメールやRSSで通知
+---メールでも投稿・リプライ可能
+---レポートの検索
+---データベースがなくても動く
+---PostgreSQL/MySQL/SQL Serverを用いたデータ保存もできる 
+--日本語がおおむね正しく扱える 
+
+:Trac:Edgewall Software.社製。次の特徴を持つ。
+--SVNとの統合をメイン機能としている。
+--Subversionリポジトリビュアー（過去のリビジョンにいつでも切り替え可能）
+--Wikiとの統合
+--管理画面がなく設定ファイルを直接修正する必要がある。
+--課題管理としての機能は低い。統計情報も取れない。
+--多くのメジャーOSSプロジェクトで実績がある。（SpringIDE、Namazu、Ruby on Rails）
+--構成：Apache、Python、DB（SQLite, PostgreSQL）、Subversion
+:Palpilio（http://www.valtech.jp/papilio.htm）:国産。商用フリーのOSS。株式会社バルテック製。次の特徴をもつ。
+--サーバ構築不要。P2Pでデータ共有。
+--Eclipseプラグインのみで実現。
+--信頼度成長曲線などのレポート出力機能。
+--最新状態を常に保つためには、結局同期用クライアントを常時立ち上げる必要がある。
+--構成：Eclipse3.1/3.2、Windows、JDK1.4/5.0
+
+:Scarab（すからべ）:Java製ITS。次の特徴を持つ。
+--Web からほぼすべての設定を行うことができる管理コンソール
+--複数プロジェクト管理(Module)
+--ユーザアカウント管理
+--プロジェクト毎のユーザ権限管理
+--Issue の柔軟な検索と検索手順の保存と再生 (Query Save)
+--関連する Issue 同士を結び付け、依存関係を管理 (Dependencies)
+--投票による意思決定支援機能 (Voting)
+--Issue への担当者割り当て
+--mail での担当者、プロジェクトメンバーへの通知 (Notification)
+--Issue に関連するファイルをアップロード
+--Issue にコメントを掲示板のように追記可能
+--2種類のレポート作成機能
+--XML の Import/Export
+--構成：Appサーバー：Tomcat4.1が設定済みで同梱。DB:MySQL, PostgreSQL, Oracle, MSSQL, Hypersonic
+
+:XPlanner:Java製ITS。次の特徴を持つ。
+--XP、スクラムなどのアジャイル開発プロセスに適している。
+--イテレーションを主軸としてタスクを作成する
+--構成：Servlet2.3/JSP1.2以降準拠のAppサーバ、JDK1.4以上、Hibernateが対応するDB（標準ではHSQLDB）
+:Bugzilla:MozillaのBTSにもなっているBTSの草分け的存在。ただし使い勝手が複雑なせいか、競合製品が多数出ているという背景がある。
+	<b>プロプライエタリ</b>
+:JIRA:Atlassianソフトウェア （日本代理店：ImaHima）製ITS。次の特徴を持つ
+--非営利団体、OSS団体以外は有償（Seasar.orgでも利用）。
+--課題のワークフローを設定可能。
+--課題単位にセキュリティレベルを設定可能。
+--認証などLDAP連携が可能。
+--Eメール通知以外に、RSS、XML-RPC、SOAPなどのI/Fを完備。
+--Excelに課題一覧を出力可能。
+--構成：JDK1.4以上、スタンドアロンサーバー実行またはServlet2.3/JSP1.2以降準拠のAppサーバ、DB：内臓, MySQL, PostgreSQL
+	
+	<b>参照</b>
+	他にいくつも種類がある。http://www.opensourcetesting.org/bugdb.php
+	</td>
+</tr>
+<tr>
+	<th class="report">
+	CI
+	</th>
+	<td class="report">
+	<b>OSS</b>
+:Continuum:Mavenでできるものは全て扱えるので次のようなものも自動化できる。
+--Javadocをビルドして常に最新を公開
+--dJUnit＋JCoverageプラグインでカバレッジレポート。実行ケースの網羅率を測定する。
+--FindBugsプラグインで「不具合の発生しやすいコーディング」を発見
+--check-styleプラグインで「コーディング規約に準拠していない」
+--構成：
+---SCM：Maven-SCM（CVS, SVN, StarTerm, Rational ClearCase, Perforce, ローカルファイル）
+---ビルド：maven, ant, シェルスクリプト
+---パブリッシャー：Webページ、XML-RPC、メール
+:Bitten:Tracのプラグイン。設定-ビルド実行-レポートまでをTrac上で一元管理できる。
+--構成：
+---SCM：SVN（Tracが対応するSCM）
+---ビルド：Ant, Pythonのdistutils, make, シェルスクリプト／実行ファイル
+---パブリッシャー：Webページ、RSS（Trac上のチェンジセット）
+:Luntbuild:以下の特徴を持つ。
+--機能が豊富で汎用性も高い
+--分初期設定項目が多い。
+--Java製で、各種OSSで構成されている（Hibernate+Spring+Tapestry）。
+--構成：
+---SCM：CVS, SVN, VSS, Perforce, StarTerm, Rational ClearCase, AccuRev, ファイルシステム
+---ビルド：Ant, Maven, シェル・スクリプト, Rake
+---パブリッシャー：Webページ, RSS/ATOM, メール, インスタント・メッセンジャ, IBM Lotus Sametime, ブログ, Eclipseプラグイン
+:hudson:新進気鋭のCIツール。 https://hudson.dev.java.net/
+--複数OSで分散ビルド。
+--プラッガブルな構成になっており、ビルドのプラグイン作成の方法も公開されている。
+--Java製サーブレット。
+--ビルド履歴をグラフで表示
+--TracプラグインでTracと連携
+--構成：
+---SCM：CVS, SVN
+---ビルド：シェルスクリプト, バッチコマンド, Ant, Maven
+---パブリッシャー：Webページ, メール, RSS
+		
+	<b>プロプライエタリ</b>
+:QuickBuild:Luntbuildの有償版。以下が強化されている。
+--UIの操作性向上
+--複数OSで分散ビルド
+--対応SCMとビルドの拡充
+--JIRAプラグインでJIRAと連携
+	</td>
+</tr>
+
+<tr>
+	<th class="report">
+	負荷テスト
+	</th>
+	<td class="report">
+	<b>OSS</b>
+:JMeter:Java製負荷テストツール
+--テストケースが多いと落ちる（GUIのグリッド行を増やしたり、記録をメモリ上に持ったりしてOut Of Memoryに達する）。
+--UIが複雑。
+--集計結果を保存しても正しく復元して表示できない。
+
+:grinder:Java製負荷テストツール
+--軽量で軽快。
+--エージェントを複数のマシンに分散して実行し、センターとなるプロセスに集計結果を収集できる。
+--自動的に記録したスクリプトが最初からセッションを考慮したものになる。
+	
+	<b>プロプライエタリ</b>
+:Microsoft Stress Tool:使用はフリー。
+--初めて使う人でも直感的に使える。
+--レポート機能のみでグラフはない。
+--MDB（ACCESS-DB）に記録する。
+	</td>
+</tr>
+<tr>
+	<th class="report">
+	プロファイラ
+	</th>
+	<td class="report">
+:Netbeans Profiler:　
+:TPTP（Eclipse用）:依存するプラグインが多くセットアップが困難。
+:memleak（BEA JRockit付属）:　
+	</td>
+</tr>
+<tr>
+	<th class="report">
+	監視
+	</th>
+	<td class="report">
+:JConsole（SUN JDK付属）:　
+:jrcmd（BEA JRockit付属）:各種シグナルをJavaプロセスに発行して、Javaプロセスのログとは別に情報を収集することができる
+--スタックトレース
+--オブジェクトサマリー
+	</td>
+</tr>
+
+<tr>
+	<th class="report">
+	Webブラウザでのテスト
+	</th>
+	<td class="report">
+	<b>OSS</b>
+:Selenium:Webブラウザから再帰テストが行えるツール
+--Selenium IDEで操作によってスクリプトを記録
+--細かなテストケースは直接スクリプトを編集
+--カテゴリ単位や一括など、JUnitと同様の使い方ができる。
+--一括テストだけでなくステップ実行もできるため、テストしていないケースも発見しやすい。
+	</td>
+</tr>
+
+</table>

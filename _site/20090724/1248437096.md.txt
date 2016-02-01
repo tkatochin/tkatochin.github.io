@@ -1,0 +1,42 @@
+SWTのJNIメソッド追加によるビルドを、マッサラのWindowsからやることになったが、自分のブログがちゃんとログとして機能してなかった。今後のために少し詳細に手順を書く。
+
+***いくつかの前提条件
+-x86の場合のみとする。x86_64やia64は説明の対象としない。
+-eclipseは3.4.1の場合のみとする。他は未確認。
+-便宜上、作業ディレクトリを c:\swt_build_work とする。
+
+***インストールしておくもの
+-VC6、Platform SDK。Cドライブ上の既定の場所にインストールしたものとする。
+-http://technet.microsoft.com/en-us/sysinternals/bb896768.aspx にあるjunctionツールをPATHの通ったところに入れておく。windows/system32ディレクトリでもいい。一度 junctionをパラメータなしで実行し、表示されるライセンスに同意しておく。
+-http://mirrors.linux.edu.lv/mozilla.org/xulrunner/releases/1.8.0.4/sdk/ にある gecko-sdk-win32-msvc-1.8.0.4.zip をダウンロードしてC:\swt_build_workに展開。C:\swt_build_work\gecko-sdkディレクトリができる。
+
+
+***対象となる改修内容
+-swtのソースにnativeメソッド定義を追記するなどネイティブライブラリの再構築が必要なケース。
+　例）
+--COM.javaに、VtblCallの新しい引数の組み合わせのオーバーロードメソッドを定義した。
+--OS.javaに、記述の無いWin32API関数のメソッド定義を追記した。
+
+***その他の準備
++C:\swt_build_work に、initenv.bat というファイルを作成しておく。
++eclipse/plugins/org.eclipse.swt.win32.win32.x86_3.4.1.v3449c.jar をZIP展開してあらわれる、swt-win32-3449.dllをC:\swt_build_work にコピーしておく。
+
+**initenv.batのファイル内容
+>||
+set SWT_BUILDDIR=C:\swt_build_work
+set DEV_TOOLS=%SWT_BUILDDIR%
+junction %SWT_BUILDDIR%\msvc6 "c:\Program Files\Microsoft Visual Studio"
+junction %SWT_BUILDDIR%\platformsdk "C:\Program Files\Microsoft Platform SDK"
+set MSSDK=%SWT_BUILDDIR%\platformsdk
+||<
+
+***JNIソースの生成とビルドの手順
++swt.toolsをチェックアウトしてswtプロジェクトと並べてワークスペースに置く。
++リストアップされる内容が重複しないようにするためのパッチあてをswt.toolsにする。
++eclipse上で実行するのは、swt.toolsの中のJNIGeneratorAppUIクラスのmainになる。これを実行構成のJava Applicationで定義して、VM引数 に以下を記述する。-Dswt.library.path=C:\swt_build_work
++適用して実行すると、画面が出るので [Generate Natives]ボタンをクリックする。
++実行後は、JNIGeneratorAppUI画面の[Output Dir]が示すとおり、swtプロジェクト内の[Eclipse SWT PI/win32]/library/の中のファイルが幾つか更新されるので、コマンドプロンプトからそのディレクトリ内に移動する。
++eclipseを終了する。
++コマンドラインから、C:\swt_build_work\initenv.bat を実行。そのまま、eclipseを起動。
++swtプロジェクトと同列に、org.eclipse.swt.win32.win32.x86 というディレクトリを作成する。ビルドしたdllはここに出力される。
++http://www.eclipse.org/swt/jnigen.php にある手順どおり((Antをeclipse起動中の同じJREにして、実行後にワークスペースをリフレッシュするという設定))に Ant Buildを実行。

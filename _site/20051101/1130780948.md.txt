@@ -1,0 +1,28 @@
+　optgroupなんてものがあるんですね。selectの中でoptionに対して囲えば良いだけとは、こりゃ簡潔でいいですね。
+>|html|
+<select>
+  <optgroup label="ディズニー">
+    <option>ミッキー
+    <option>ドナルド
+    <option>プーさん
+  </optgroup>
+  <optgroup label="アンパンマン">
+    <option>アンパンマン
+    <option>カレーパンマン
+    <option>ショクパンマン
+  </optgroup>
+</select>
+||<
+↓↓↓実行結果↓↓↓
+<select>
+  <optgroup label="ディズニー">
+    <option>ミッキー
+    <option>ドナルド
+    <option>プーさん
+  </optgroup>
+  <optgroup label="アンパンマン">
+    <option>アンパンマン
+    <option>カレーパンマン
+    <option>ショクパンマン
+  </optgroup>
+</select>

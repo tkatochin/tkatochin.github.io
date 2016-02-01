@@ -1,0 +1,7 @@
+　http://csfun.blog49.fc2.com/blog-entry-90.html
+　同じことで悩んでいましたが、すばらしきかな。なんとエレガントな拡張方法！やっぱWPFのデザインは秀逸で超スマートだわぁ。惚れる。
+
+***追記
+　あれ、でもよく見るとモデルをViewBase側で規定しちゃってるからダメじゃない。
+　こっちのサンプルが良いみたい。TileViewがやりたいことに近い。
+http://msdn.microsoft.com/en-us/library/ms771469(VS.85).aspx

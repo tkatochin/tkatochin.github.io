@@ -1,0 +1,25 @@
+　Chromeの[http://gihyo.jp/lifestyle/feature/01/yammer/0001:title=Yammer]用拡張機能の[https://chrome.google.com/webstore/detail/hgbahmpeoomojdginnhijkchahhoalda:title=Yermah]ですが、ポップアップウィンドウにHTMLコードを書くとJavaScriptも含めてレンダリングできてしまいます。社内で危険なスクリプトを流すやつはいないだろう...と楽観せずに対策してみました。以下の手順で治ります。お使いの方はお試しアレ。
+　Macでの手順なのでWindowsの人は色々読み替えてください。現在最新は Yermah 0.2.5 です。以下の場所に入っています。
+>||
+~/Library/Application Support/Google/Chrome/Default/Extensions/hgbahmpeoomojdginnhijkchahhoalda/0.2.5_0/
+||<
+　HTMLをエスケープすれば良いだけなのでprototype.jsのString.escapeHTML()を使うこととします。まずは prototype.jsを然るべき場所で取得。
+>|sh|
+cd ~/Library/Application Support/Google/Chrome/Default/Extensions/hgbahmpeoomojdginnhijkchahhoalda/0.2.5_0/
+cd lib/dependencies
+curl -O https://ajax.googleapis.com/ajax/libs/prototype/1.7.0.0/prototype.js
+||<
+　好きにJSのオプティマイザをかけても良いかと思いますが、それはハショリます。次にnotification.htmlをいじります。 Dashcode使うと見やすいです。
+>|html|
+    <script type="text/javascript" src="lib/dependencies/ba-linkify.min.js"></script>
+    <script type="text/javascript" src="lib/dependencies/prototype.js"></script> <!-- ←これを追加 -->
+    <script type="text/javascript">
+||<
+>|javascript|
+/*
+  body.innerHTML = linkify(message.body.plain, {
+*/
+  body.innerHTML = linkify(message.body.plain.escapeHTML(), {
+||<
+　以上で保存。Chromeを再起動すれば治ります。
+[f:id:t-katochin:20110405135105p:image]

@@ -1,0 +1,6 @@
+　perlプログラムが出力する実数よりJavaの方が１桁ほど丸めが少ないようです。きちんとコンバートされているかdiffで比較がし辛いのはよくないということで、ちょっと調べたところ以下のように、DECIMAL64の定義から１桁引くと良いようです。
+>|java|
+MathContext mathContext = new MathContext(15, RoundingMode.HALF_EVEN);
+return new BigDecimal(source, mathContext).doubleValue(); 
+||<
+Tigerだったから、こんなに簡単にできました。

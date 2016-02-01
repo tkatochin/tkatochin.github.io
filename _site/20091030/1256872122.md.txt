@@ -1,0 +1,27 @@
+　って、実際はGWTじゃなくJavascriptネタですけど。Win32で言えばGetSystemMetrixのSM_CXVSCROLLにあたるものはWebブラウザでは提供されていないし、ブラウザ互換性も考えるとちょっとメンドクサイですが、一時的にスクロールバーのある領域を作成してそのoffsetWidthからclientWidthを引けば取れます。
+　以下のような感じ。（GWTでJSNIの場合）
+>|java|
+/**
+ * スクロールバーの幅
+ */
+public static final native int getScrollbarWidth() /*-{
+    var tempNode = document.createElement("div");
+    tempNode.style.position = "absolute";
+    tempNode.style.zOrder = "999";
+    tempNode.style.top = "-1000px";
+    tempNode.style.margin = "0px";
+    tempNode.style.padding = "0px";
+    tempNode.style.width = "100px";
+    tempNode.style.height = "100px";
+    tempNode.style.display = "block";
+    tempNode.style.visibility = "hidden";
+    tempNode.style.overflow = "scroll";
+    var body = document.getElementsByTagName("body")[0];
+    body.appendChild(tempNode);
+    var result = tempNode.offsetWidth - tempNode.clientWidth;
+    body.removeChild(tempNode);
+    return result;
+}-*/;
+||<
+　幅100pxに固定して算出しているので実際にはoffsetWidthじゃなくて100から引いても良いですが。
+　小ネタですが、WindowsだとSafariだけ独自のスクロールバーなので15が、他のブラウザはOSの設定が返るようです（デフォルトで17とか）。それと、chromeだけは動的なOSのスクロールバー設定の変更を検知しません（ブラウザの再起動が必要）。ie, firefox, operaでは呼び出しなおせば更新されたサイズが返ります。

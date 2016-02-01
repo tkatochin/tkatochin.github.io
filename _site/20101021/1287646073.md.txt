@@ -1,0 +1,1 @@
+　KeyRemap4Macbookで、かな／英数を割り当てているからね。VMWare Fustionからマウスが抜けられなくて一瞬あせった。が、Command+Controlと、ストローク順序を変えればいいだけだった。

@@ -1,0 +1,1 @@
+　iPod touch内のランタイムフレームワークライブラリ（UIKitやらFoundationなど）は、-fobjc-gcなどせずにコンパイルされているだろうからlibauto相当のサブセットを用意しても厳しいのかも。

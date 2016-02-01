@@ -1,0 +1,4 @@
+　federated loginなアプリケーションをiframe内で認証も含めて展開しようとしたら、失敗した。googleが認証からのレスポンスヘッダに、X-Frame-Option: SAMEORIGINを入れているからのようだ。クリックジャッキング対策というものらしい。
+[http://www.cworld2000.com/blog/archives/2009/03/xframeoptions.html:title]
+[http://kaba-blog.shall-systemservice.co.jp/20100909-310/:title]
+IE、Chrome、Firefoxでもこれが対応されている。Firebugで見るとレスポンスのボディが一切返らない。

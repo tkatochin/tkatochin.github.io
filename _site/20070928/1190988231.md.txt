@@ -1,0 +1,83 @@
+　以下のパッチをあててようやく対応できた。
+
+***TomcatBootstrap.java.patch
+>|java|
+264c264
+<           !entry.getPath().toString().equals("org.eclipse.jdt.launching.JRE_CONTAINER")) {
+---
+>           !entry.getPath().toString().startsWith("org.eclipse.jdt.launching.JRE_CONTAINER")) {
+314c314,344
+<         } else {
+---
+>         } else if (tmpEntry[j].getEntryKind() == IClasspathEntry.CPE_PROJECT) {
+>           String prjName = tmpEntry[j].getPath().lastSegment();
+>           IJavaProject javaProject = prj.getJavaModel().getJavaProject(prjName);
+>           IClasspathEntry[] tmpEntryClassPathEntries;
+>           try {
+>             tmpEntryClassPathEntries = javaProject.getRawClasspath();
+>           } catch (JavaModelException e) {
+>             TomcatLauncherPlugin.log(e);
+>             continue;
+>           }
+>           for (int k = 0; k < tmpEntryClassPathEntries.length; k++) {
+>             IPath outpath = tmpEntryClassPathEntries[k].getOutputLocation(); 
+>             if (outpath == null) {
+>               try {
+>                 outpath = javaProject.getOutputLocation();
+>               } catch (JavaModelException e) {
+>                 TomcatLauncherPlugin.log(e);
+>                 continue;
+>               }
+>             }
+>             if (selectedPaths.contains(
+>                 outpath.toFile().toString().replace('\\', '/')
+>                 )) {
+>               IResource res = javaProject.getProject().getWorkspace().getRoot().findMember(outpath);
+>               if (res != null)
+>                 add(data, res);
+>               else
+>                 add(data, outpath);
+>             }
+>           }
+>         } else { 
+||<
+***before-after
+>||
+************ before **************
+
+*** src/main/webapp/.#webclasspath
+
+C:\workspace\huse\src\main\webapp\WEB-INF\classes
+\conversion\target\classes
+\jre-extension\target\classes
+C:\Documents and Settings\katochin\.m2\repository\antlr\antlr\2.7.2\antlr-2.7.2.jar
+              :
+
+*** console log
+
+[DevLoader] Starting DevLoader
+[DevLoader] projectdir=C:\workspace\huse\src\main\webapp
+[DevLoader] added file:/C:/workspace/huse/src/main/webapp/WEB-INF/classes/
+[DevLoader] Error: /conversion/target/classes does not exist !
+[DevLoader] Error: /jre-extension/target/classes does not exist !
+              :
+
+************ after **************
+
+*** src/main/webapp/.#webclasspath
+
+C:\workspace\huse\src\main\webapp\WEB-INF\classes
+C:\workspace\conversion\target\classes
+C:\workspace\jre-extension\target\classes
+C:\Documents and Settings\katochin\.m2\repository\antlr\antlr\2.7.2\antlr-2.7.2.jar
+              :
+
+*** console log
+
+[DevLoader] Starting DevLoader
+[DevLoader] projectdir=C:\workspace\huse\src\main\webapp
+[DevLoader] added file:/C:/workspace/huse/src/main/webapp/WEB-INF/classes/
+[DevLoader] added file:/C:/workspace/conversion/target/classes/
+[DevLoader] added file:/C:/workspace/jre-extension/target/classes/
+              :
+||<

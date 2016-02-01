@@ -1,0 +1,5 @@
+　いま丁度困っている。
+　http://java.sun.com/javase/ja/6/docs/ja/technotes/tools/windows/classpath.html
+6からか〜！5で欲しかった〜。
+
+　mavenのdependenciesから持ってきたjarのリストをANTでテンプレート置換・クラスパスに展開できないかなぁと模索しているんだけど、なにか良い手はないものか。

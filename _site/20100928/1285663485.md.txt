@@ -1,0 +1,50 @@
+　どうも、ContentSectionの実装クラスに付加させる、@InjectContentアノテーションが、ビューを分岐する仕掛けっぽい。もうちょい調べよう。
+　最初は "home" セクションの＠InjectContentの内容が表示された。しかし相変わらずContentSectionのinitメソッドは呼び出されないようだ。InjectContentの内容の後に、Gadget.initが呼び出されるんだけど、ViewFeatureのgetCurrentView().getName() を取得すると、"home"ではなく、"profile" になってしまっている。理由はわからない。ViewFeatureのgetCurrentViewはあてにならないということかな。
+　できたJSを見ると、どうも"home"はない。
+>|javascript|
+gadgets.config.init({ ...
+    "views": {
+        "canvas": {
+            "aliases": [
+                "FULL_PAGE"
+            ], 
+            "isOnlyVisible": true, 
+            "urlTemplate": "http://www.gmodules.com/gadgets/ifr?{var}"
+        }, 
+        "profile": {
+            "aliases": [
+                "DASHBOARD", 
+                "default"
+            ], 
+            "isOnlyVisible": false, 
+            "urlTemplate": "http://www.gmodules.com/gadgets/ifr?{var}"
+        }
+    }
+... });
+||<
+しかし、上記のコードのすぐ後で、以下のような記述が。
+>|javascript|
+window.gadgetViewName = 'home';
+||<
+　うーん、何をやりたいんだ。NeedsViews で得たViewFeatureは"home"を知らないし、ガジェット自体はhomeのContentを扱っているという状態になっている感じ。
+　というわけで、ViewFeatureのgetCurrentView()を見ずに、JSNIで $wnd.gadgetViewName を取得すれば判断が付くようになった。
+>|java|
+@Override
+protected void init(HelloPreferences prefs) {
+    String viewName = //_viewFeature.getCurrentView().getName();
+        getGadgetViewName();
+        
+    if (GadgetViewConst.PROFILE.equals(viewName)) {
+        initProfileView(prefs);
+    } else if (GadgetViewConst.HOME.equals(viewName)) {
+        initHomeView(prefs);
+    } else if (GadgetViewConst.CANVAS.equals(viewName)) {
+        initCanvasView(prefs);
+    }
+}
+
+private final native String getGadgetViewName() /*-{
+    return $wnd.gadgetViewName;
+}-*/;
+||<
+とりあえずこれだと、Profileのビューは一切呼び出されない。homeとcanvasだけしか分岐しない。GoogleカレンダーとiGoogleでコンテナの違いがあるからなんだろーなー。

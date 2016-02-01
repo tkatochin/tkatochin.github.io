@@ -1,0 +1,3 @@
+　LGPLがまだ準備中で、nightly-buildを見てんだけど、どっちでも良いのかな？
+- http://www.smartclient.com/smartgwt/builds/
+- http://www.smartclient.com/builds/SmartGWT/2.x/LGPL/

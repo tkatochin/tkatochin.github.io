@@ -1,0 +1,1 @@
+　任意で選択できる割に、コレクションエディタやらのダイアログが動作しないのはひどし。しかたないので、TypeDescriptionProvider, TypeDescription, TypeConverterを作る。NameValueCollectionぐらい用意しておいてほしいなぁ。

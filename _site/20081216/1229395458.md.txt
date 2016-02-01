@@ -1,0 +1,1 @@
+　Ganymedeにeurope用のプラグイン(Eclipse Platform Extensions)を入れたら、[Software Updates...]が、[Software Updates]->[Find And Install...],[Manage Configuration...] に戻ってしまった。なんじゃらほい。

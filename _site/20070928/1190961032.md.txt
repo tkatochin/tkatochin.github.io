@@ -1,0 +1,50 @@
+　原因判明。同じワークスペースにある他のプロジェクトのPOMの groupId+artifactIdが一致するものは、m2eclipseのMAVEN2_CLASSES_CONTAINERがプロジェクト参照として内包していることからくる問題だった。
+　あるライブラリのコンテナがワークスペース内のプロジェクトを参照するというような構成を持つということが、Sysdeo tomcat pluginには想定外だったためだった。3.2.1のソースを展開してプロジェクトインポートしてPluginデバッグしたら分かったので手元では対応したが握っててもしょうがないので、Excite翻訳まかせでレポートした。
+　以下がその内容だけど、このいい加減な英語で伝わるだろうか…。
+>>
+Hi,
+
+MAVEN2_CLASSPATH_CONTAINER becomes in another project in the same workspace and when POM is found, it becomes a project reference.
+
+PresentIt is not possible to correspond to this by the making processing of ".# webclasspath", and an invalid passing is shown.
+
+It was possible to correspond by the following corrections. It would be greatly appreciated if it could take it into the next version.
+
+>|java|
+----------------
+in com.sysdeo.eclipse.tomcat.TomcatBootstrap#getClassPathEntries(IClasspathEntry[], IJavaProject, ArrayList, List, ArrayList, IPath)
+----------------
+            for (int j = 0; j < tmpEntry.length; j++) {
+                if (entry.getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
+                    IResource res = prj.getProject().getWorkspace().getRoot().findMember(tmpEntry[j].getPath());
+                    if (res != null)
+                        add(data, res);
+                    else
+                        add(data, tmpEntry[j].getPath());
+                } else if (entry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
+                    IPath srcPath = entry.getOutputLocation();
+                    if(srcPath != null && !srcPath.equals(outputPath))
+                    {
+                        add(data, prj.getProject().getWorkspace().getRoot().findMember(srcPath));
+                    }
+//---- add begin
+                } else if (tmpEntry[j].getEntryKind() == IClasspathEntry.CPE_PROJECT) {
+                    String prjName = tmpEntry[j].getPath().lastSegment();
+                    if(!visitedProjects.contains(prjName)) {
+                        visitedProjects.add(prjName);
+                        getClassPathEntries(prj.getJavaModel().getJavaProject(prjName), data, selectedPaths, visitedProjects);
+                    }
+//---- add end
+                } else {
+                    TomcatLauncherPlugin.log(">>> " + tmpEntry[j]);
+                    if(tmpEntry[j].getPath() != null)
+                        add(data, tmpEntry[j].getPath());
+                }            
+            }
+-----------------
+||<
+
+Regards.
+<<
+
+それと、上記パッチをあてたものを以下に置いておきます。http://package.gluegent.com/~kato/download/com.sysdeo.eclipse.tomcat_3.2.1_pached_m2referproject.zip

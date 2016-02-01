@@ -1,0 +1,5 @@
+　C# 2008 Express Edition SP1 と VS 2008 SP1を入れたら、あるPCだけ、C# 2008 Express EditionのXAMLエディタがただのテキストエディタになってしまい、[デザイナの表示]を実行しても、.xamlに対応するエディタはない的なエラーになっていた。サブマシンだったこともあり放置していたんだけど、今日ぐぐってみたら、[http://d.hatena.ne.jp/ZOETROPE/:title=ZOETROPEの日記]で解決方法が紹介されていた。私とは逆のパターンだったけど、C# Express でも同じ引数で解決。
+>|dosbatch|
+"C:\Program Files\Microsoft Visual Studio 9.0\Common7\IDE\VCSExpress.exe" /resetskippkgs
+||<
+ 感謝感謝。

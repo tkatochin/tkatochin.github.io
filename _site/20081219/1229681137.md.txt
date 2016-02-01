@@ -1,0 +1,6 @@
+　classpathのせいで２重にクラスがリストアップされてしまう。ソースを追って納得。クラスパスの全てから探してるから。
+自身のUIもswtで出来ているからswt.jar見てるし、ジェネレート元のクラスはチェックアウトしてきたswt（これに手を加えている）なんだから同じクラスが重複するのは当然。JNIGeneratorApp#getClassNamesの中を以下のように修正することでちゃんと出力された。
+>|java|
+	//ArrayList classes = new ArrayList();
+	Set classes = new TreeSet();
+||<

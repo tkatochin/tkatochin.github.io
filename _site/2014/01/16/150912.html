@@ -1,0 +1,27 @@
+<p>slim3-genが、どうも定義している .apt_generated 以外に、target/generated-sources/apt という謎のフォルダにもdaoのメタ情報クラス吐き出してて、同じクラスを二重に定義してるよ〜と怒られる。</p>
+
+<p>[f:id:t-katochin:20140116143009p:plain]</p>
+
+<p>覚えのない謎のソースフォルダ「target/generated-sources/apt」なんやこれー。</p>
+
+<p>eclipse:eclipse で必ず .classpathにこのソースフォルダできるからなんだろーって思って ググったら、apt-maven-plugin が吐き出すらしくて、pomをよくよく見たら、</p>
+
+<blockquote>
+  <p>|xml|
+    <artifactid>apt-maven-plugin</artifactid>
+    <configuration>
+        <outputdirectory>${generated.src}</outputdirectory>
+||&lt;</configuration></p>
+</blockquote>
+
+<p>なんてこった！ちがうぜ！outputDirectoryじゃないぜ！</p>
+
+<p>以下に修正して無事解決。</p>
+
+<blockquote>
+  <p>|xml|
+    <artifactid>apt-maven-plugin</artifactid>
+    <configuration>
+        <sourceoutputdirectory>${generated.src}</sourceoutputdirectory>
+||&lt;</configuration></p>
+</blockquote>

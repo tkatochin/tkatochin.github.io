@@ -1,0 +1,1 @@
+　微妙にはまった。原因はxamlのWindow属性で Visibility="Hidden" にしていたためだった。

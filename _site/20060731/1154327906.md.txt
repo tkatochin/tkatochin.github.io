@@ -1,0 +1,17 @@
+　JAVA_HOMEをJRockit(R26.3.0-jdk1.5.0_06)にするとうまくいかない。
+>||
+Caused by: java.lang.ClassFormatError: Invalid constant pool entry JVM_CONSTANT_Fieldref at 226. Expected JVM_CONSTANT_Class
+	at java.lang.ClassLoader.defineClass(Ljava.lang.String;[BIILjava.security.ProtectionDomain;)Ljava.lang.Class;(Unknown Source)
+	at org.python.core.BytecodeLoader2.loadClassFromBytes(Ljava.lang.String;[B)Ljava.lang.Class;(BytecodeLoader2.java:???)
+	at org.python.core.BytecodeLoader.makeClass(Ljava.lang.String;Ljava.util.Vector;[B)Ljava.lang.Class;(BytecodeLoader.java:???)
+	at org.python.core.BytecodeLoader.makeCode(Ljava.lang.String;[B)Lorg.python.core.PyCode;(BytecodeLoader.java:???)
+	at org.python.core.Py.compile_flags(Lorg.python.parser.SimpleNode;Ljava.lang.String;Ljava.lang.String;ZZLorg.python.core.CompilerFlags;)Lorg.python.core.PyCode;(Py.java:???)
+	at org.python.core.Py.compile_flags(Ljava.io.InputStream;Ljava.lang.String;Ljava.lang.String;Lorg.python.core.CompilerFlags;)Lorg.python.core.PyCode;(Py.java:???)
+	at org.python.core.__builtin__.execfile_flags(Ljava.lang.String;Lorg.python.core.PyObject;Lorg.python.core.PyObject;Lorg.python.core.CompilerFlags;)V(__builtin__.java:???)
+	at org.python.util.PythonInterpreter.execfile(Ljava.lang.String;)V(PythonInterpreter.java:???)
+	at net.grinder.engine.process.jython.JythonScriptEngine.initialise(JythonScriptEngine.java:117)
+	at net.grinder.engine.process.GrinderProcess.run(GrinderProcess.java:208)
+	at net.grinder.engine.process.WorkerProcessEntryPoint.run(WorkerProcessEntryPoint.java:86)
+	at net.grinder.engine.process.WorkerProcessEntryPoint.main(WorkerProcessEntryPoint.java:58)
+||<
+　↑テストケースを小分けすると動き出したものがあった。スクリプトの中のどこかに地雷があるのかもしれない。

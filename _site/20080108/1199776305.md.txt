@@ -1,0 +1,1 @@
+　[http://suga.parfe.jp/td/index.cgi?date=20080108#p02:title=須賀さんのおかげ]でWinをサーバーにしたOSXへの接続ができた〜。けっこうこのFAQは貴重。あっちこっちでSynergyでJISキーボードは駄目説が流れているので広まってほしい。

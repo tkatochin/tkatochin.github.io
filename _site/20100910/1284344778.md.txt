@@ -1,0 +1,22 @@
+　WPFで、動的な画像をMemoryStreamに展開済みのBitmapImageからWindowのアイコンに設定する必要があったのだが「Iconで指定してください」という例外が出た。調べたところIconBitmapDecoderを使えば良いということがわかった。以下のような感じ。
+>|cs|
+/// <summary>
+/// BitmapImageのままでは、Window.Iconにセットできないので、
+/// Window.Iconにセット可能な形式のImageSourceに変換する。
+/// </summary>
+/// <param name="source">元となるBitmapImage</param>
+/// <returns>Icon型のImageSource。失敗した場合はヌル。</returns>
+public static ImageSource ToIcon(this ImageSource source)
+{
+    BitmapImage bi = source as BitmapImage;
+    if (bi != null && bi.StreamSource is System.IO.MemoryStream)
+    {
+        MemoryStream ms = new MemoryStream(
+            (bi.StreamSource as MemoryStream).GetBuffer());
+        BitmapDecoder decoder = IconBitmapDecoder.Create(
+            ms, BitmapCreateOptions.None, BitmapCacheOption.None);
+        return decoder.Frames[0];
+    }
+    return null;
+}
+||<

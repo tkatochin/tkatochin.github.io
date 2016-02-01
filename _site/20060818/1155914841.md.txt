@@ -1,0 +1,33 @@
+　C標準のメモリではなくJVMヒープから取る実装になってしまったけど性能の劣化は認められず。むしろ前回より速くなってるし（誤差だろうけど）、まずまずの出来。
+>||
+100000 time speed test. data size = 49
+[nativeRC4] encrypt speed: 750 ms
+[nativeRC4] decrypt speed: 734 ms
+[JCE RC4] encrypt speed: 1016 ms
+[JCE RC4] decrypt speed: 578 ms
+
+10000 time speed test. data size = 8404
+[nativeRC4] encrypt speed: 1438 ms
+[nativeRC4] decrypt speed: 1406 ms
+[JCE RC4] encrypt speed: 2687 ms
+[JCE RC4] decrypt speed: 2813 ms
+
+100000 time speed test. data size = 49
+[sun.misc.base64] encrypt speed: 6110 ms
+[sun.misc.base64] decrypt speed: 1704 ms
+[nativeBase64] encrypt speed: 468 ms
+[nativeBase64] decrypt speed: 313 ms
+[apache.commons.codec base64] encrypt speed: 500 ms
+[apache.commons.codec base64] decrypt speed: 734 ms
+
+10000 time speed test. data size = 8404
+[sun.misc.base64] encrypt speed: 14125 ms
+[sun.misc.base64] decrypt speed: 15750 ms
+[nativeBase64] encrypt speed: 1078 ms
+[nativeBase64] decrypt speed: 1125 ms
+[apache.commons.codec base64] encrypt speed: 5328 ms
+[apache.commons.codec base64] decrypt speed: 5703 ms
+
+||<
+
+本番稼動間際に起きてマジびびった。

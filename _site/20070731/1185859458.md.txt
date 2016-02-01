@@ -1,0 +1,11 @@
+　eclipseでまともにJSPなんて触ったことがなかったのだが（ほんとに初期だけだった。xml/xslt→tapestry→mayaaなんてきてるから疎い。JavaScript版JSPエンジンは一時期開発してたけど）、紆余曲折を経ていろんな意味で鬼のようなJSPがわんさかあるプロジェクトに携わっている。
+　で、sysdeo Tomcat plugin を使ったデバッグなんだけど、急にJasperが無い的なエラーでTomcatが起動直後に落ちるという現象にさっきまで子一時間ほど悩まされていた。もちろん[Tomcatのライブラリーをビルドパスに追加]はしていたので、jasperあんじゃん。なんでだよーと思っていた。
+　原因は、[JSP作業ディレクトリーを作成]をしていたからだった。これを有効にするとworkフォルダがソースフォルダに追加されて、JSPのコンパイル結果のソースにブレークポイントを張ってデバッグできそうな勢いだったのでやってみたのだが、これがきっかけで、JSPCompilerというクラスなど無い！というエラーになっていた。
+　対応は簡単。ふと、TOMCAT_HOME\common\lib の中を見たら、jasper-runtime.jar 以外に、jasper-compiler.jar があった。なーんだこれじゃーんと、クラスパスに追加したところ解決した。いつもは３つなのが４つにすれば良いだけだった。
+>|xml|
+  <classpathentry kind="var" path="TOMCAT_HOME/common/lib/servlet-api.jar"/>
+  <classpathentry kind="var" path="TOMCAT_HOME/common/lib/jasper-runtime.jar"/>
+  <classpathentry kind="var" path="TOMCAT_HOME/common/lib/jsp-api.jar"/>
+  <classpathentry kind="var" path="TOMCAT_HOME/common/lib/jasper-compiler.jar"/>
+||<
+　ちなみにjasper-compiler-jdt.jarなんてのも入っていた。とりあえず試してみたところ動作したけど特別メリットなさそうな気が。

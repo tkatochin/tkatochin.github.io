@@ -1,0 +1,7 @@
+　デプロイと同時にSpringboardを自動的に再起動させる方法がわかりました。scpした後に以下を実行するだけです。
+>|sh|
+ssh root@タッチのアドレス 'kill `ps -cx -o pid,command | grep SpringBoard | sed -e "s/^ *//g" | cut -f1 -d" "`'
+||<
+　Springboardをkillするだけで良いようです。新規に登録した場合や、アプリのアイコンを書き換えた場合などは、Springboardのリセットが必須なのでこちらの方が良さげです。
+　ビルドしたらタッチして右にスッ((ロック解除のことね。))。このタッチしてスッができないときは、クリーンビルドが必要ってこと。ちゃんとデプロイしたことを示す視覚効果にもなる。
+昨日アップしたiPhone Project Templateの改修版のMakefileに反映済みのものは[http://package.gluegent.com/~kato/share/iPhone%20UIKit%20Application%203.zip:title=こちら]です。

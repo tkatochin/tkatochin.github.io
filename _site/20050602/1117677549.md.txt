@@ -1,0 +1,129 @@
+　Tapestry3.0.3のDefaultMultipartDecoderは、commons.FileUploadはちゃんと取得しているにも関らず、Multipartの１つ１つのFileItemのContent-Typeを見てない。。。例えば以下のようなパケットダンプ例を見ても分かりますが、<br>
+>||
+Content-Type: multipart/form-data; boundary=----------------314159265358979323846
+
+------------------314159265358979323846
+Content-Disposition: form-data; name="service"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+
+page/GoodsPost
+------------------314159265358979323846
+Content-Disposition: form-data; name="Body"
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: binary
+
+.$BB8:_$7$J$$%7%g%C%W$+$i.(B
+.$BAw?.$7$F$_$l$P$I$&$J$k!).(B
+||<
+　１つ１つ Content-Typeがあり、charsetの示すencodingでエンコードされているにも関らず。。。。<big>全部、request.getCharacterEncoding() でエンコードされているものだとして扱われちゃうのです。</big>うーん、かなり手抜きだ。英語圏にはcharsetオプションなんてほとんど付かないということだろうか。。。
+　で、これの解決策ですが、DefaultMultipartDecoderを改良したものを用意して、.applicationで extention登録すればよろしいようです。
+　まずこんなのを作ります。
+>|java|
+package com.gluegent.commons.tapestry.multipart;
+
+public class CharsetMultipartDecoder extends DefaultMultipartDecoder {
+    // ほとんどコピペ。	
+    public void decode(HttpServletRequest request) {
+        Map partMap = new HashMap();
+
+        request.setAttribute(PART_MAP_ATTRIBUTE_NAME, partMap);
+
+        String encoding = request.getCharacterEncoding();
+
+        DiskFileUpload upload = new DiskFileUpload();
+
+        List parts = null;
+
+        try
+        {
+            if (encoding != null)
+                upload.setHeaderEncoding(encoding);
+            parts = upload.parseRequest(request, getThresholdSize(), 
+                                                    getMaxSize(), getRepositoryPath());
+        }
+        catch (FileUploadException ex)
+        {
+            throw new ApplicationRuntimeException(
+                Tapestry.format("DefaultMultipartDecoder.unable-to-decode",
+                                       ex.getMessage()), ex);
+        }
+
+        int count = Tapestry.size(parts);
+
+        for (int i = 0; i < count; i++)
+        {
+            FileItem item = (FileItem) parts.get(i);
+
+            if (item.isFormField())
+            {
+                try
+                {
+                    String name = item.getFieldName();
+                    String value;
+                    // ここでちゃんと Content-Typeを処理する
+                    ContentType contentType = new ContentType(item.getContentType());
+                    String enc = contentType.getParameter("charset");
+                    if (enc == null) {
+                        // スペースが空いている場合があるので
+                        enc = contentType.getParameter(" charset");
+                    }
+                    if (enc != null) {
+                        value = item.getString(enc);
+                    } else {
+                        if (encoding == null)
+                            value = item.getString();
+                        else
+                            value = item.getString(encoding);
+                    }
+                    value = decodeParameter(value);
+                        
+                    ValuePart valuePart = (ValuePart) partMap.get(name);
+                    if (valuePart != null)
+                    {
+                        valuePart.add(value);
+                    }
+                    else
+                    {
+                        valuePart = new ValuePart(value);
+                        partMap.put(name, valuePart);
+                    }
+                }
+                catch (UnsupportedEncodingException ex)
+                {
+                    throw new ApplicationRuntimeException(
+                        Tapestry.format("illegal-encoding", encoding),
+                        ex);
+                }
+            }
+            else
+            {
+                UploadPart uploadPart = new UploadPart(item);
+
+                partMap.put(item.getFieldName(), uploadPart);
+            }
+        }
+    }
+    
+    public static String decodeParameter(String param) {
+        try {
+            if (param == null) {
+                return null;
+            }
+            return MimeUtility.decodeText(param);
+        } catch (UnsupportedEncodingException e) {
+            return param;
+        }
+    }
+}
+||<
+そんでもって、.applicationにこの作成したクラスを登録すればＯＫ。
+>|xml|
+    <extension name="org.apache.tapestry.multipart-decoder"
+               class="com.gluegent.commons.tapestry.multipart.CharsetMultipartDecoder" />
+||<
+
+
+
+***コメント
+:<b>yaga</b>(2006/04/13 15：33):commons.FileUploadでMultiPartで取得した文字列の文字化けがどうもとれなくて、こちらのパケットダンプがたいへん参考になりました。自分の場合はFileItemでgetString()してもcontent-typeがnullでサーバ側のデフォルトcharsetでみてしまっていたようで、getString(charset)でcharaset指定することで無事解決することができました。

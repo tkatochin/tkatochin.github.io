@@ -1,0 +1,92 @@
+　サイドバーガジェットからえいやでフルスクリーンガジェットに切り替えたいのだが、まあとにかくぜんぜん情報がない。GadgetGeneratorのソースを読んでなんとか解決させてみたが、[http://groups.google.com/group/gwt-google-apis/browse_thread/thread/d68dd5b41fb6437c?pli=1:title=こちら]でも議論されているが、とてもあやしい。ビューはContent要素ごとに分けられるのに、その中身に同じガジェットのコードをまるまるコピーして使われるので、Content分、倍々で大きくなるという酷い実装になっている。うまく共通化すれば良いのに。
+　そもそも意図したものかどうかも分からない。本当は実装がうまくいっていないだけで、そのうちドカンと修正されるんじゃないかと思うと掘り下げるのも躊躇する。
+　ジェネレータが修正されれば、ビューごとのビルド結果のJSがきれいに収まるような気がするんだけども、今は何が正しいか分からない感じ。
+　まあそんなモヤモヤもあるけど、今のところ、gwt-gadgets-apiでうまくいったマルチビューの実現方法を書きます。
+　まず、ガジェットに、複数のContentがあることを示すアノテーションを付加します。
+>|java|
+@Content(contents={HomeSection.class, CanvaSection.class})
+public class HelloGadgets extends Gadget<HelloPreferences> {
+||<
+このHomeSectionとCanvasSectionは、&lt;Content type="html" views="..."&gt;に相当するアノテーションで別途定義しておきます。
+>|java|
+interface ViewConst {
+    public static final String HOME = "home";		// 必須。
+    public static final String PROFILE = "profile";     // Googleカレンダーでは初期表示にこれが使われる。
+    public static final String CANVAS = "canvas";       // フルスクリーンキャンバスビュー
+}
+
+@ContentType(views={ViewConst.PROFILE, ViewConst.HOME})
+class HomeSection extends ContentSection<HelloGadgets> {
+    @Override
+    public void init(HelloGadgets gadget) {
+        Window.alert("呼ばれた試しがない！");
+    }
+}
+
+@ContentType(views=ViewConst.CANVAS)
+class CanvasSection extends ContentSection<HelloGadgets> {
+    @Override
+    public void init(HelloGadgets gadget) {
+        Window.alert("呼ばれた試しがない！");
+    }
+}
+||<
+本当なら、ContentSectionのinitでビューとビューの制御を書ければ良いのにできない感じ。
+で、ビューを切り替える機能をガジェットに追加するには、gwt-gadgets-apiに用意されている、NeedsViewsインターフェースを実装するとイける。initializeFeatureに渡されるViewFeatureとは、google.gadgets.views. JS APIに代替するものとなっている。
+>|java|
+@GadgetFeature.FeatureName("views")
+public interface NeedsViews {
+  /**
+   * Entry point that gets called to handle views feature initialization.
+   * 
+   * @param feature an instance of the feature to use to invoke feature specific
+   *        methods
+   */
+  void initializeFeature(ViewFeature feature);
+}
+||<
+　とりあえずは、以下のようにフィールドに参照を持つだけにしておき...
+>|java|
+public class HelloGadgets extends Gadget<HelloPreferences> implements NeedsViews {
+    // :
+    ViewFeature _feature;
+
+    @Override
+    public void initializeFeature(ViewFeature feature) {
+        _feature = feature;
+    }
+    // :
+}
+||<
+　initでViewFeatureから現在ビューを判断して、画面部品の配置をすると良い。initializeFeatureはinitの前に呼ばれるようになっているのでちょーど良い。
+>|java|
+// HelloGadgets内
+//        :
+    @Override
+    protected void init(final HelloPreferences prefs) {
+        String viewName = _feature.getCurrentView().getName();
+        if (ViewConst.PROFILE.equals(viewName) || ViewConst.HOME.equals(viewName)) {
+            // サイドバーの時の表示初期処理
+        } else if (ViewConst.CANVAS.equals(viewName)) {
+            // キャンバスビューの時の表示初期処理
+        }
+    }
+//        :
+||<
+　で、サイドバーがジェット内からキャンバスに切り替える方法だが、jsと似ている。 ボタンを用意したとして、その処理は以下のようになる。ここでもViewFeatureによろしくお願いする感じ。
+>|java|
+// HelloGadgets内
+//        :
+        button.addClickHandler(new ClickHandler() {
+	    public void onClick(ClickEvent event) {
+                View canvasView = _feature.getSupportedViews().getView(ViewConst.CANVAS);
+                _feature.requestNavigateTo(canvasView);
+            });
+//        :
+||<
+
+ビルドするといつもと違うメッセージが出るので、それが出たら「うまくジェネレートしてそーねー」という想像もつく。
+>||
+            Building gadget manifest
+               Using multi-view generation mode.
+||<

@@ -1,0 +1,18 @@
+　サムネイルを作るために検証。[http://developer.apple.com/jp/technotes/tn2006/tn2120.html:title=こちら]が参考になるが、特定フレームを指定するオプション（QTExporterのStartTime,EndTimeの指定）が現バージョンのQuickTime Playerではどうも動かない。調査したところプレイヤーの再生ヘッドの位置のものが保存されるということが分かった。
+　要はこんな感じで書けってこと。
+>|cs|
+qtControl.Movie.Stop();
+
+if (qtControl.QuickTime.Exporters.Count == 0)
+{
+    qtControl.QuickTime.Exporters.Add();
+}
+QTExporter ex = qtControl.QuickTime.Exporters[1];
+
+ex.TypeName = "JPEG";
+ex.SetDataSource(qtControl.Movie);
+ex.DestinationFileName = @"C:\hoge.jpg";
+qtControl.Movie.Time = qtControl.Movie.Duration / 2;
+ex.BeginExport();
+||<
+　この例では動画の中央のフレームをJPEGファイルに保存している。

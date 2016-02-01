@@ -1,0 +1,7 @@
+　意外と簡単。
+>|sh|
+$ sudo rm -rf /Applications/iTunes 
+$ rm -rf ~/Music/iTunes
+||<
+で削除。インストールCDをセットして、Optional Installs/Optional Installs.mpkgを開いて、インストーラからiTunesだけ選択して続行すればOK。
+toolchain helperもエラーにならずに起動した。

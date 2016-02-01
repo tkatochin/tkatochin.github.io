@@ -1,0 +1,1 @@
+　WinCVSぐらいしか知らなかったが、いまさらながら、TortoiseCVSを発見。TortoiseSVNのサイトでもよく見ると「感謝！インスピをくれたTortoiseCVSを忘れるな」と、ちゃんとリンクがあった。Winの人に抵抗ないUIを提供したTortoisecvsの功績は素晴らしい。ほんとthanks guys。

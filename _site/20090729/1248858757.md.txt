@@ -1,0 +1,4 @@
+　Microsoftが出している[http://www.microsoft.com/japan/mac/downloads.mspx?pid=Mactopia_RDC&fid=803F9438-8DF3-490F-92C6-0E0F92787DB8#viewer:title=Remote Desktop Connection Client for Mac 2]というのがあります。略してRDCらしい。
+　これを使ってリモートのMacbook内で動かしているVirtualBox上のWindowsを今コントロールしている。複数ユーザで１つのマシンに環境を作るのを手分けするので、これわ快適だわ。
+***追記
+　もとい、マウスの追随がちゃんとしてなくて酷すぎる。クリッピングすればいいのにしないからすぐにホストOS側にマウスが戻っちゃう。だめだこりゃ。VirtualBox上のWindowsからリモートデスクトップ使うほうが全然まともに動く。仮想イン仮想とはな。

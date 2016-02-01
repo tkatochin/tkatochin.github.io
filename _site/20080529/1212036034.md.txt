@@ -1,0 +1,1 @@
+　System.Linqをusingするかしないかだけで、配列オブジェクトのメソッドが増減する。おもしろい。　C#3.0から（というかVS2008から）の拡張メソッドの好例です。簡潔なまとめが[http://ufcpp.net/study/csharp/ap_ver3.html#fanctional:title=こちら]にあります。

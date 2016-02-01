@@ -1,0 +1,8 @@
+　pluginsの中には確認できる swt.win32.x86.sources_xxxx.jarが、dev.eclipse.org:/cvsroot/eclipseに見つからない。あるのはnativeビルド済みのdllしか含んでいないswt.win32.x86プロジェクトだけ。バージョン管理してないわけないはず。いったいどこにあるんだろうか。
+
+***追記
+　理解した。→ http://www.eclipse.org/swt/jnigen_34.php
+　Eclipse SWT/とかの中にあるのね。ソースフォルダになってないから参照できないのね。
+
+***追記の追記
+　今頃気づいたけど、プロジェクトに、.classpath_win32 などの、各プラットフォームごとのものが用意されているので、それをあらかじめ .classpathにコピーすればちゃんとソースフォルダとして参照される。

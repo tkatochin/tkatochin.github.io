@@ -1,0 +1,1 @@
+　[http://d.hatena.ne.jp/t-katochin/20060112/1137058517:title=Winsock2のRawを使ったものを作成したりもした]けど、WI-FIができなかったり、色々セキュアになって送る側がモニタできなくなっていたりするので、標準の[http://www.microsoft.com/downloads/details.aspx?FamilyID=983b941d-06cb-4658-b7f6-3088333d062f&displaylang=en:title=Microsoft Network Monitor 3.3]を使うのが一番良いようだ。

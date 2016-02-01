@@ -1,0 +1,2 @@
+　Irenkaのクエリーパーサーでleft recursionに対応するのに、backtrack=trueオプションが使えるようなのでかなり楽になったんだけど、ANTLRworksの、interpreterがノードツリーのグラフを表示しなくなってしまった。
+　ノードツリーのグラフ出力は、backtrack=trueオプションに未対応らしい。ちゃんとオプション見てくれよ。orz

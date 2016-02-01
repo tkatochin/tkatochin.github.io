@@ -1,0 +1,45 @@
+　JSDTはGANYMEDEからwstに含まれるようになったJDTに似たJavaScript版の開発環境プラグイン。CompilationUnitやExpression,Assignmentなど字句構造のクラスを持っていて、かなりJDTに近づけようと頑張っている今後期待できる愛いやつ。
+　ただ初期状態ではWebブラウザでのクライアントスクリプトを記述するのに向いていないボキャブラリセットになっているので、以下の手順でクライアントスクリプトエディタとしてイケてる状態にする。設定にはクセがあるのでハマリどころも記述する。
+　まず新規プロジェクトで「Static Web Project」を作るか、適当なプロジェクトを右クリして[Web Development Tools]＞[Add JavaScript Support]を実行して、JSDTを有効にしたプロジェクトを用意する。プロジェクトの中に「JavaScript Support」という参照ライブラリが追加されて、[Script Language Libraries]と[ECMA 3 Browser Support Library]が含まれる。前者はArrayやStringなど基本型の定義情報が含まれて、後者はDOMの定義と後述するブラウザサポートのための共通定義が含まれる。
+[f:id:t-katochin:20081225175016p:image]
+　次に新規JSファイルを作成する。クライアントスクリプトエディタとして有効になったかが確認できるよう、以下の内容を記述して保存しておくと良い。
+>|javascript|
+if (confirm("hoge?")) {
+    alert("hoge!");
+}
+||<
+　confirmのところが「type mismatch: cannot convert from void to boolean」という警告メッセージが表示される。[ECMA 3 Browser Support Library]だけでは、confirmの定義が詳細化されておらず、その場合は戻り値がvoidとなる((JSDTはJsDocのタグから使用している型の情報を判断するため。例えば @type Boolean とあればvoidではなく booleanに。))。confirmの位置でF3か右クリ[Open Declaration...]で、JsDocの無いメソッドの宣言だけが見える。詳細は各ブラウザ毎のサポートライブラリに委ねているようだ。
+>|javascript|
+Window.prototype.confirm=function(arg1){};
+||<
+　各ブラウザのサポートライブラリは、プロジェクトプロパティの[JavaScript]＞[JavaScript Libraries]＞[Libraries]ページで、[Add Runtime Library...]から選択できる。これにはオプショナルなプラグイン[org.eclipse.wst.jsdt.support.ie][org.eclipse.wst.jsdt.support.firefox]の２種類が用意されている。残念ながら個々のjsファイル毎に対応ブラウザを選択できない。プロジェクト単位でどちらかを選択しなければならないようだ。
+　Firefoxの方は2.0ベース、IEは5.0ベースのスクリプト定義となっている。FireFoxを有効にするにはIEも必要。IEだけであればFireFoxは不要。
+　FireFoxの方は[ECMA 3 Browser Support]の型定義と同じ宣言を使ってJsDOCを追加している。IEの方は[ECMA 3 Browser Support]と異なる宣言なため、SuperTypeをIEに差し替えなければならない。手順としては、[Libraries]の隣の[Global SuperType]の一番下の、[Select & Re-order Libraries]ボタンをクリックして、Internet Explorer Support Libraryの、windowを選択すれば良い。
+[f:id:t-katochin:20081225175017p:image]
+　先ほどのjsをエディタで見ると警告はなくなっているはずだ。F3で、FireFox Supportや IE SupportのJsDoc付きの宣言に飛ぶことができるようになる。
+>|javascript|
+/**
+* function confirm(arg1)
+* @type Boolean
+* @param {Object} arg1
+* @memberOf Window
+* @since FireFox 2.0.0.3
+*/
+Window.prototype.confirm=function(arg1){};
+||<
+>|javascript|
+/**
+  * function confirm(sMessage)
+  * @param {String} sMessage
+  * @type Boolean
+  * @returns {Boolean}
+  * @memberOf window
+  * @since JScript 5.6
+  * @see http://msdn2.microsoft.com/en-us/library/ms536376.aspx
+*/
+
+window.prototype.confirm=function(sMessage){};
+||<
+
+***追記(09/01/07)
+　どうもその後いろいろ触っていたところ、FireFoxはIEも存在した上でないと有効にならないということが分かった。これを踏まえて説明を修正した。

@@ -1,0 +1,1 @@
+　APIが少なすぎる。たとえばミリ秒やマイクロ秒単位の計測や時間調整などを扱うには、CarbonCoreのMicroseconds関数が必要なんだけど、iPhone SDK βではそもそもCarbonCoreフレームワークが用意されていない（勝手SDKにはあった）。どうしたもんか。

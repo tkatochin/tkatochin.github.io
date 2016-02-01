@@ -1,0 +1,1 @@
+　stream closed. は、jetty-5.1.10についているxercesImpl.jarだと出るようだ。2.7.1だと出なくなった。

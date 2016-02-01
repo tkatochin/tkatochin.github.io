@@ -1,0 +1,6 @@
+　…ようやくIntraWebの世界が時代に追いついたという感じか((GWTがすでにそうっぽいけど))。SWTをまんま使えるのでIntraWebもGWTも超えてる感じ。
+　インストール手順は公式サイト通りにやらないとはまる。http://www.eclipse.org/rap/gettingstarted.php
+特に「Install Target Platform」がポイント。これで[Preferences]-[Plug-in Development]-[Target Platform]のLocationが以下のように2種類になる。
+--/Developer/Application/eclipse
+--/Developer/Application/eclipse/configuration/org.eclipse.rap.target-1.1.1/eclipse
+　長い方は「Install Target Platform」で組み込まれたものでRAPを開発したい場合に選択する。RCPの開発では元々の短いほうに切り替えなければならない。

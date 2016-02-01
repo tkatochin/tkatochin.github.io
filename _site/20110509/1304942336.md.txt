@@ -1,0 +1,3 @@
+　挿入するもの全て、ダイアログボックスの「選択」「キャンセル」が効かなくなった。chromeでもfirefoxでも、「processRequestという関数が無い！」というようなエラーになる。×ボタンで閉じる以外なく、何もできない状態。なんだろう。
+　日本のヘルプフォーラムもなさそうだし、どこにレポートすれば。。。
+　[http://www.google.es/support/forum/p/sites/thread?tid=49a516a0d91ed13c&hl=en:title=適当くさい英文で書いてみた]けどGoogleの中の誰かしら拾ってくれるんだろうか。

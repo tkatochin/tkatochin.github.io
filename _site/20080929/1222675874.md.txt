@@ -1,0 +1,13 @@
+　とても不思議な現象にあっている。List<T> は IList<T> を実装していて、IList<T>はICollection<T>の継承。でICollection<T>にあるはずのIsReadOnlyが、List<T>からは呼び出せない。
+>|cs|
+    List<string> list = new List<string>();
+    bool a = list.IsReadOnly;       // ← そんな定義は見つからないというコンパイルエラー。
+    IList<string> ilist = list;
+    a = ilist.IsReadOnly;   // 問題ない。
+
+||<
+
+どんな方法を使えばこんなことが実現できるのかとても興味深い。ただのバグだったらやだけど。
+
+***追記
+　明示的実装をするだけで消えるということのようです。限定させればちょっとした隠蔽ができるというのは結構うれしい。ただ GetEnumeratorは明示的実装をしても、foreach で引っ掛かってくれます。

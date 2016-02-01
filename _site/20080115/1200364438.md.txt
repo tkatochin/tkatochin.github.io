@@ -1,0 +1,1 @@
+　ビルドしてもリソースの変更検知がされないのはかなりストレスになってきたのでMakefileをまた改修。$addprefixを使っているので、画像やWAVファイルが増えても、i18nリソースが複数になっても大丈夫なつくりにしてます。([http://package.gluegent.com/~kato/share/iPhone%20UIKit%20Application%204.zip:title=download])

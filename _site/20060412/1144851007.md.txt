@@ -1,0 +1,5 @@
+あれれ、もしかしてWin2000ProのIISでは仮想サイトが追加できない！？Server版だけなの！？
+<blockquote cite="http://cropcrusher.web.infoseek.co.jp/shufuden/windowsfolder/win32.html" title="Win32DB:Webサーバの選択">
+IISを使うには2000Serverが必要だし、2000pro付属のPersonal Web Serverでは機能がこころもとなさすぎる。その根拠はServer(IIS)との差別化のために機能を削ってやがるに違いないからだ。
+</blockquote>
+…その読みは当たっていると思われ。

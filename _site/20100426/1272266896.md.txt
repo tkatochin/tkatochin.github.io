@@ -1,0 +1,19 @@
+　== と != をオーバーロードしたクラスがあって、そのインスタンスを == null で比較すると次のようなビルドエラーが出る。
+>>
+  次のメソッドまたはプロパティ間で呼び出しが不適切です: 'MyClass.operator == (MyClass, object)' と 'MyClass.operator == (object, MyClass)'
+<<
+　これは気を利かせすぎてオーバーロードメソッドを用意しすぎたことが問題だった。このエラーが出た時は以下を用意してしまっていた。
+>|C#|
+  operator ==(MyClass, MyClass);
+  operator ==(MyClass, string);
+  operator ==(string, MyClass);
+  operator ==(MyClass, object);
+  operator ==(object, MyClass);
+||<
+　stringとobjectの両方があるとダメで、以下のように減らしたところ解決。
+>|C#|
+  operator ==(MyClass, MyClass);
+  operator ==(MyClass, object);
+  operator ==(object, MyClass);
+||<
+　Equalsの中でちゃんとGetTypeすれば良いだけだしね。ただビルドエラーのメッセージが直接言い当てていないのが気になる。どういうビルドプロセスがあって、このようなエラーになるのかは謎のまま。時間があったら調べてみたいけど。

@@ -1,0 +1,2 @@
+　[http://ipinfo.info/netrenderer/index.php:title=IE NetRenderer]に、IE8beta1が追加されたようです。
+　[https://addons.mozilla.org/ja/firefox/addon/6455:title=Firefoxのプラグイン]を使うとより楽かも？ 

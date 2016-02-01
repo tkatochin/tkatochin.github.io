@@ -1,0 +1,6 @@
+　労せずにssh-agentがLeopardとTouchで動くので、scpの自動ログインを昨日id:ashigeruさんにアドバイスもらいながら設定(([http://www.atmarkit.co.jp/flinux/rensai/linuxtips/447nonpassh.html:title=こちらの手順通り]にやれば無問題…と思ってたらsugaさんがハマっちゃったので[http://suga.parfe.jp/td/index.cgi?date=20080111#p01:title=こちらで書かれていること]も確認しましょう))。
+　で、XCode iPhone Templateもそれにあわせて改良（[http://package.gluegent.com/~kato/share/iPhone%20UIKit%20Application%202.zip:title=download]）。Makefile内のTouchのアドレスだけ書き換えておけばOK。テンプレートは他にもいろいろ改良しています。Leopard以外で動くかどうかは知りません。
+-最低限のビュー表示コードを記述。プロジェクト新規作成後、何もせずにビルド／デプロイしても、Touchフリーズアプリにならないようにした。
+-文字列リソースを最低限用意。側があれば、追記しやすいでしょう。日本語ちゃんと扱えるアプリ作成に自然と誘導します。
+-Leopardのldの問題を解決。MacPortsを入れなくても(/opt/がなくても)ビルドできる。/Developer/usr/bin/ldをXcodeが選択するが今のところこれがLeopard固有の問題。/usr/bin/ldではちゃんといけるので、ldを実行する際にPATHを変えるという処置を行っている(id:ashigeruさんのおかげ)。
+-リソース関係をビルド結果の.app内にコピーするようにした。一部のリソースが更新されても微妙に更新対象にならないけど。。。

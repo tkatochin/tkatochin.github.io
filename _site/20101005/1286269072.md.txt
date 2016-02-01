@@ -1,0 +1,1 @@
+　Google Apps Marketplaceと連携するために、OpenIDとOAuth コンシューマを実装したものを作るってことなんだけど良くわからん。

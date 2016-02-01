@@ -1,0 +1,3 @@
+　何回か参照するのにすぐ検索履歴から探す羽目になるので忘れないようメモします。重宝してます。m(_ _)m
+  http://www.in-vitro.jp/blog/index.cgi/Maven/20070522_01.html
+　ただ、XSD的に<phase>は<execution>の中に書くようにWSTに怒られるのでコピペしてから移動した方が吉。

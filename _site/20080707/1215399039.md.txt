@@ -1,0 +1,243 @@
+　昨日のつづき。IDictionary<string, IDictionary<string, string>> 相当のものを作成してXMLシリアライズできるようになった。こんなの。
+>|cs|
+    public class ClassAttributes
+    {
+        public ClassAttributes()
+        {
+            ClassNames = new StringCollection();
+            Attributes = new List<Attributes>();
+        }
+
+        public StringCollection ClassNames
+        {
+            get;
+            set;
+        }
+
+        public List<Attributes> Attributes
+        {
+            get;
+            set;
+        }
+
+        public void Add(string className, Attributes attributes)
+        {
+            int index = ClassNames.IndexOf(className);
+            if (index >= 0)
+            {
+                Attributes[index] = attributes;
+            }
+            else
+            {
+                ClassNames.Add(className);
+                Attributes.Add(attributes);
+            }
+        }
+
+        public bool Remove(string className)
+        {
+            int index = ClassNames.IndexOf(className);
+            if (index >= 0)
+            {
+                ClassNames.RemoveAt(index);
+                Attributes.RemoveAt(index);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public Attributes this[string className]
+        {
+            get
+            {
+                int index = ClassNames.IndexOf(className);
+                if (index >= 0)
+                {
+                    return Attributes[index];
+                }
+                return null;
+            }
+            set
+            {
+                Add(className, value);
+            }
+        }
+    }
+
+    public class Attributes
+    {
+        public Attributes()
+        {
+            Names = new StringCollection();
+            Values = new StringCollection();
+        }
+
+        public StringCollection Names
+        {
+            get;
+            set;
+        }
+
+        public StringCollection Values
+        {
+            get;
+            set;
+        }
+
+        public void Add(string name, string value)
+        {
+            int index = Names.IndexOf(name);
+            if (index >= 0)
+            {
+                Values[index] = value;
+            }
+            else
+            {
+                Names.Add(name);
+                Values.Add(value);
+            }
+        }
+
+        public bool Remove(string name)
+        {
+            int index = Names.IndexOf(name);
+            if (index >= 0)
+            {
+                Names.RemoveAt(index);
+                Values.RemoveAt(index);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public string this[string name]
+        {
+            get
+            {
+                int index = Names.IndexOf(name);
+                if (index >= 0)
+                {
+                    return Values[index];
+                }
+                return null;
+            }
+            set
+            {
+                Add(name, value);
+            }
+        }
+    }
+||<
+***保存・読み出しテストコード (loadXml, saveXmlは昨日と同じなので省略)
+>|cs|
+        private void buttonSave_Click(object sender, RoutedEventArgs e)
+        {
+            ClassAttributes maps = new ClassAttributes();
+            Attributes map;
+
+            map = new Attributes();
+                map.Add("Top", "123");
+                map.Add("Left", "456");
+                map.Add("Opacity", "0.8");
+            maps.Add("window1", map);
+            map = new Attributes();
+                map.Add("Top", "200");
+                map.Add("Left", "600");
+                map.Add("Opacity", "1.0");
+            maps.Add("window2", map);
+            map = new Attributes();
+                map.Add("Top", "100");
+                map.Add("Left", "200");
+                map.Add("Opacity", "0.5");
+            maps.Add("window3", map);
+
+            saveXml(maps);
+        }
+
+        private void buttonLoad_Click(object sender, RoutedEventArgs e)
+        {
+            ClassAttributes maps = loadXml(typeof(ClassAttributes)) as ClassAttributes;
+            foreach (string className in maps.ClassNames) {
+                System.Diagnostics.Debug.WriteLine("className=" + className + " attributes={");
+                foreach (string attrName in maps[className].Names)
+                {
+                    System.Diagnostics.Debug.WriteLine("    name=" + attrName + " value=" + maps[className][attrName]);
+                }
+                System.Diagnostics.Debug.WriteLine("}");
+            }
+        }
+||<
+*** 保存XML
+>|xml|
+<?xml version="1.0"?>
+<ClassAttributes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ClassNames>
+    <string>window1</string>
+    <string>window2</string>
+    <string>window3</string>
+  </ClassNames>
+  <Attributes>
+    <Attributes>
+      <Names>
+        <string>Top</string>
+        <string>Left</string>
+        <string>Opacity</string>
+      </Names>
+      <Values>
+        <string>123</string>
+        <string>456</string>
+        <string>0.8</string>
+      </Values>
+    </Attributes>
+    <Attributes>
+      <Names>
+        <string>Top</string>
+        <string>Left</string>
+        <string>Opacity</string>
+      </Names>
+      <Values>
+        <string>200</string>
+        <string>600</string>
+        <string>1.0</string>
+      </Values>
+    </Attributes>
+    <Attributes>
+      <Names>
+        <string>Top</string>
+        <string>Left</string>
+        <string>Opacity</string>
+      </Names>
+      <Values>
+        <string>100</string>
+        <string>200</string>
+        <string>0.5</string>
+      </Values>
+    </Attributes>
+  </Attributes>
+</ClassAttributes>
+||<
+*** Debug.WriteLine出力結果
+>||
+className=window1 attributes={
+    name=Top value=123
+    name=Left value=456
+    name=Opacity value=0.8
+}
+className=window2 attributes={
+    name=Top value=200
+    name=Left value=600
+    name=Opacity value=1.0
+}
+className=window3 attributes={
+    name=Top value=100
+    name=Left value=200
+    name=Opacity value=0.5
+}
+||<
+　名前と値がXml上でペアになってないのが分かりにくいなぁ。

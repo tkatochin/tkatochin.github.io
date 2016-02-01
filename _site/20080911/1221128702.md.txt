@@ -1,0 +1,1 @@
+　[http://blogs.msdn.com/hiroyuk/archive/2007/05/11/bitmapeffect-rendertargetbitmap.aspx:title=川西裕幸さんのブログにある方法]で、VisualBrushを使わないようにして対策できました。さすが中の人。感謝感謝。

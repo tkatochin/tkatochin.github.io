@@ -1,0 +1,2 @@
+　別プロジェクトに分けていたサービス層がApiProxyを使ったJUnitのためにappengine-local-runtime.jarを直接参照していたためだった。appengine-local-runtime.jar を外すというのは、id:cynipeさんがひがさんに教えてもらった情報。感謝。
+　テストケースは別プロジェクトにしないとダメだね。

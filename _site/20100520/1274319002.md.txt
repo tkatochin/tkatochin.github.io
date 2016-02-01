@@ -1,0 +1,2 @@
+　AccordionのContent領域の高さがStretch状態で、ウィンドウの高さを激しく大きくしたり小さくすると、Content領域の高さがゼロ以下になった瞬間、プロセスが落ちる。。
+　なのでAccordionは全部のAccordionItemの全ヘッダが見える最小限＋１の高さ未満にならないように、AccordionのMinHeightで調整しないとならない。でもコンテントの高さが1で中身が見えてしまう不都合が生じるので、コンテントとして使っているFrameworkElementのMarginを0,1,0,0などのようにして、ずらさないとならない。

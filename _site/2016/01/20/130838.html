@@ -1,0 +1,63 @@
+<p>単純型にしかバインドできないのかー。</p>
+
+<p>[http://doma.seasar.org/tutorial/select.html#結合した結果を取得する検索]</p>
+
+<p>それなら次のように書けばdepartmentがまるごとバインドされるといいのになー。</p>
+
+<blockquote>
+  <p>|java|
+@Entity
+public class EmployeeDepartment extends Employee {</p>
+</blockquote>
+
+<pre><code>@Column(name = "d")
+Department department;
+
+...
+</code></pre>
+
+<p>}
+||&lt;</p>
+
+<blockquote>
+  <p>|sql|
+select
+  e.<em>,
+  d.</em>
+from 
+  employee e 
+left outer join 
+  department d 
+on 
+  e.department_id = d.id 
+order by 
+  e.id
+||&lt;</p>
+</blockquote>
+
+<p>Departmentも@Entityであればその中でのアノテーションで項目名や諸々分かっている状態だし…。
+…んがしかしできない理由わかった。SQLの結果セットでのフィールド名では d.* は展開されて departmentのメンバーなのかなんなのか区別できんからだわー。
+S2DaoだとN:1マッピング、Slim3だとModelRefでレイトバインディングする形で提供されているけど、Domaの思想には合わない感じがする。
+複数SQL発行せずに最初の一発でjoinした情報で解決するのがDomaらしい形。Domaを選んだのもパフォーマンスのためなわけだったし。いろんなナンチャラコンテナの積み上げで掛かるwarmupがないから速いんだし。</p>
+
+<p>名前が展開されちゃうから問題なので、次のようにSQL側できちんと１つ１つドット付きで名前付けしたならバインドできそう。</p>
+
+<blockquote>
+  <p>|sql|
+select
+  e.*,
+  d.departmentId as <code>d.departmentId</code>,
+  d.name as <code>d.name</code>,
+  d.xxxx as <code>d.xxx</code>, …
+from 
+  employee e 
+left outer join 
+  department d 
+on 
+  e.department_id = d.id 
+order by 
+  e.id
+||&lt;</p>
+</blockquote>
+
+<p>バインドして欲しい意思が強いSQL（笑）。でもこうやって明示化してるからコードとの対応も分かりやすいし。</p>

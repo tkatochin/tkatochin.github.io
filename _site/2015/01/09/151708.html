@@ -1,0 +1,28 @@
+<blockquote>
+  <p>||
+# mysql
+||&lt;</p>
+</blockquote>
+
+<p>って打っても</p>
+
+<blockquote>
+  <p>||
+can’t connect to local mysql server through socket ‘/tmp/mysql.sock’ (2)
+||&lt;</p>
+</blockquote>
+
+<p>とかなってまじかーーー！？</p>
+
+<p>って思ってたら、システム環境設定のmysqlがStopになっていただけだった。なんだよもー。
+スタートしなおして解決。</p>
+
+<p>[f:id:t-katochin:20150109151630p:plain]</p>
+
+<p>…って違った！
+問題はOSスタート時に立ち上がらないってことだった。</p>
+
+<p>[http://stackoverflow.com/questions/25954230/mysql-does-not-start-in-osx-yosemite-10-10:embed]
+[http://stackoverflow.com/questions/25954230/mysql-does-not-start-in-osx-yosemite-10-10:title]</p>
+
+<p>こちらの回答者のおかげで解決。感謝！</p>

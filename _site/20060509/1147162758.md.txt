@@ -1,0 +1,2 @@
+　<s>AuthzSVNAccessFileとSSLRequireSSLが同時に有効にならないよー。SSLじゃなくてもBasic認証できるようになってしまう〜。どうやれば両方を有効にできるんだろー。</s>
+よく見たら Satisfy Any を指定していただけだった。勘違い。

@@ -1,0 +1,1 @@
+@RequestScoped なクラスの中に、@SessionScoped なフィールドを @Injectしたけど、リクエストごとに初期化されてしまう。むぅ。

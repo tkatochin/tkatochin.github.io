@@ -1,0 +1,2 @@
+　1.5でコンパイルしてたようだ。JREが1.4でjettyLauncherが起動できなくなってしまっていたのでjavacし直した。
+ダウンロード：http://package.gluegent.com/~kato/share/jettylauncher1.3.0patch/runner.jar

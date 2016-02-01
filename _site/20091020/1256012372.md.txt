@@ -1,0 +1,16 @@
+　ログインにAppsドメインを指定する際、APIバージョンによってパラメータの指定が異なる。
+>|javascript|
+google.load("gdata", "1");
+||<
+…の場合は、
+>|javascript|
+var token = google.accounts.user.login(scope, "appsdomain.com");
+||<
+…と、AuthSubコマンドへのhdパラメータしか渡せず他のオプションは渡せない。
+>|javascript|
+google.load("gdata", "2");
+||<
+…の場合は、以下のようにオブジェクトで渡す。
+>|javascript|
+var token = google.accounts.user.login(scope, {"hd: "appsdomain.com"});
+||<

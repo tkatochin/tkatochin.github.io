@@ -1,0 +1,7 @@
+　設定方法が分からず難儀していたら、
+>http://code.google.com/p/gwt-google-apis/wiki/GadgetsGettingStarted:title>
+Debugging Gadgets is not supproted in the current release. Below instructions are compatible with previous release of Gadgets API (1.0.2) and GWT 1.5.3 or 1.6
+<<
+　ちゃんと前置きが書いてんじゃん。気づくのに時間がかかりすぎ。orz
+　でもさ、GAE+GWT使わずに外サーバー内でしこしこJS書いた方が激しく効率良いってことになるよね。これじゃ。まじ死ねるんだけど。orz
+　ビルド時間がネックになりすぎで、幸せ感がうすいんだよなぁGWT。 

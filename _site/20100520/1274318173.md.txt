@@ -1,0 +1,2 @@
+　久々にC#を触るとまた色々忘れていたことに気付く。Timer使うときはTimerじゃなく、DispatcherTimerだった。タイマーイベント内でコントロールなどの資源を参照しようとすると、他のスレッドの持ち物なのでうんぬんかんぬんというエラーが出るのでDispatcher.InvokeやBeginInvokeをしないとならない。Visual StudioでEclipseのようにCtrl+Tできればなぁ。
+　DispatcherTimerの使い方は、http://www.longhorncorner.com/UploadFile/dbeniwal321/248/ がサンプル付きで良い。

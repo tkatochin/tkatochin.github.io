@@ -1,0 +1,9 @@
+　Macでデバッガ起動しているのに、
+>||
+java.lang.UnsatisfiedLinkError: no swt-win32-3449 or swt-win32 in swt.library.path, java.library.path or the jar file
+||<
+　と、落ちる。なぜwin32？
+　こちら（http://www.eclipse.org/swt/faq.php#missingdll）を見てもよくわからない（そっちもWindowsの場合の話している風だから）。RCPのマルチプラットフォームビルド構成にしているのが悪いのか、謎だらけで進まない。うーん。
+
+***追記
+　workspaceに、org.eclipse.swt置いてるからだわー。swt自体を改修する時以外は含めちゃダメだってばさー。悶絶。

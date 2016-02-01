@@ -1,0 +1,45 @@
+　eclipseで [ソース]-[外部ストリング化]ってのがあるけど、getMessage("文字列")で引っ張るので文字列の中を加工しちゃわないよう注意しなければならないし、これまた文字列なもんだから $NON-NLS-1$ でマークアップしなければならない。
+　それを解決できる、org.eclipse.osgi.util.NLS というちょっと良い感じのクラスがある。これをベースにMessagesクラスを作成すれば、プロパティ名と同じstring フィールドを定義するだけで、自動的にバインドしてくれる。
+
+　以下のような感じで作る。
+sample/messages_ja.properties
+>|javaproperties|
+Hoge_errorMessage=エラーだよ！
+||<
+
+sample/Messages.java
+>|java|
+package sample;
+
+public class Messages extends org.eclipse.osgi.util.NLS {
+    private static final String BUNDLE_NAME = "sample.messages";	//$NON-NLS-1$
+
+    // 同じ名前で定義するだけ。
+    public static String Hoge_errorMessage;
+
+
+    static {
+	NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+    }
+}
+||<
+
+　利用側の例は以下のような感じ。
+>|java|
+package sample;
+
+import static sample.Messages.*;
+
+public class Hoge {
+    
+    public void printError() {
+        System.out.println(Hoge_errorMessage);
+    }
+}
+||<
+
+　しかもバインドできなかったフィールドがあるとフィールドの内容がエラーメッセージになる。「実行時に踏まないとバインドエラーが確認できないのは辛い」ということであれば、PDEデバッグの際にあらかじめどこかで、
+>|java|
+org.eclipse.osgi.framework.debug.DEBUG_MESSAGE_BUNDLES = true;
+||<
+としておけば、コンソールにエラーメッセージが出る。

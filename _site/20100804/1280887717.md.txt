@@ -1,0 +1,1 @@
+　[http://oshiete.goo.ne.jp/qa/5075342.html:title=ここ]とか[http://okwave.jp/qa/q4653773.html:title=ここ]とか、ないとか知ったかぶりして質問者を一蹴している輩が多いのにはゲンナリ。BMPは32ビットカラーではRGBの各8ビットの24ビットカラーに加えて8ビットのアルファチャンネルが付けられるってば。GIMP2でも確認できるし。で、.NETのBitmapで普通に読むと壊れた画像になるので、どうするのか調べたら、[http://www.ipentec.com/document/document.aspx?page=csharp-32bit-argb-bitmap-load:title=こちら]で解決策をレポートされている人が。素晴らしい。

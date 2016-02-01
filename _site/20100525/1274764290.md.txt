@@ -1,0 +1,21 @@
+　ContextMenuもビジュアルにデザインしたいのに出来ない。うーむ何か方法はないのかな。
+　
+***追記
+　やりたいことは、MenuItemに設定したスタイルをContextMenuにも適用したいということなので、Blendでデザイン済みのMenuItemを転用するだけで解決した。
+　まず、BlendでMenu上のトップレベルのMenuItemから「テンプレートをコピーして編集」でデザインしたテンプレートのxamlを開き、PART_Popupの中身のxamlを、ContextMenuのControlTemplateの中身とした。
+>|xml|
+<Popup x:Name="PART_Popup" AllowsTransparency="true"
+    HorizontalOffset="1" IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}" Placement="Bottom"
+    PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}" VerticalOffset="-1" Focusable="false">
+  <!-- ↓↓ここから↓↓ -->
+  <Microsoft_Windows_Themes:SystemDropShadowChrome x:Name="Shdw" Color="Transparent">
+    <ContentControl x:Name="SubMenuBorder" IsTabStop="false" Template="{DynamicResource {ComponentResourceKey ResourceId=SubmenuContent, TypeInTargetAssembly={x:Type FrameworkElement}}}">
+      <ScrollViewer Style="{DynamicResource {ComponentResourceKey ResourceId=MenuScrollViewer, TypeInTargetAssembly={x:Type FrameworkElement}}}" CanContentScroll="true">
+        <ItemsPresenter Margin="2" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" KeyboardNavigation.DirectionalNavigation="Cycle" KeyboardNavigation.TabNavigation="Cycle" Grid.IsSharedSizeScope="true"/>
+      </ScrollViewer>
+    </ContentControl>
+  </Microsoft_Windows_Themes:SystemDropShadowChrome>
+  <!-- ↑↑ここまで↑↑ -->
+</Popup>
+||<
+　しかし、そのままでは Presentation.Aeroの影(右下方向に表示される影)が出なかったので、Microsoft_Windows_Themes:SystemDropShadowChrome の Marginを "0,0,8,8" にした。

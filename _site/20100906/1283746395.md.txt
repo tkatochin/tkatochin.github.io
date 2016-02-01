@@ -1,0 +1,2 @@
+　なんとか解決。Userinitではなかったが原因はWinlogonレジストリだった。他のVistaのWinlogonと見比べたところ、問題だった僕のマシンでは、Shellの値が「explorer.exe rundll32.exe nbai.amo pbjnukb」となっていた。他のVistaでは、単に「explorer.exe」になっていたので、この無駄っぽいパラメータを削除したところタスクバーが復活するようになった。
+　しかしそれにしても、なんの拍子でこのようなことが起こるんだか。気持ち悪い。

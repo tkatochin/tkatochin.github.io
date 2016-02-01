@@ -1,0 +1,1 @@
+　eAccelaratorいれたしwordpressのキャッシュ有効にしたし、WP-CACHEも入れたし。それでもWP-Dokuwikiの重さったら全然解消されない。何でだろ。

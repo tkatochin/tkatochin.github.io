@@ -1,0 +1,3 @@
+これ http://d.hatena.ne.jp/t-katochin/20070508/1178631348 によって、
+これ http://d.hatena.ne.jp/t-katochin/20061207 も解決。
+以前のSSLは相当やばかったってことねー。

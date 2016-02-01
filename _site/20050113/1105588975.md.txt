@@ -1,0 +1,71 @@
+　Eclipse JDT Pluginのソースをハックしていて初めて知ったのですが、なんとインナークラスなのに外部から直接生成したり、staticメンバを持たせることができる方法がありました。
+　これをするには全然むずかしいことはなく、ただ単にインナークラスの宣言にstaticを付加するだけです。public static にすれば、他のパッケージからも可視になります。
+>|java|
+package test;
+
+public class ClassA {
+    public static class InnerA {
+        // 実は普通のインナークラスにはstaticメソッドを
+        // 作成することはできないのですが、staticインナークラス
+        // の場合に限り、定義できちゃいます。
+        public static void staticHello() {
+            System.out.println("hello - static");
+        }
+        public void hello() {
+            System.out.println("hello");
+        }
+    }
+}
+||<
+>|java|
+package test.hoge;
+
+import test.ClassA.InnerA;   // こんな宣言もできちゃうのですよー。
+
+public class ClassB {
+    public static void main(String[] args) {
+        
+        // staticメソッド呼び出し例
+        InnerA.staticHello();
+        
+        // 普通のインナークラスでは
+        // インスタンスの直接生成はできません。
+        InnerA directInstance = new InnerA();
+        directInstance.hello();
+    }
+}
+||<
+　たしかに「staticなし」メンバは、インスタンスを伴うのが当然なので妙に納得してしまいました。
+　更に static が付いている限り、インナーのネストができてしまいます。
+>|java|
+package test;
+
+public class ClassA {
+    public static class InnerA {
+        public static class MoreInnerA {
+            public static class DeepA {
+                public static void staticHello() {
+                    System.out.println("深すぎ！");
+                }
+            }
+        }
+    }
+}
+||<
+>|java|
+package test.hoge;
+
+import test.ClassA.InnerA.MoreInnerA.DeepA;
+
+public class ClassB {
+    public static void main(String[] args) {
+        DeepA.staticHello();
+    }
+}
+||<
+　importが示すのがパッケージなのかインナークラスのネストなのか、もう何がなにやら分からなくなるので多用しないほうが吉です。でもあまり使われないせいか、Eclipse2.1でも3.0でも、インナークラスのimportの定義から「宣言を開く」を行うとうまくいかず、おもしろいことに、ビルドパスに同名クラスがあると、その全く関係ないクラスを開いちゃうようです。
+
+
+
+***コメント
+:<b>かとちん</b>(2005/01/25 11：15):まさたかさんからJava魂にも載っていることを聞きました。

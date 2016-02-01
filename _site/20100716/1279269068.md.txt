@@ -1,0 +1,83 @@
+　[http://d.hatena.ne.jp/t-katochin/20100618/1276844625:title=前回のやり方]ではビルド番号インクリメントプラグインと自作スクリプトの組み合わせを行ったんだけど、そもそもビルドイベントでスクリプトに手を出してるなら、<b><big>毒を喰らわば皿まで、いっちゃっていいじゃない！</big></b>...ってことに気づき、ビルド番号のインクリメントなんて人に任せなくても良いことに気付いた。ワケないワケなーい。
+　実はそれよりも、ファイルバージョンに、1.0a とか数字以外の文字を入れたくなったので（about boxに使うので）改造することにした。AssemblyVersionは数字のみで構成しないと怒られるので、ファイルバージョンだけね。
+>|vb|
+'Usage: CScript //nologo makeVersionInfoTemplate.vbs
+Const ForReading = 1, ForWriting = 2
+Const adTypeText = 2
+Const adCRLF = -1
+Const adLF = 10
+Const adCR = 13
+Const adReadAll = -1
+Const adReadLine = -2
+Const adWriteLine = 1
+Const adSaveCreateNotExist = 1
+Const adSaveCreateOverWrite = 2
+
+If WScript.Arguments.Length <> 2 Then
+    WScript.Echo "Usage...:" & vbCRLF & " makeVersionInfoTemplate.vbs AssemblyInfo.csパス 出力するAssemblyInfoテンプレートファイル"
+    WScript.Quit(1)
+End If
+
+fromAssemblyInfoFileName = WScript.Arguments(0)
+toAssemblyInfoTemplateFileName = WScript.Arguments(1)
+
+Set InStream = CreateObject("ADODB.Stream")
+InStream.Open
+InStream.Charset = "UTF-8"
+InStream.LoadFromFile(fromAssemblyInfoFileName)
+If Err.number > 0 Then
+    WScript.Echo "Can't open " & fromAssemblyInfoFileName & " for reading."
+    WScript.Quit 1
+End If
+allText = InStream.ReadText(adReadAll)
+
+'既存のビルド番号を取得
+pattern = "\[assembly: AssemblyVersion\(""([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)""\)\]"
+Set regEx = New RegExp
+regEx.Pattern = pattern
+regEx.IgnoreCase = False
+regEx.Global = True
+Set Matches = regEx.Execute(allText)
+If Matches.Count = 0 Then
+    WScript.Echo "AssemblyVersion not found."
+    WScript.Quit 1
+End If
+'インクリメントしたビルド番号
+IncrementedBuildNumber = CInt(Matches(0).SubMatches(2)) + 1
+
+'置換
+
+pattern = "\[assembly: AssemblyVersion\(""([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)""\)\]"
+replacer = "[assembly: AssemblyVersion(""$1.$2." & IncrementedBuildNumber & ".$$WCREV$$"")]"
+
+Set regEx = New RegExp
+regEx.Pattern = pattern
+regEx.IgnoreCase = False
+regEx.Global = True
+allText = regEx.Replace(allText, replacer)
+
+pattern = "\[assembly: AssemblyFileVersion\(""([0-9]+)\.([0-9a-z]+)\.([0-9]+)\.([0-9]+)""\)\]"
+replacer = "[assembly: AssemblyFileVersion(""$1.$2." & IncrementedBuildNumber & ".$$WCREV$$"")]"
+
+Set regEx = New RegExp
+regEx.Pattern = pattern
+regEx.IgnoreCase = False
+regEx.Global = True
+allText = regEx.Replace(allText, replacer)
+
+
+Set OutStream = CreateObject("ADODB.Stream")
+OutStream.Open
+OutStream.Charset = "UTF-8"
+OutStream.WriteText allText
+OutStream.SaveToFile toAssemblyInfoTemplateFileName, adSaveCreateOverWrite
+OutStream.Close
+
+Set InStream = Nothing
+Set OutStream = Nothing
+||<
+　これでBuildVersionIncrementとはおさらば。むしろ使っちゃダメ。
+　副作用として、そもそもこのソリューション、AssemblyInfo.csを自動更新するので、みんなで開発しているとコンフリクトしまくるんだけどね。。。。
+
+***追記
+　ていうか、警告が出るね。「'ファイルバージョン'に指定されたバージョン'1.0a.123.123'は正常なmajor.minor.build.version'フォーマットではありません。」文字を入れちゃだめらしい。警告を無視すると、ファイルのプロパティで表示されるバージョン情報が1.0.0.0固定になってしまう。残念。

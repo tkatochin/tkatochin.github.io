@@ -1,0 +1,12 @@
+<p>EntityManagerの皆のサンプル、どこ行っても new EntityManager(url, user, pw) の使用例しかないんだけど、ActiveObjects 0.25.1にはそんなコンストラクタ無くなっちゃってて、なんだなんだと command+T 使いまくってようやく分かった。EntityManagerBuilderを使うのね。長かったわー。Web探すよりコードで見つける方が早いわー。</p>
+
+<blockquote>
+  <p>|java|
+EntityManager em =
+        EntityManagerBuilder.url(“jdbc:mysql://……”)
+               .username(user)
+               .password(password)
+               .none()
+               .build();
+||&lt;</p>
+</blockquote>

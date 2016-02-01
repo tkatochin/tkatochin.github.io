@@ -1,0 +1,2 @@
+　MYCOMサイトでフォントがやたらアンチエイリアスが掛かるので、なぜだろうといろいろ調べたところ、以前に入れていた[http://osakattf.hp.infoseek.co.jp/:title=Osakaフォント]のせいだということが判明。[http://journal.mycom.co.jp/css/layout/main.css:title=MYCOMのCSSはOsakaが優先されていた]ためだったようだ。
+　Osakaフォントはビットマップフォントも含めていると紹介されていたが、どうも全ての小さいポイントで用意していないようだ。アンインストールするしかないのでアンインストール。うーむ残念。

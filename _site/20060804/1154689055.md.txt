@@ -1,0 +1,55 @@
+　現行の仕事でログを暗号化する仕組みが要件にあるのだが、パフォーマンスチューニングのためにbase64もネイティブ化した。その結果は以下になった。
+>||
+100000 time speed test. data size = 49
+[sun.misc.base64] encrypt speed: 5781 ms
+[sun.misc.base64] decrypt speed: 1719 ms
+[nativeBase64] encrypt speed: 313 ms
+[nativeBase64] decrypt speed: 265 ms
+[apache.commons.codec base64] encrypt speed: 485 ms
+[apache.commons.codec base64] decrypt speed: 718 ms
+
+10000 time speed test. data size = 8404
+[sun.misc.base64] encrypt speed: 14250 ms
+[sun.misc.base64] decrypt speed: 15235 ms
+[nativeBase64] encrypt speed: 718 ms
+[nativeBase64] decrypt speed: 1125 ms
+[apache.commons.codec base64] encrypt speed: 5203 ms
+[apache.commons.codec base64] decrypt speed: 5640 ms
+||<
+　サイズが小さいとapache.commons.codecはnativeと大差ないが、データ量がそれなりにあるとインパクトが強い。リクエストデータ内に含まれる入力情報を直接ログに残さない仕組みとして要件があったため暗号化にRC4、ログに記録する際のBASE64を、JNIで実装した。同時に何千アクセスあっても耐えられる仕組みとなった。10万回、1万回でも nativeBase64だとほとんどインパクトが無い。chunkは実装しなかったのだが、それも高速化への効果があった。
+　暗号化アルゴリズムにRC4を選択したのは、最も高速だったため。これを更にJNIにすることで暗号化コストを極限までチューニングした。iTextのPDF暗号化で使われていたRC4ロジックを参考にしてCに移植した。
+　しかし、以下のようにJCEのものと大きな差が得られなかった。
+>||
+100000 time speed test. data size = 49
+[JCE DES] encrypt speed: 1844 ms
+[JCE DES] decrypt speed: 1750 ms
+[JCE DESede] encrypt speed: 4312 ms
+[JCE DESede] decrypt speed: 4125 ms
+[JCE AES] encrypt speed: 1500 ms
+[JCE AES] decrypt speed: 1828 ms
+[JCE BLOWFISH] encrypt speed: 17532 ms
+[JCE BLOWFISH] decrypt speed: 12218 ms
+[JCE RC2] encrypt speed: 922 ms
+[JCE RC2] decrypt speed: 954 ms
+[JCE RC4] encrypt speed: 921 ms
+[JCE RC4] decrypt speed: 579 ms
+[nativeRC4] encrypt speed: 812 ms
+[nativeRC4] decrypt speed: 797 ms
+
+10000 time speed test. data size = 8404
+[JCE DES] encrypt speed: 13797 ms
+[JCE DES] decrypt speed: 14218 ms
+[JCE DESede] encrypt speed: 34860 ms
+[JCE DESede] decrypt speed: 35828 ms
+[JCE AES] encrypt speed: 4969 ms
+[JCE AES] decrypt speed: 5500 ms
+[JCE BLOWFISH] encrypt speed: 4234 ms
+[JCE BLOWFISH] decrypt speed: 4766 ms
+[JCE RC2] encrypt speed: 7312 ms
+[JCE RC2] decrypt speed: 8078 ms
+[JCE RC4] encrypt speed: 2203 ms
+[JCE RC4] decrypt speed: 2641 ms
+[nativeRC4] encrypt speed: 1422 ms
+[nativeRC4] decrypt speed: 1344 ms
+||<
+　データサイズがそれなりにあると配列要素へのアクセスはネイティブの方が幾分か有利ではあるが、8Kのデータで0.1msほど速くなる程度でしかない。RC4であればデータ長が小さくても大きくても一定のパフォーマンスを得られているのでJCEのもので十分だ。他の暗号アルゴリズムの速度とは雲泥の差がある。暗号化アクセスログに3DESやBLOWFISHを選択すると実用に耐えられないことがよく分かる結果となった。

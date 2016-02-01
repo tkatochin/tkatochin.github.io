@@ -1,0 +1,4 @@
+　なんだ簡単だったー。Chrome,firefox,safari,IE8,Operaでメッセージのやりとりができる。
+http://javascript.info/tutorial/cross-window-messaging-with-postmessage
+　今までCoockieとJSONP組み合わせてたけど、とてもシンプルになった。
+　postMessageの第二引数は、相手ドメインのRealm。受け側のev.originは送り側ドメインのRealmということだけ注意すれば全く簡単。

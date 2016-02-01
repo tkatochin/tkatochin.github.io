@@ -1,0 +1,9 @@
+　「別のリポジトリのデータを取り込む方法が調べたけど無かったので、最新だけコミットすることにしました。」とあるお客さんのシステム部から連絡があった。まさか！方法はあるでしょー。ただその時は「調べた」ゆーてるしツッコミは避けて聞き流すことにした。
+　で、電話の後やっぱり[http://subversion.bluegate.org/doc/ch05s03.html:title=方法はあった]。今後のこともあるので実験。
+>||
+Z:\> svnadmin dump fromrepos -r 1:551 > fromrepos.dump
+Z:\> svn mkdir -m "import other repos" file:///Z:/torepos/import
+Z:\> svnadmin load torepos --parent-dir import < fromrepos.dump
+||<
+　ぜんぜん簡単にできんじゃ〜ん。後はリポジトリ内の配置替えだけなので、TortoiseSVNでドラッグドロップで終わりだし。
+　ただ実際に移行しようとしていたデータベースは1.1GBあるので、ダンプは時間が死ぬほどかかるはず。言わなくて良かったかも。

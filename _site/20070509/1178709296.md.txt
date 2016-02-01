@@ -1,0 +1,3 @@
+　これまでCobaltのmajorDomoのためにカスタマイズしたりもしてきましたが、ようやくCobaltから、Xenのサーバー内のmailmanに移行です。
+　でもMLの通し番号を引き継ぎたいなーとググったら、番号を変更するやり方を紹介している素晴らしいページがありました。http://slack.cals.gr.jp/archives/000342.html
+　

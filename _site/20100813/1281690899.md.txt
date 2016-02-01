@@ -1,0 +1,2 @@
+　キーワードに全てのヘッダが使えれば良いのになぁ。。。
+　received:(@hogehoge.com) とか、return-path:(@hogehoge.com)とか、書ければ完璧なのに。

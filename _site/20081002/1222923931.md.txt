@@ -1,0 +1,2 @@
+　DragEventArgs.Data.GetData()の話。"Shell IDList Array"でMemoryStreamをとってセッセと昔ながらにSHGetPathFromIDListを読んでいってstring[]を返す関数を作ってしまった。しかもユニコード文字が含まれているファイル名が？になっちゃうし((ピンボケをワイド文字列版でやらなかったせいだろうけど))。
+　DataFormats.FileDropだけでユニコードファイル名も問題ないstring[]が普通に返るのにさ。orz

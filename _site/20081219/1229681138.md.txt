@@ -1,0 +1,1 @@
+VtblCallピンチとか言ってたけど、そもそも 64bit版WinSafariってあるのか？というかターゲットがpluginじゃなくRCPなので64bit版を考えなくていいじゃんという結論に達した。64bitWindowsで32bitRCPが動かないわけじゃないし。いーらない。

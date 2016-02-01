@@ -1,0 +1,19 @@
+　web.xmlを編集していると、eclipseでエラーだとうるさい。amaretas html editor と web toolプラグインを入れていると、どっちかがスキーマ検証してくれるようだけど、エラーの意味が分からなかった。schemaLocationを指定しているのに、「cvc-elt.1: Cannot find the declaration of element 'web-app'.」と、「SchemaLocation: schemaLocation value = 'http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd' must have even number of URI's.」といったように怒られてしまう。
+>|xml|
+<?xml version="1.0"?>
+<web-app
+    xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+    version="2.4">
+      ：
+</web-app>
+||<
+　偶数個必要ってなんだ？？と思いながら調べたところ、ようやく分かりました。ネームスペース 対 XSDファイル という書き方をしなくちゃなんですね。スペースで区切って記述することで解決しました。
+>||
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+                       ↓
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+||<
+
+　ちゃんとした書き方してないとこを参照しちゃってたため…。＠ITでさえね。http://www.atmarkit.co.jp/fjava/javatips/037container004.html とか。eclipseのWSTのウィザード使えば自動的に書いてくれるんですけどね。Netbeansもできるようです。

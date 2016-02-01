@@ -1,0 +1,6 @@
+　全く見ているだけなら良いが動きを確かめさせるためにはCOMの実装を用意しなければならないようだ。具体的にはIWebUIDelegateが必要で、これはアプリ側が用意して IWebView.setUIDelegate(IWebUIDelegate)でセットしなければならないものだ。
+　レンダリング以外の機能をアプリ側に委ねるために設けられているインターフェースでWebKitから「javascriptのalert,confirm,prompt画面を出せ！」とか、「ファイルを開いて選択してよこせ！」とか色々指示が飛んでくる。リードオンリーなビューの場合は何もしなくて良いかというとそうでもなく「スクロールバーを描画しろ！」とか指示が来る。スクロールバーはSafariが独自にカスタマイズしているのでIWebUIDelegate4のpaintCustomScrollbar(), paintCustomScrollCorner()で対応しないといけないようなのだ((しかしWebKit.dllのタイプライブラリでは、IWebUIDelegate2〜IWebUIDelegate4は非公開))。
+　で、COMなのでJavaで実装するのは無理（vtableアドレスで叩かれてしまうので）で、C++なりC# COMなりで提供しなければならない。やれやれ。
+　
+***追記(12/11)
+　うそうそ。公開されているWin-Safariでは、まだIWebUIDelegate4は実装されていない。普通にSafariのスクロールバーを表示させるのにIWebUIDelegate4は関係なかった。

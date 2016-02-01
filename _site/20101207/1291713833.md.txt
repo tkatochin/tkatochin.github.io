@@ -1,0 +1,29 @@
+　UiBinderの国際化手順は、[http://code.google.com/intl/ja/webtoolkit/doc/latest/DevGuideUiBinderI18n.html:title=こちら]にあるが、はまって数時間悩んだ。
+以下のようなui.xmlを用意する事で...
+>|xml|
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+    xmlns:g="urn:import:com.google.gwt.user.client.ui"
+    ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+    ui:generateKeys="com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator"
+    ui:generateLocales="default">
+    <g:HTMLPanel>
+	<ui:msg description="my app greeting">
+	Hello,
+	</ui:msg>
+    </g:HTMLPanel>
+</ui:UiBinder>
+||<
+こんなpropertiesファイルが生成されるはずだったのだが...
+>||
+# Generated from katochin.gwt.test.client.TestBinder1TestBinder1UiBinderImplGenMessages
+# for locale default
+
+# Description: my app greeting
+70FEBC419840FFAB3C91C81E9134E375=Hello,
+||<
+それが全く生成されない。オチは、検証用のUiBinderのCompositeが、エントリーポイントからnewされていないからビルドされないコードになっていたためだった。モジュールのsourceコードに含まれるものを全てJSにするわけではないんですね。気づかなかった。
+
+それにしても、無理矢理ですね。この手順。-extra 出力パス でコンパイルして吐き出されたディレクトリには、rpcLogやらManifestsやらsymbolMapsやらsoycReportやらがあって、まずこいつ等は何かから気を掛けてしまう。
+プロパティファイルを見つけて、その中からdescriptionがコメントとして一致するものを見つけて（これも見つけやすいように他のでdescriptionと被らないように付けておかないとならないでしょう。）、com.google.gwt.i18n.clientというなんと固定のソースパッケージにLocalizableResource_ja.propertiesを置いて、そこで全ての画面のMD5キー名のコピーしてきて対応するってことをしないとならない。
+　かろうじて国際化ができるようにしているだけの対処で、スマートさのカケラも無い。ui:msgで、keyなんか人が指定したら同じパッケージだから他の画面とぶつかる可能性があるからMD5でやっているってことだよね？どんだけー。
+　まあ、なんとか出来て良かった訳だけれども。UiBinderにしたことで国際化できなかったら、それこそ作り直しだし。

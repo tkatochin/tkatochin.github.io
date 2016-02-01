@@ -1,0 +1,57 @@
+　配布サイトが閉鎖されてるし、転がっていたkr.pragmatic.openexternal.jarをdropinsに入れても「ProvisioningException: No repository found.」
+とか言われて組み込めなかったので、Open External Toolsで茶を濁すことにした。
++ [Run]-[External Tools]-[External Tools Configurations...]を開く
++ Programで右クリnew。
++ 下記を記述してApplyする。
+
+*** Open Directory By Finder
+:Location:/usr/bin/open
+:Arguments:${selected_resource_loc}
+
+*** Open Directory By Terminal
+:Location:/usr/bin/osascript
+:Arguments:/usr/local/bin/opendirbyterminal ${selected_resource_loc}
+
+ターミナルを開く方は上記に出てきている通り、スクリプトファイルを作成する。
+>||
+sudo vi /usr/local/bin/opendirbyterminal
+||<
+で下記内容を記述して保存。
+>|lscript|
+on run argv
+  set pathParam to item 1 of argv
+  tell application "Terminal"
+    set thewindows to (every window)
+    do script "cd " & pathParam
+    activate
+  end tell
+end run
+||<
+
+Organize Favorites...にも当然追加。これでPackageExplorerのコンテキストメニューに登録出来れば文句なしなんだけどなー。
+
+***追記(12/27)
+とーりすがりさんに path toolsプラグインを教えてもらいました。自分でAppleScriptを書かなくても、
+eclipse/configuration/org.eclipse.osgi/bundles/465/1/.cp/scripts/cdterminal.scpt というスクリプトでターミナルにパスを渡せるようです。このスクリプトを開いてみました。
+>|lscript|
+on run argv
+	set cdTo to item 1 of argv
+	my terminalcd(cdTo)
+	return
+end run
+
+on terminalcd(cdTo)
+	tell application "Terminal"
+		activate
+		if (count of windows) is 0 then
+			do script ""
+		else if window 1 is busy or (not ((processes of selected tab of window 1) is {"login", "bash"})) then
+			do script ""
+		end if
+		do script "cd '" & cdTo & "'" in front window
+	end tell
+	return
+end terminalcd
+||<
+微妙に違うのは既存のターミナルを再利用するところです。（in front windowなので）
+eclipseから開く前に、開かせたいターミナルウィンドウをアクティブにしておけば、そこで開かれるので、こっちの方が良さげ。

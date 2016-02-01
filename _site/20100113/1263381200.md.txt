@@ -1,0 +1,10 @@
+　
+　http://vanirsystems.com/danielsblog/?p=256
+　でビルドエラーになったのでググったら、こちら↓に解決策が。
+　http://inwater999.wordpress.com/2009/09/29/eclipse%E3%81%A7monoc%E7%92%B0%E5%A2%83%E3%81%AE%E6%A7%8B%E7%AF%89snowleopard/
+　とりあえず Hello World は動いた。GUIはどうすんだかな。x11で動いてしまうという噂も聞いたけど。
+
+　それにしてもコード補完が何も無いので辛過ぎ。
+
+***Emonic Build Editorが動かん
+　nantは.buildファイルの定義を食ってビルドするようだけど、.buildファイルが開けない。emonic頼むよ。「Could not open the editor: Widget is disposed」となるが分からん。仕方ないので.buildファイルを直に書いていこうとしているが、cscの中に-pkg:dotnet.pcと同等のパラメータを渡す方法が分からん。

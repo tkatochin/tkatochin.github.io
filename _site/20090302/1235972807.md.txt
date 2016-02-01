@@ -1,0 +1,4 @@
+　最近tracで、tracプロジェクトごとにIRCのチャネルを作って、チャットログをsupybotで記録させ、tracのIRC Logプラグインで閲覧できるようにするということが社内で流行っている（らしている？）のですが、なんとirclogspluginは、NOTICE発言を処理できずに無視してしまいます。
+　多くのチャットクライアントでは複数行テキストを貼り付けて発言すると、自動的にNOTICE発言になります((もちろん設定は変えられるでしょうが))。本来のNOTICEの使い方とは違うようですが、クライアントが色の識別などを通常発言と異なるように示してくれるので、引用のブロックのように見えるわけで区別が付きやすくなります。
+　NOTICEの場合は、"日時 <katochin> 発言内容" ではなく、"日時 -katochin- 発言内容" とログに残るだけの違いしかありません。なので、irclogspluginの検索パターンに１つ追加してあげて、prefix nとしnをid="notice"としてマッチングさせて、違いが分かるように画面上では薄緑の背景色にnoticeをStyleで割り当てるという改造をしました。
+　[http://package.gluegent.com/~kato/share/irclogsplugin-0.11-katochin-patched.zip:title=ここ]に転がしておきますので、欲しい人は、展開してpython setup.py clean installしてapache restartしてみてくださいな。

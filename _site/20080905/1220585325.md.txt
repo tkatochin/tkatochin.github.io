@@ -1,0 +1,8 @@
+>|cs|
+　value == double.NaN
+||<
+  だとダメで、
+>|cs|
+double.IsNaN(value)
+||<
+じゃないと引っかからない。

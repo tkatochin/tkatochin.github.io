@@ -1,0 +1,257 @@
+　Tapestryの案件で、クラスタリングする必要がでてきたので土曜ぐらいからチョコチョコと調査した結果、ローカルで実現成功！！
+　今後のためにメモしておきます。Apache＋Tomcatだけで実現できました。最終的にはRedHat9に入れるのですが、Win2000上で確認作業をした内容を記録しておきます。
+
+***前提の環境
+　ちょうど私の開発マシンに入っていたのはApache2.0.47とTomcat5.0.28でしたのでそのまま使いました。これにmod_jk2を別途追加します。mod_jk2はjakartaが提供しています。
+　以前はApache連携のためだけに使ったmod_jk2がクラスタリングまで出来ると知りビックリ。ちゃんと死活を見てフェールオーバーしちゃいます。なかなか凄いです。
+***mod_jk2のダウンロード
+　今回使ったのはapache2.0.49用jk2.0.4でしたが難なく動作しました。mod_jk2は、http://jakarta.apache.org/site/downloads/downloads_tomcat-5.cgi の一番下までスクロールさせると「browse download area」「archives...」というリンクがあるので、どっちでも好きな方から入ります。browse download areaは見ているミラーサーバー内、archives...は、apache.org内です。Tomcatのバージョンがいくつか見えてますが、実はここより下ではなくParent Directoryをクリックして１つ上のディレクトリに行きます。tomcat-connectorsというディレクトリが見えますので、この中のjk2/binaries/win32/ に進んでダウンロードします。ソースビルドでも良いのですが、私はzipになっているもの((今回ダウンロードできたのは、jakarta-tomcat-connectors-jk2.0.4-win32-apache2.0.49.zip))をお薦めします。このアーカイブの中だと、dllという拡張子ではなくmod_jk2.soになっていますし、サンプル設定ファイルやドキュメントも含まれているためです((…とは言ってもCPUなどによってはソースビルドを余儀なくされる場合もあるでしょうが))。
+***mod_jk2の配置
+　mod_jk2.soは、%APACHE%/modulesに入れます。アーカイブ内にサンプルとなる設定ファイルが含まれているので、%APACHE%/confに、mod_jk2.confとworkers2.propertiesを入れます。最初は、それぞれmod_jk2.conf.sample、workers2.properties.sampleというファイル名ですのでリネームしてください。
+　mod_jk2.confは、workers2.propertiesの場所を記述しないとなりません。Apacheの在るディレクトリに合わせて以下のように下線の部分を修正します。
+>|apache|
+<IfModule mod_jk2.c>
+    #-----------------------------------------------
+    # Where to find the workers2.properties file
+    #-----------------------------------------------
+    #
+    JkSet config.file "C:/Program Files/Apache Group/Apache2/conf/workers2.properties"
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</IfModule>
+||<
+　次に、workers2.propertiesですが、最初は /examples/* が設定されています。目的のwebappに変更しないといけませんが、それには先にTomcatのwebappの構成から作る必要がありますので後にして、Tomcatの設定から参りましょう。
+　そうそう、もちろん .soはhttpd.confの中で忘れずにLoadModuleします。
+>|apache|
+LoadModule jk2_module modules/mod_jk2.so
+||<
+
+***Tomcatアプリケーションの設定
+web.xmlに次を追加します。これを書かないとクラスタリングの対象にならないので注意。
+>|xml|
+    <distributable/>
+||<
+dtdをよく見て適切な場所に書かないと起動時に怒られるので注意。eclipseのspindleを使っていると注意してくれます（でもspindleやりすぎな時も）。適当に言えば、filterなどよりも前で、display-name,descriptionよりも後ろです。
+
+***Tomcatのクラスタ設定を有効化
+　conf/server.xmlしか修正しません。クラスタリングの設定はデフォルトでコメントアウトされていますので、コメントを外します。
+>|xml|
+        <!--  -->
+        <Cluster className="org.apache.catalina.cluster.tcp.SimpleTcpCluster"
+                 managerClassName="org.apache.catalina.cluster.session.DeltaManager"
+                 expireSessionsOnShutdown="false"
+                 useDirtyFlag="true">
+            <Membership 
+                className="org.apache.catalina.cluster.mcast.McastService"
+                mcastAddr="228.0.0.4"
+                mcastPort="45564"
+                mcastFrequency="500"
+                mcastDropTime="3000"/>
+            <Receiver 
+                className="org.apache.catalina.cluster.tcp.ReplicationListener"
+                tcpListenAddress="auto"
+                tcpListenPort="4001"
+                tcpSelectorTimeout="100"
+                tcpThreadCount="6"/>
+            <Sender
+                className="org.apache.catalina.cluster.tcp.ReplicationTransmitter"
+                replicationMode="pooled"/>
+            <Valve className="org.apache.catalina.cluster.tcp.ReplicationValve"
+                   filter=".*\.gif;.*\.js;.*\.jpg;.*\.htm;.*\.html;.*\.txt;"/>
+        </Cluster>
+        <!-- -->
+||<
+***Tomcatのコピー
+　１台のマシンで試す場合はTomcatの複製を作る必要があります。もちろんクラスタ構成するアプリケーションは同一のものにしないといけません。既存のものをtomcat2というディレクトリ名にコピーしました。エイヤっ！て一気にやると、巨大ログの影響でメチャクチャ待つことになっちゃいました。。。logs,temp,workを除いてコピーするのが吉です。でも後で泣くことになるので、tomcat2の中にlogsとtempディレクトリは忘れず に作りましょう。Tomcatは勝手に作成してくれませんので。今回は３台構成を想定していたのでtomcat3というのも作りましたが、説明上特に有用でもないので省きます。tomcat2が構成できれば、後は増やし方は同じですんでね。
+
+***同一マシンで複数のTomcatを動作させるための設定
+　<a href="#refer">参考にしたサイト</a>にも書いていますが、複数台のマシンでなく１台で試す場合はポート設定をずらさないといけません。server.xmlのポート設定の修正箇所を以下に示します。反転している部分が対象になります。tomcat2のserver.xmlは例えば、それぞれ18005,18080,18009,14001というように１万代にすると楽です（参考サイトむいみこむ様さまで、確かに楽）。
+>|xml|
+<Server port="<span class="rev">8005</span>" shutdown="SHUTDOWN" debug="0">
+              ：
+            (略)
+              ：
+        <Connector port="<span class="rev">8080</span>" maxThreads="150" minSpareThreads="25" maxSpareThreads="75"
+               enableLookups="false" redirectPort="8443" acceptCount="100"
+               debug="0" connectionTimeout="20000" 
+               disableUploadTimeout="true"
+               useBodyEncodingForURI="true" />
+              ：
+            (略)
+              ：
+        <Connector port="<span class="rev">8009</span>" 
+               enableLookups="false" redirectPort="8443" debug="0"
+               protocol="AJP/1.3"
+               useBodyEncodingForURI="true" />
+              ：
+            (略)
+              ：
+        <Cluster className="org.apache.catalina.cluster.tcp.SimpleTcpCluster"
+                 managerClassName="org.apache.catalina.cluster.session.DeltaManager"
+                 expireSessionsOnShutdown="false"
+                 useDirtyFlag="true">
+            <Membership 
+                className="org.apache.catalina.cluster.mcast.McastService"
+                mcastAddr="228.0.0.4"
+                mcastPort="45564"
+                mcastFrequency="500"
+                mcastDropTime="3000"/>
+            <Receiver 
+                className="org.apache.catalina.cluster.tcp.ReplicationListener"
+                tcpListenAddress="auto"
+                tcpListenPort="<span class="rev">4001</span>"
+                tcpSelectorTimeout="100"
+                tcpThreadCount="6"/>
+            <Sender
+                className="org.apache.catalina.cluster.tcp.ReplicationTransmitter"
+                replicationMode="pooled"/>
+            <Valve className="org.apache.catalina.cluster.tcp.ReplicationValve"
+                   filter=".*\.gif;.*\.js;.*\.jpg;.*\.htm;.*\.html;.*\.txt;"/>
+        </Cluster>
+||<
+　設定し終わったら2つのTomcatを起動します。それぞれCATALINA_HOMEがちゃんと分かれて起動していることを確認してください。環境変数にあらかじめCATALINA_HOMEをセットしておいてしまうと、１つのTomcatの二重起動になるので注意しましょう。それでもPortのBindエラーが出る場合は、ポートの設定がどこか重複している箇所があるということになります。
+　起動時のログにはいつもと違う見慣れない内容が出力されます。クラスタマネージャがスタートしたことが示されているようです。このログの前後には、やたら空白行が出ています。
+>||
+Creating ClusterManager for context /gapp1 using class org.apache.catalina.cluster.sess
+ion.DeltaManager
+||<
+　上記のログが出ていない場合は設定に失敗している((例えばweb.xmlに、&lt;distributable/&gt;が無い場合など))はずです。
+　tomcat2を起動すると、tomcat1のログには次の内容が追加されます。例では 192.168.1.123がテストしているマシンです。
+>||
+2005/08/18 12:58:54 org.apache.catalina.cluster.tcp.SimpleTcpCluster memberAdded
+情報: Replication member added:org.apache.catalina.cluster.mcast.McastMember[tcp://19
+2.168.1.123:14001,192.168.1.123,14001, alive=0]
+||<
+　tomcat2を停止すると、居なくなったことを示すログが出力されます。
+>||
+2005/08/18 13:01:41 org.apache.catalina.cluster.tcp.SimpleTcpCluster memberDisappeared
+情報: Received member disappeared:org.apache.catalina.cluster.mcast.McastMember[tcp://
+192.168.1.123:14001,192.168.1.123,14001, alive=163500]
+||<
+　死活状態を互いに感知して動作しているようです。
+***workers.propertiesの設定
+　Tomcatが正常に動作していることが確認できたら保留にしていたworkers.propertiesの設定です。まずデフォルトでは同じコンピュータ内に１つTomcatが存在するという構成で設定されています。ポート8009に関する部分を複写して、tomcat2の設定を追加します。下記の「↓↓ここから↓↓〜↑↑ここまで↑↑」部分が複製してポートを変えたものです。18009がtomcat2のjk2コネクタのポートという前提で設定しています。
+>|sh|
+# Example socket channel, override port and host.
+[channel.socket:localhost:8009]
+port=8009
+host=127.0.0.1
+
+# define the worker
+[ajp13:localhost:8009]
+channel=channel.socket:localhost:8009
+group=lb
+
+#↓↓ここから↓↓
+# Example socket channel, override port and host.
+[channel.socket:localhost:18009]
+port=18009
+host=127.0.0.1
+
+# define the worker
+[ajp13:localhost:18009]
+channel=channel.socket:localhost:18009
+group=lb
+#↑↑ここまで↑↑
+||<
+　もし別のマシンを増やす場合、例えば 192.168.1.2というマシンにtomcat1の複製を配置する場合は以下を追加します。
+>|sh|
+# Example socket channel, override port and host.
+[channel.socket:server2:8009]
+port=8009
+host=192.168.1.2
+
+# define the worker
+[ajp13:server2:8009]
+channel=channel.socket:server2:8009
+group=lb
+||<
+　最後に対象となるwebappを記述します。デフォルトでは[uri:/examples/*]という記述になっている箇所を修正します。例としてクラスタリング対象のTapestryのwebappが、gapp1,gapp2だった場合を以下に示します。
+>|sh|
+# Map the Tomcat examples webapp to the Web server uri space
+[uri:/gapp1/*]
+group=lb
+
+[uri:/gapp2/*]
+group=lb
+||<
+　設定が終わったら、apache2を起動します。
+***実行確認
+　まず、http://localhost/gapp1 を実行します。ここから内部的に8009か18009にリクエストが割り振られて該当するTomcatに橋渡しされます。リクエストごとにログを出力するようにしたところ、セッションが有効になっているにも拘らず、ページ遷移のたび（アクセスするたび）に、tomcat1とtomcat2がランダムに実行されていました。
+　これは良くない方法です。なぜなら全てのセッションデータを各Tomcatサーバーが無駄に持たないといけなくなり
+セッションを保持するサーバーメモリを圧迫してしまいます。それなんでセッションアフィニティ（スティッキーセッション）という方式が一般的に使われているようです。セッションアフィニティであれば、非常時以外は同じクライアントからのセッション付きリクエストは、そのセッションを作成した１つのTomcatサーバーに流れます。そのTomcatがダウンしていない間は、他のTomcatがそのセッションを保持する必要がなくなります。非常時だけ代替サーバーに切り替わりますが、それも１台の代替サーバーだけがセッションを引き継ぐだけで、元のTomcatが復旧すると制御を返します。オンメモリになるセッション情報は常に１台のTomcatだけで賄われるようになります。
+　…と講釈を垂れても、Tomcatのデフォルトの設定ではSimpleTcpClusterというクラスを使っていて、いつも他の全てのTomcatにセッションデータを通知して皆で共有しちゃっています。SimpleTcpClusterはセッションに変更があるたびに、他のTomcatにTCPで転送します。セッションデータが大きかったり、セッション数が多くなったりすると、通信トラフィックが増えてパフォーマンスに影響が出ます。しかも常にオンメモリです。
+　Tomcatでは他にPersistenceManagerやJDBCManagerというセッションレプリケーションを使うと良いとドキュメントに書いています。しかし詳しく載っていなくてWebにも情報がなかなかありません。参考サイトの最後にJDBCManagerを使う参考になるところを置いておきます。その情報からまた試して、その調査結果を後日またレポートしたいと思います。期待しないでお待ちください…。
+
+***セッションアフィニティの設定
+　そんなわけでSimpleTcpClusterでは余り適用効果がないのですがセッションアフィニティ対応します。設定は難しくありません。Tomcatのserver.xmlとworkers.propertiesファイルに、Tomcat１つ１つを識別するIDを振るだけです。
+　まずserver.xmlですが、8082のProxy設定の少し下辺りにある、&lt;Engine&gt;にjvmRouteという属性を追加しtomcat1,tomcat2というように識別IDをつけます。
+>|xml|
+    <Engine name="Catalina" defaultHost="localhost" debug="0" jvmRoute="tomcat1">
+                                                              ~~~~~~~~~~~~~~~~~~
+||<
+　次にworkers.propertiesです。[channel.socket:...]設定に、tomcatIdというプロパティを追加します。
+>|sh|
+# Example socket channel, override port and host.
+[channel.socket:localhost:8009]
+port=8009
+host=127.0.0.1
+# ↓↓これを追加↓↓
+tomcatId=tomcat1
+
+# define the worker
+[ajp13:localhost:8009]
+channel=channel.socket:localhost:8009
+group=lb
+
+# Example socket channel, override port and host.
+[channel.socket:localhost:18009]
+port=18009
+host=127.0.0.1
+# ↓↓これを追加↓↓
+tomcatId=tomcat2
+
+# define the worker
+[ajp13:localhost:18009]
+channel=channel.socket:localhost:18009
+group=lb
+||<
+これだけでOKです。簡単です。
+
+***Tapestryの場合に必要な設定変更
+　実はTapestryに限らないのですが、セッション情報のデフォルトの同期タイミングを変更する必要があります。デフォルトの同期タイミングは、セッションにデータがセットされた時(session.setAttribute)と削除された時(session.removeAttribute)になっています。で、TapestryではIEngineのインスタンスそのものをsetAttributeされているので、Visitオブジェクトの内容の変化ではsession.setAttributeは実行されません。これでは全く同期されないのと等しい状態です。この解決方法は簡単です。&lt;Cluster&gt;のuseDirtyFlagを落とすだけになります。
+>|xml|
+        <Cluster className="org.apache.catalina.cluster.tcp.SimpleTcpCluster"
+                 managerClassName="org.apache.catalina.cluster.session.DeltaManager"
+                 expireSessionsOnShutdown="false"
+                 useDirtyFlag="false">
+                              ~~~~~~~
+||<
+　この設定変更によりセッション情報の同期は、各リクエストの終了時に行われます。パフォーマンスは落ちることになりますが、正常動作させるためには仕方がありません。尚のこと早くJDBCManagerの使い方をマスターせねば…。
+
+***もう１度実行確認
+　次の流れを確認してみました。
+>>
+tomcat2を起動
+　　　↓
+Webアクセスにより、tomcat2でセッション保存
+　　　↓
+tomcat1を起動
+　　　↓
+先ほどのWebアクセスを継続しtomcat2が制御していることを確認
+　　　↓
+tomcat2を終了
+　　　↓
+先ほどのWebアクセスを継続しtomcat1が制御を引き継いでいることを確認
+　　　↓
+tomcat2を起動
+　　　↓
+先ほどのWebアクセスを継続しtomcat2に制御が戻っていることを確認
+<<
+結果はバッチリ成功でした！！皆さんのところではどうですか？
+
+<a name="refer"></a>
+今回参考にさせていただいたサイトは以下になります。感謝です。<br>
+:「Tomcatメモ」:http://muimi.com/j/jakarta/tomcat5/
+:【連載 】Tomcat5の新機能 「第3回：クラスタリング機能」:http://www.stackasterisk.jp/tech/java/tomcat5th03_01.jsp
+:しいしせネット「Tomcat 5でmod_jk2を使ってしまう」:http://www.siisise.net/java/tomcat/mod_jk2.html
+:Brian's Waste of Time　「Clustering Tomcat is Easier than People Think」:http://kasparov.skife.org/blog/2003/10/01/

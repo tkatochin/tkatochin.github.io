@@ -1,0 +1,1 @@
+　[http://blogs.yahoo.co.jp/chartreuse_1605/54333063.html:title=こちら]で紹介されているように[SUID Lib Fix]をインストールするだけで解決。

@@ -1,0 +1,6 @@
+ error_logを見ると以下が出ていた。
+>||
+(20014)Error string not specified yet: Expected format '3' of repository; found format '5'
+||<
+　なんのことだか…と思っていたら、リポジトリデータベースの中のFORMATというファイルの内容のことだった。ちゃんと動作するリポジトリと比べると、動作するほうはFORMATファイルの値が3、ダメなのは5だった。新しいsvnからリポジトリを作成したからダメだったようだ。
+　対策するならapacheのmod_svnの方を最新にしなきゃなわけだが…放置。ダメなのを古いSVNでDB切りなおしておく。

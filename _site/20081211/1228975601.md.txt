@@ -1,0 +1,13 @@
+　[http://d.hatena.ne.jp/t-katochin/20081204/1228371014:title=12/3に無理ポと書いた]けど、org.eclipse.swt.internal.ole.win32.COMObjectで全然いけそう。
+Vtableのアドレス順にcallBackできるようになっている。例えばIUnknownは、OleClientSiteで次のように定義している。
+>|java|
+iUnknown = new COMObject(new int[]{2, 0, 0}){
+    public int /*long*/ method0(int /*long*/[] args) {return QueryInterface(args[0], args[1]);}
+    public int /*long*/ method1(int /*long*/[] args) {return AddRef();}
+    public int /*long*/ method2(int /*long*/[] args) {return Release();}
+};
+||<
+　org.eclise.swt.dnd.DropTargetでもWin32APIのRegisterDragDropに、COMObject.getAddress()で渡していたので、webkit on swt-winでは、IWebUIDelegateをこれと同じように実装してWebView.setUIDelegate(iWebUiDelegate.getAddress())にしちゃえば良さげ。
+　COMObjectのこのmethod0,1,2...はどうなってるのか見てみたら、ベタに、method79まで書かれていた。80を超えるメソッドを持つインターフェースはダメということに。Tableオフセット値を引数にした１つのコールバックメソッドだけで良いのに、この不思議な割り切りにちょっと受けた。
+　ちなみに、「int /*long*/」は、64bit版ビルドとコードを共有するためのアノテーションと思われる。コンバートしてビルドみたいなことをやってそうな感じ((swt-win32のsourceのant-build.xmlに、そういうコンバーターを叩いていると思われる箇所アリ))。他にもキャストは、「(int)/*64*/num」のように記述している。
+　swt-winからWin32APIやCOM周りを触る人は一応これに習って作ったほうが良いかもしれない。

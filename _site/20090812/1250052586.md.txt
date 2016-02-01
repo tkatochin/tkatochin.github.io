@@ -1,0 +1,3 @@
+　LiveProject viewerはTrialということなので他を探したところ、[http://gigazine.net/index.php?/news/comments/20090107_openproj/:title]で紹介されている、OpenProjがファイナルアンサー(死語？)っぽい。ビュアーじゃなく作れるし、java製だし、画面もある程度日本語化されてる。[http://sourceforge.net/projects/openproj/files/:title=ダウンロードページ]を見たら、ちゃんとWindows,mac,linuxが揃ってたし。
+　ただ、軽く操作してみた感じでは、LiveProjectの印刷のように、ガントチャートをページ内に収まるようにスケール調整できないようだ。
+　mac版は、macUpdateからもダウンロードできるようだ。http://www.macupdate.com/info.php/id/29072

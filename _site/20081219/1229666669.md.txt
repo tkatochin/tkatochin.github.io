@@ -1,0 +1,5 @@
+　先日強引に(BSTR,int,double)を、(int,int,int,int)にマッピングしたやつだけど、win32x86_64((しかし気持ち悪い名前だwin32が64bitサポートって時点でダサい。)) に対応するとなると合わない。
+>|java|
+public static final native int VtblCall(int fnNumber, int /*long*/ ppVtbl, int arg0, int arg1, int arg2, int arg3);
+||<
+arg0に、/*long*/がついてないので、BSTR が64bit版で失敗するということになる。今のところnative書き換えが必要なところまでいかなかったので、共通のswtビルドだけで済んでいたのに、これだとやっぱりJNI追加定義しないとならなくなる。しょうがねやるか。

@@ -1,0 +1,12 @@
+　federatedIdentifierが適当なだけの問題だった。Appsの場合は以下にすることでスキップできました。
+
++ MarketplaceのmanifestのOpenIdRealmは「https://まいあぷり.appspot.com」。
++ リダイレクトするURLは、第２引数はドメイン、第３引数はApps用のfederatedIdentifierである「https://www.google.com/accounts/o8/site-xrds?hd=ドメイン」。
+
+参考になったのは、木村さんのつぶやき（http://twitter.com/#!/a_kimura/status/17380250263）と、
+本家のgoogle-appengine-javaグループのスレッドです。
+https://groups.google.com/group/google-appengine-java/browse_thread/thread/ab95097cc217368b
+
+ありがとうございました。
+
+とは言え、そもそもfederatedIdentifierが無効で今までアクセスしていたのに、なぜ承認してしまえていたのか謎です。

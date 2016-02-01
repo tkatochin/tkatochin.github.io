@@ -1,0 +1,6 @@
+　http://googleappengine.blogspot.com/2010/05/app-engine-at-google-io-2010.html
+　Google Apps MarketPlaceと密に連携するための前提にもなる、OAuth Consumerを作るための機能が、1.3.4 ですでに組み込まれていたんですね。
+　App Engineのヘルプにも入ってますね。相変わらず英語のときだけしかメニューに表示されませんが。
+http://code.google.com/intl/ja/appengine/docs/java/oauth/overview.html
+　ただ、気になるのがこちらの、Jean-Lou Dupontさんの疑問。OAuthRequestErrorが起きるってやつ。
+http://googleappengine.blogspot.com/2010/08/app-engine-137-sdk-bugfix-release.html

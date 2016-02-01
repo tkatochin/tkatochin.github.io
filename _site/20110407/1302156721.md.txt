@@ -1,0 +1,2 @@
+　http://d.hatena.ne.jp/t-katochin/20110318/1300432259 で実行したシェルは、個々にインストールしているだけで、dependenciesが無いので、いまいち。。。。
+　各gdata jar内のMANIFESTのclasspathにある他のgdata jarの記述からdependenciesを起こしてPOM吐いてdeployまでできるよう改良したいなぁ.... うーん重い。

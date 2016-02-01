@@ -1,0 +1,8 @@
+　こういう時は make_win32.makの中を修正すればOK。例えば今回手元で、DLL/EXEのバージョンを取得するために、OS.javaに GetFileVersionInfo,GetFileVersionInfoSize,VerQueryValueを追加したんだけどそういう時は以下のように。
+>|make|
+#SWT_LIBS    = comctl32.lib shell32.lib imm32.lib oleacc.lib usp10.lib wininet.lib
+SWT_LIBS    = comctl32.lib shell32.lib imm32.lib oleacc.lib usp10.lib wininet.lib version.lib
+||<
+
+***追記
+　ビルドは成功するけど関数が存在しない旨の実行時エラーになる。.libのリンクで処理を書かなくても静的にDLLロードがされるもんだと思ったけど(VC/C++だとそうだったよね？うろ覚えだけど)、原因不明。時間なくて調査中断。

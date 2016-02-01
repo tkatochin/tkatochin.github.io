@@ -1,0 +1,5 @@
+　Tomcat5を使った最初の案件の時もハマった問題をすっかり忘れていた。さっき調査しながらようやく思い出した。
+もう今後は標語にして絶対忘れないようにしなければ。
+>>
+<big>Tomcat5をインストールしたら、server.xml内のConnector全てにuseBodyEncodingForURI="true" を追加するべし</big>
+<<

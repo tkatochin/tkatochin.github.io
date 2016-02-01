@@ -1,0 +1,93 @@
+　Microsoftの定義と意味合いが若干異なるが、バージョン番号の書式は「Major.Minor.Build.Revision」なので、Buildはビルド回数、RevisionはSubversionのリビジョンとなるようにしたい...ということで色々調査。
+　自動インクリメントは[http://autobuildversion.codeplex.com/:title]を、リビジョンの更新には、TortoiseSVNの[http://tortoisesvn.net/docs/nightly/TortoiseSVN_ja/tsvn-subwcrev.html:title]を使うことにしたが、SubWCRevコマンドはテンプレートファイルからAssemblyInfo.csを上書きするため、Build Version Increment Add-Inがせっかくインクリメントしたビルド番号を消してしまうことになる。しかも、AssemblyInfoを修正する際も、テンプレートファイルの方を修正しなければならないので、Visual StudioのPropertiesエディタが意味をなさなくなったり、一々気を遣うことになる。
+　そんなわけで、ビルド前イベントでテンプレートをAssembliyInfo.csに変換するだけではなく、その前に動的にテンプレートを最新のAssemblyInfo.csから作成するWSH用のVBSコマンドを作成した。
+***makeVersionInfoTemplate.vbs
+>|vb|
+'Usage: CScript //nologo makeVersionInfoTemplate.vbs
+Const ForReading = 1, ForWriting = 2
+Const adTypeText = 2
+Const adCRLF = -1
+Const adLF = 10
+Const adCR = 13
+Const adReadAll = -1
+Const adReadLine = -2
+Const adWriteLine = 1
+Const adSaveCreateNotExist = 1
+Const adSaveCreateOverWrite = 2
+
+If WScript.Arguments.Length <> 2 Then
+    WScript.Echo "Usage...:" & vbCRLF & " makeVersionInfoTemplate.vbs AssemblyInfo.csパス 出力するAssemblyInfoテンプレートファイル"
+    WScript.Quit 1
+End If
+
+fromAssemblyInfoFileName = WScript.Arguments(0)
+toAssemblyInfoTemplateFileName = WScript.Arguments(1)
+'UTF-8は処理できないので、Scripting.FileSystemObjectではなく asodb.streamを使う。
+'Set fso = CreateObject("Scripting.FileSystemObject")
+'Set fHandle = fso.OpenTextFile(fromAssemblyInfoFileName, ForReading)
+'allText = fHandle.ReadAll
+'fHandle.Close
+Set InStream = CreateObject("ADODB.Stream")
+InStream.Open
+InStream.Charset = "UTF-8"
+InStream.LoadFromFile(fromAssemblyInfoFileName)
+If Err.number > 0 Then
+    WScript.Echo "Can't open " & fromAssemblyInfoFileName & " for reading."
+    WScript.Quit 1
+End If
+allText = InStream.ReadText(adReadAll)
+
+pattern = "\[assembly: Assembly(.*)Version\(""([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)""\)\]"
+replacer = "[assembly: Assembly$1Version(""$2.$3.$4.$$WCREV$$"")]"
+
+Set regEx = New RegExp
+regEx.Pattern = pattern
+regEx.IgnoreCase = False
+regEx.Global = True
+replacedText = regEx.Replace(allText, replacer)
+
+'UTF-8は処理できないので、Scripting.FileSystemObjectではなく asodb.streamを使う。
+'Set fHandle = fso.OpenTextFile(toAssemblyInfoTemplateFileName, ForWriting, True)
+'fHandle.Write replacedText
+'fHandle.Close
+Set OutStream = CreateObject("ADODB.Stream")
+OutStream.Open
+OutStream.Charset = "UTF-8"
+OutStream.WriteText replacedText
+OutStream.SaveToFile toAssemblyInfoTemplateFileName, adSaveCreateOverWrite
+OutStream.Close
+
+Set InStream = Nothing
+Set OutStream = Nothing
+||<
+　正規表現置換では、AssemblyVersionだけではなくAssemblyFileVersionにも同じリビジョンが入るようにしている。上記のスクリプトファイルをソリューションディレクトリに配置して、各プロジェクトのビルド前イベントに以下を設定した。
+>||
+"$(SolutionDir)makeVersionInfoTemplate.vbs" $(ProjectDir)Properties\AssemblyInfo.cs $(ProjectDir)Properties\AssemblyInfoTemplate.txt
+
+"C:\Program Files\TortoiseSVN\bin\SubWCRev.exe" "$(SolutionDir)\" $(ProjectDir)Properties\AssemblyInfoTemplate.txt  $(ProjectDir)Properties\AssemblyInfo.cs
+
+del $(ProjectDir)Properties\AssemblyInfoTemplate.txt
+||<
+　これでビルド番号はビルドの度にインクリメントしつつ、リビジョンはSubversionのリビジョンが使われるようになった。しかもテンプレートファイルをSubversionで管理する必要もない（なのでビルド前イベントの中だけで作成され削除される只の中間ファイルでしかなくなっている）。
+　もうリリース作業の際にMajorとMinorをいじる以外には何もしなくて良くなった。良い感じ。
+
+***参考：
+- [http://d.hatena.ne.jp/aoki1210/20091009/p1:title]
+- [http://www.crystal-creation.com/software/technical-information/tool/version-control/tortoise-svn/version-number.htm:title]
+- [http://tabuyan.blog.so-net.ne.jp/2009-04-23:title]
+
+
+***追記(2010/07/16)
+微妙に、間違っていてうまく当たっていなかった。SolutionDirの末尾には\が付き、これが SubWCRev.exeに怒られていた。
+>>
+The WorkingCopyPath contains a quotation mark.
+this indicates a problem when calling SubWCRev from an interpreter which treats
+a backslash char specially.
+Try using double backslashes or insert a dot after the last backslash when
+calling SubWCRev
+Examples:
+SubWCRev "path to wc\\"
+SubWCRev "path to wc\."
+<<
+\を外すことはできないので、\\とさせることでうまくいった。
+↑はすでに修正している。

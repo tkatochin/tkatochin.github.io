@@ -1,0 +1,2 @@
+へぼいRegexpプラグインをこの間、恥ずかしくも晒しましたが、こんどはブラウザ版を晒します。JavaScript なので、クライアントでもちゃんと動くかどうか確かめられて一石二鳥。これで動いて確かめれば、安心して clientScriptingEnabledをtrueにできます。
+http://www29.atwiki.jp/katochin/pub/tech_utils/clientRegexpValidator.html

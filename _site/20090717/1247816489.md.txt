@@ -1,0 +1,10 @@
+　svnのWindowsバイナリをダウンロードするのに、いちいちログインさせられるCollabNetからしかダウンロードできないと勘違いしていた。SVNの古いバージョンがCollabNetからだと1.5.6しかなく困っていて((eclipseのちょっと前のSVNKitがsvn1.5.2の管理情報を使うから必要だった。))あっちこっち見て回ってようやく見つけた。
+>http://subversion.tigris.org/getting.html#windows:title>
+Windows
+	
+CollabNet (Certified binaries)
+Tigris.org: Apache 2.0 or Apache 2.2
+SlikSVN: 32 and 64 bit client MSI
+VisualSVN (VisualSVN Server)
+<<
+　上記で「CollabNet (Certified binaries)」へのリンクでしかできないものと思っていたが、「Tigris.org: Apache 2.0 or Apache 2.2」の方に行けばいいだけの話だった。Apacheとか書くから、svnのwebdavのapacheモジュールがあるだけだろうと勘違いしていた。

@@ -1,0 +1,1 @@
+　/Applicationsがごちゃごちゃになるので、開発アプリを全部、/Developer/Applications というディレクトリに入れていたら、うまく移行してくれませんでした。残念。

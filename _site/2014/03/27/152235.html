@@ -1,0 +1,30 @@
+<p>Doma Toolsが _Entityクラスや DaoImplクラスを吐いてくれなくて悩みに悩んでいたんだけど、やっと解決！</p>
+
+<p>まず、EclipseのUIから以下の画面のように設定すると、何が起きるかってことから話さないといけないんだけど…
+[f:id:t-katochin:20140327150847p:plain]</p>
+
+<p>上記の設定で、.settings/ の下に、org.eclipse.jdt.apt.core.prefs が出来て、
+&gt;|sh|
+org.eclipse.jdt.apt.aptEnabled=true
+org.eclipse.jdt.apt.genSrcDir=.apt_generated
+org.eclipse.jdt.apt.reconcileEnabled=true
+||&lt;
+こんなのが書かれる。
+…なんだけど、ここにヒトツ罠があって、これだけではなく実は org.eclipse.jdt.core.prefsにも以下のものが追加されてる！
+&gt;|sh|
+org.eclipse.jdt.core.compiler.processAnnotations=enabled
+||&lt;
+罠ってゆーかeclipseの仕様だから良いんだけど、この一連の挙動を mvn eclipse:eclipse では解決してくれない。</p>
+
+<p>だからウチラはmaven-eclipse-pluginのadditionalConfigでfile生成にて jdt.apt.core.prefsの方は解決させていたんだけど、jdt.core.prefsはお任せ状態だった。だって slim3-genは問題なく動くんだもん。</p>
+
+<p>同僚の環境でも出来たり出来なかったりするってゆーことで謎だったのはここで、設定画面で一旦チェックを外して保存、また開いてチェックして保存すると、 org.eclipse.jdt.core.compiler.processAnnotations=enabled が復活するので、「おお動く動く。はて？」となっていたってゆーオチだった。
+んでまたその後も不意に eclipse:clean eclipse:eclipseすることで再び動かなくなるってゆーことだった。</p>
+
+<p>ハマった。見事にハマった。</p>
+
+<p>仕方ないので、maven-eclipse-pluginが自動生成するorg.eclipse.jdt.core.prefsまで additionalConfigで上書きするってゆー苦渋の選択を余儀なくされるってゆーオチに。</p>
+
+<p>誰か maven-eclipse-pluginのコミッタに annotation processor対応してって伝えて〜。</p>
+
+<p>ちなみに見つけたのはウチの織田信成似の同僚。ちゃんと動くdoma-tutorialプロジェクトと目diffで発見！よく見つけてくれたゎ！ ＼(^o^)／</p>

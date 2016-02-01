@@ -1,0 +1,26 @@
+　[http://suga.parfe.jp/td/index.cgi?date=20060809#p01:title=sugaさんの日記]へのコメントです。デッドロックではなくウェイト・リークと呼ばれるもののようです。デッドロックであればJVMの機能で検出できますが、そうではなくBlocking＋waitの状態でnotifyがいつまで経っても来なくなってしまうという状況です（[http://www-06.ibm.com/jp/developerworks/java/050204/j_j-perf01215.html#resources:title=参考]）。DaoMetaDataFactoryImplのgetDaoMetaDataメソッドが同期対象のため、プールに返却していないトランザクション境界内からのDao参照が爆裂すると、getDaoMetaData内に入った唯一のスレッドがメタデータ取得のためにコネクションプールが空くまで待機してしまい、永遠にnotifyが来なくなるという状況に、運の悪いタイミングでのみ陥ります。
+　createDaoMetaDataがコネクション獲得に待機するので、これをブロックしないようにする対策を手元で行いました。s2-dao-1.0.35限定でのパッチですが以下のコードになります。メソッドでなくcacheオブジェクトを同期するだけにしてcreateDaoMetaDataがパラで要求され止まることがないようにしました。タイミングによっては同じDaoクラスのメタデータを複数回取ることになり幾分冗長ですが、最初に取得したメタデータのキャッシュを保証してリターンの重複を避けています。
+>|java|
+    public DaoMetaData getDaoMetaData(Class daoClass) {
+        String key = daoClass.getName();
+        DaoMetaData dmd;
+        synchronized (daoMetaDataCache) {
+            dmd = (DaoMetaData) daoMetaDataCache.get(key);
+        }
+        if (dmd != null) {
+            return dmd;
+        }
+        dmd = createDaoMetaData(daoClass);
+        synchronized (daoMetaDataCache) {
+            if (daoMetaDataCache.containsKey(daoClass)) {
+                dmd = (DaoMetaData) daoMetaDataCache.get(daoClass);
+            } else {
+                daoMetaDataCache.put(key, dmd);
+            }
+        }
+        return dmd;
+    }
+||<
+　問題が起きていた、開発環境で200スレッド、ステージング環境で1000スレッドのノーウェイトのリクエスト負荷試験を再試行したところ、解決したことを確認できました。と言っても、ロジカルに解決の実証はできないのですが。そもそもなかなか現象が出ないので、信頼に値するほどの長時間の負荷をかけ続けて納得するというしかない状況です。
+　koichikさんが[http://d.hatena.ne.jp/koichik/20060620:title=日記]にも書かれているように、なんでもO/Rに遅延ロードを任せると弊害が起きるというのは正にその通りだと思います。今回の現象で言えばメタデータ参照も、通常のトランザクション・コネクションプールの仕組みの中に含まれて遅延ロードしてしまっているために起きているわけですね。メタデータ参照専用のコネクションを別途用意すればgetDaoMetaDataがブロッキングしても問題は起きないと思います。が、ひがさんからのコメントもありますので私があれこれ考えても詮無きことですね。
+　こういった高負荷での検証や対策が数多く行われてくると、seasar,s2daoが頑強になって迫力がでてきますよね。いずれくる遠くない将来に期待。

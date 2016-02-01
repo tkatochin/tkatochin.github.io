@@ -1,0 +1,19 @@
+　GoogleアカウントのカレンダーのloginすべきスコープとAppsアカウントのカレンダーのloginすべきスコープは異なることが原因だった。
+　Googleアカウントはhttpで、Appsアカウントはhttpsであることが必須。要は以下のようにスペース区切りで指定すれば良いということだった。calendar以外のサービスを利用する場合も同様にスペース区切りで追加していけば良さげ。
+>|javascript|
+    // :
+    var scope = 'http://www.google.com/calendar/feeds/ ' +
+                'https://www.google.com/calendar/feeds/';
+    if (!google.accounts.user.checkLogin(scope)) {
+        var domain = prompt("ドメインを指定：", "");
+        if (domain == null || domain == "") {
+            google.accounts.user.login(scope);
+        } else {
+            google.accounts.user.login(scope, {"hd": domain});
+        }
+    } else {
+        // :
+    }
+    // :
+||<
+　こちらの情報([http://ameblo.jp/kury999/entry-10260196120.html:title])が無ければAppsは未対応と決めつけて諦めていたかも。助かりました。

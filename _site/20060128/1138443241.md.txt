@@ -1,0 +1,13 @@
+　納品先の実行環境がdebianということなので色々調べ中。これまでやったことをメモしておこう。
+***[http://www.vmware.com/download/player/:title=VMPlayer]
+　…は直ぐに手に入りますね。
+***VMディストロ
+　…を、VMPlayerのダウンロードページからリンクで[http://www.vmware.com/vmtn/vm/:title=バーチャルマシンセンター]というのが見つかりますが、debianが複数バージョンあるんですが、ダウンロード失敗かそもそもアップロードが失敗しているのか、小さいサイズのは取れなかった(CRCエラー)。しかたないので就業時間ぐらいかけて[http://www.netliving.com/:title=1GBのもの]をダウンロード。
+***設定とか
+　…最初からXにログイン。そもそもXあまり普段触っていないので辛くてよくわからん。まずXの解像度やキーボード設定を、ずっとコンソールからコンフィグファイルを探していたんだけど、ぜんぜんGUIからできることが判明。Applications-Desktop PreferencesのKeybord,Screen Resolutionだった。
+　キーボードはレイアウトがイメージで表示されて秀逸。仕事のディスプレイは今時ながら1024x768なので、Xのは1000x600にした。タスクバーやらなにやらがなければ1000x700がいいんだけど。
+ あとコンソールの色が気に入らないのが最初は変更方法がわからんかったけどふと気づいた。ProfilesのDefaultというやつをEditしちゃえば良かっただけだった。
+***ssh
+　debianはserviceやchkconfigは無いのね。とりあえず /etc/init.d/sshd start させたんだけど、認証に失敗する。どこで管理しているんだろ。/etc/ssh/ の中のどれかかなぁとは思うけどまだ未解決。
+***んでJ2SDK5は
+　はんばあぐさんとこから、ファウラーたんのとこにいって、[http://wiki.serios.net/wiki/Debian_Java_JRE/JDK_installation:title=ここ]に辿り付いた。うまくいくかはこれから。

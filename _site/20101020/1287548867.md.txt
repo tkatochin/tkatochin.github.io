@@ -1,0 +1,2 @@
+　crcdisk.sysまで読み込んだところで、一瞬ブルースクリーンになってリブートされちゃう。[https://discussionsjapan.apple.com/message/100534582;jsessionid=464F1AC79B570BD48255B16401590DB2.node0:title=こちら]と同じ感じ。レジストリを書き換えるやり方を[http://madeinpc.blog50.fc2.com/blog-entry-49.html:title=こちら]を参考に行ったところ（MacなのでBIOS設定はできないが）、状況は少し変わり、STOP ERROR 0x0000007B というブルースクリーンで止まるようになった。調べると[http://support.microsoft.com/kb/935806/ja:title=こちら]が該当する感じ。でも解決策見つからない。
+ ShadowProtectというツールが売っているけど、それもBootcampでいけるのか分からないし。

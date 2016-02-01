@@ -1,0 +1,6 @@
+　WindowsもLinuxもビルド大変だわ。まずLinux。configureでパッケージ各種ないない騒ぐので１つ１つ手動でがんばらないとなんない。[http://package.gluegent.com/~kato/share/Ubuntu-WebKit-build.log.html:title=UbuntuでのWebKitのビルドのログ]を置いておきます。
+　Windowsだと、buildfailedファイルが吐き出されて失敗。内容を見ると…
+>||
+XXQTMovieWinXX
+||<
+だけ書かれている。これってQuickTimeが入ってないとビルドできないってことか？ふう…明日につづく。

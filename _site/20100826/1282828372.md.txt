@@ -1,0 +1,1 @@
+　サンプルのPlainViewを使って実現すると、選択時の色をカスタマイズできない。巷で出てるTipsのように、ListViewItemのControlTemplateを差し替えてしまうと、GridViewRowPresenter に代替される、PlainViewでの何かがわからないので表示できない。うーんどうすりゃいい。

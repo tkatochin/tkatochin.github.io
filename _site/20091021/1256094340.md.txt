@@ -1,0 +1,11 @@
+hdパラメータで、AuthSub JS 使ってログインできたのに、こんなんが出て失敗する。(FirefoxとIEの場合。chromeでは「Error: [object Event]」に。）
+>>
+Error: Request via script load timed out. Possible causes: feed URL is incorrect; feed requires authentication
+<<
+hosted domainじゃなければうまくいく。
+
+が、しかしsafariやoperaだと無限にリダイレクトされて、サードパーティアプリからのアクセス要求画面が出続ける(クロスドメインが効いてない風)。
+いろいろ難儀だ。
+
+以下が参考になるかと思って試したが、一般公開しても変わらず。そもそもgoogle accountの方は一般公開してないのにちゃんとリストアップされるし。
+http://groups.google.co.jp/group/google-calendar-help-dataapi/browse_thread/thread/aa495e8548f65547

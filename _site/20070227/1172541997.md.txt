@@ -1,0 +1,2 @@
+　[http://gigazine.net/index.php?/news/comments/20060415_firefoxthunderbird/:title=FirefoxやThunderbirdのメモリ消費量を劇的に減らす方法]
+　まじで〜？と試したら95MBから一瞬で1.5MBになった。復元したら徐々に50MBまで上がってきた。

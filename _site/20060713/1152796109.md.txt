@@ -1,0 +1,2 @@
+　すごいツール発見！仕事で使っているWindows2000でも、ln -s ができる〜。沢山のプロジェクトでWEB-INF/libを共有できる〜。
+  http://homepage1.nifty.com/emk/symlink.html

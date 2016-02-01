@@ -1,0 +1,17 @@
+<p>ActiveObjectsの拡張性が無いのでクラスの上書きをしないといけないんだけどね。
+でも１つだけ。patchは以下。</p>
+
+<p>net.java.ao.builder.SupportedDatabase ってのが enumだからまずい。
+このenumメンバーに、Cloud SQL用のものを追加。自分は2番め辺りに入れたけどどこでも良いっす。
+&gt;|java|
+    GOOGLE_CLOUD_SQL(“jdbc:google:mysql”, “com.mysql.jdbc.GoogleDriver”)
+            {
+                @Override
+                public DatabaseProvider getDatabaseProvider(DataSourceFactory dataSourceFactory, String uri, String username, String password, String schema)
+                {
+                    return new MySQLDatabaseProvider(getDataSource(dataSourceFactory, uri, username, password));
+                }
+            },
+||&lt;</p>
+
+<p>結局MySQLなので、同じボキャブラリであるMySQLDatabaseProviderを使ってしまって問題ない感じ。</p>

@@ -1,0 +1,14 @@
+　enumもイケるのね。知らなかった。
+>|cs|
+    public Privacy AlbumPrivacy { get; set; }
+||<
+>|xml|
+    <ComboBox SelectedValue="{Binding AlbumPrivacy}" SelectedValuePath="Content">
+        <ComboBoxItem>EVERYONE</ComboBoxItem>
+        <ComboBoxItem>FRIENDS_OF_FRIENDS</ComboBoxItem>
+        <ComboBoxItem>ALL_FRIENDS</ComboBoxItem>
+        <ComboBoxItem>SELF</ComboBoxItem>
+    </ComboBox>
+||<
+　ComboBoxItemのContentに、数字を入れればint型プロパティにもBindできるし。stringももちろんイケる。
+　SelectedValuePathを指定しないとComboBoxItem型のオブジェクトそのものを評価しようとしちゃうので必須。

@@ -1,0 +1,2 @@
+　なにかというと、SWT.MOZILLAの場合、javascriptのpromptを呼び出すと、アクセスバイオレーションでプロセスごと落ちるという問題。やなもん見つけてしまった。Win32だけ。Macではおきません。FireFoxは3.0,3.1betaのいずれも。落ちてる箇所がDispachMessageのとこなのでそんなんあらゆるWindowsメッセージが集中するからステップ実行もできんし…てなわけで、swtを追っているというかトレースコード入れたいので試行錯誤していると。しかし道のりが長そうだなぁ。
+　無理やりソースフォルダにしたら、いろいろ言われるので、「Create Compatible Filter for xxxx」とか「Create Since problem filter for xxxx」というヒントに従いまくっているんだけど、こんなんでちゃんとビルドパス通るんだろうか。。。

@@ -1,0 +1,11 @@
+　履歴、クッキーをクリアして「http://まいあぷり.appspot.com/?domain=まいどめいん」の実行を試る。
+　１回目は「ドメインロゴ画像と、「リクエストしたページは無効です。」が表示される。
+　２回目は500error((10秒超えエラー。Request was aborted after waiting too long to attempt to service your request. This may happen sporadically when the App Engine serving cluster is under unexpectedly high or uneven load. If you see this message frequently, please contact the App Engine team. とか言われるけど))。
+　３回目はGoogleの認証画面が出てログインするとやはり500error((/setup?... まで来てoauth_token does not exist))。
+　４回目でやっとGoogleAccountがダンプされる。ただしProvisioningが効いていない感じ。
+>>
+GoogleAccount [apps=null, domain=まいどめいん, email=おいら@まいどめいん, firstName=null, key=GoogleAccount("http://まいどめいん/openid?id=あいでぃを示す数字列"), lang=null, lastName=null, oAuthToken=null, oAuthTokenSecret=null]
+<<
+manifestのnavlink,openIdRealmを、httpにしてもhttpsにしても結果は同じ。うーん、何が足りないんだろう。realmの問題がうまくスキップできるので磨きたいんだけどなー。
+　Marketplaceで、appengineがデフォルトでサポートしているopenidのSSO使って、ちゃんとrealmで確認画面がスキップできて、ログイン後のUserService.getCurrentUserにちゃんと中身が入るものを作ろうとしているんだけど、なかなか全てをクリアできない。困った。
+　とりあえずappengineのopenidでApps Marketplaceを確認画面スキップしたいのにそれさえ動かない。

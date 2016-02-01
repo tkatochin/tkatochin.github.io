@@ -1,0 +1,3 @@
+　1GBの開発環境で十分テストしたものが、3GBの本番機ではアクセスバイオレーションでJVMが落ちる。malloc, freeを使っているんだけど、これが何度か実行すると地雷を踏むようだ。困った困った。
+
+　…そういうわけで、malloc,free は使わずにどんな時もJNI経由（NewByteArray,GetByteArrayElements,ReleaseByteArrayElements）で実装するのが吉。

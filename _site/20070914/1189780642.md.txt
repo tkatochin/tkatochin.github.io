@@ -1,0 +1,8 @@
+　TerminalServiceでselenium-server.jarを仕掛けるとプロンプトをそのままにしておかなければならないのでリモートデスクトップからログオフできない。なので、プロンプトからのコマンドをサービスにするというものを作った。以前作成していた汎用のものがあったので設定変更とバッチファイルをいじることで、jarファイルで実行するものは簡単にWindowsサービスにできるようにした。
+　http://sites.google.com/site/tkatochin/home/programs/selenium-rc-winservice.zip
+　配置したディレクトリの指定（デフォはD:\selenium-rcになっている）とログインユーザーをiniファイルに記入した上で、
+>||
+selenium-server.exe /INSTALL
+||<
+…を実行するとSeleniumRCServerというサービス名でインストールされる。
+　localhostで動くか試したところ、僕のWin2000だとそもそもselenium-server.jarが動かないしXpマシンでも見えないブラウザがうんともすんとも応答しなかった。TerminalServer以外はダメなのかな。

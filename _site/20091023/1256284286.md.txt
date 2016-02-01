@@ -1,0 +1,5 @@
+　AuthSubの認証がSafariやOperaで出来ない理由が分かった。[http://4plus.jp/samples/google_contacts_data_api.html:title=4plusさんのところのデモ]がSafariで動作するのでいろいろ試したところ、welcome-fileが動的なものだとダメらしい。
+　もう一点。JSAPIのドキュメントにimgが必要な理由は、Operaのためだけに必要な処置ということが判明。Crossdomain Cookie injectionというブラウザ脆弱性のセキュリティホールを使ってgoogle gdata api for javascriptは実現しているが、Operaだけはイメージがないとインジェクションできないから。これはOperaは非同期リクエストが並列処理できなくてimgを置くとそれが可能になるという技によるもの（[http://developer.cybozu.co.jp/takesako/2007/06/opera_img-jsonp.html:title=こちら]が参考になる）。img-jsonpについては一昨日辺りに得た情報だったけど、微妙に関係性が不確かだったんだけど、さきほどの[http://4plus.jp/samples/google_contacts_data_api.html:title=4plusさんのところのデモ]がimgを置いてなくて、Operaだけが認証が通らない（g314-scope-0というのがサードパーティアプリのホストのクッキーに保存できない）ことが確認できたので、確信に変わった。
+
+　しかしブラウザ脆弱性を突いた、公式サービスって、大丈夫だろうか。Chrome以外いつか対策されるんじゃないかと心配になる。
+　動的なコンテンツでjsapiを使いたいので困っている。静的コンテンツのように色々エミュレーションしているが（Last-Modified 生成したり、If-No-Matchesのリクエストヘッダに対してETagに対して304 Not modified返すなど。）それでも完全でないのかSafariやOperaで動かなかったりするし。なかなかに一筋縄ではいかないようだ。

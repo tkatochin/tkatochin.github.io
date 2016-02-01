@@ -1,0 +1,4 @@
+　換装作業をやりやすくするのに両方にSynergy入れてみました。なんと今はSynergyKMというちゃんとGUI
+で動くやつがあるんですね。[http://sites.google.com/site/saburahu/Home/synergykm---mac%E6%97%A5%E6%9C%AC%E8%AA%9E%E3%82%AD%E3%83%BC%E3%83%9C%E3%83%BC%E3%83%89%E5%AF%BE%E5%BF%9C%E7%89%88:title=かなキーに対応しているの]を作っている人もいて((バージョンは少し古くなりますが))、だいぶいい感じです。
+　インストールが終わってから、インストーラに付属する設定(SynergyKM.Preference)のダブクリで設定を上書きすることで、かなキーが効くものになります。
+　

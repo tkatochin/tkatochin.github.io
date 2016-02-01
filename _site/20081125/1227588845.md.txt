@@ -1,0 +1,3 @@
+　スプラッシュはプロジェクトのルートにsplash.bmpを追加した上で、build.propertiesに、icons/ と splash.bmp を追加すればいける。
+　でもチョイはまった。最初は、splashHandlerをextensionに追加すれば良いのかな？と追加したけど、splash.bmpが追加されるものの、build.propertiesは更新されないもんだから、eclipseからの実行では確認できるにもかかわらず、productとしてexportするとスプラッシュに出ないという状態になる。
+　新規pluginプロジェクト作成ウィザードの最後で「add branding」へのチェックを忘れさえしなければ良いというオチ。しかも只の絵だけならsplashHandlerはいらない。

@@ -1,0 +1,4 @@
+　[Add Required Plugin]で解決しないが、実は関連性があって、加えておかないと正しく実行できなくなる。…ものがある。見つけたら付け足していく予定。
+
+|*加えたいplugin|*実は必要なplugin|*加えないと…|
+|org.eclipse.wst.web.ui|org.eclipse.core.runtime.compatibility|Web Static Project作成ウィザードが動作しない。|

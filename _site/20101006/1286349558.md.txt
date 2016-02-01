@@ -1,0 +1,4 @@
+　gwt-gadgetのサンプル「Traveler」が、そもそもGAEとOAuthが組み合わさった良い感じのサンプルだと言うことを、[http://googlewebtoolkit.blogspot.com/2010/06/google-api-libraries-for-google-web.html:title=こちら]の情報でようやく理解し、まずは屠ってみた。でも、GAEのOAuth使ってないよ。oauth*20100601.jarという３つの別ライブラリを入れて使っている。せっかくGAEプロジェクトになっているのに惜しい。
+***追記
+　こりゃダメだ。gwt-mapsなんていう直接的なプロジェクト作り込んで、それを使っている。http://code.google.com/p/gwt-google-apis/
+　他のgdata APIのGWTブリッジが無いんじゃどうしようもないよ。

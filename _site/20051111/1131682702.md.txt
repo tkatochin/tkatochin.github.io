@@ -1,0 +1,27 @@
+　社内向けにはレポートしてたけど、ここにパッチをアップするのをすっかり忘れていました。
+　そういうわけで<s><a href="/download/ognlruntime.zip">ここ</a></s>((すみません。どこかにやっちゃいました。))に修正の入ったOgnlRuntime.javaを置いておきます（ちょっと無理やり１つのクラスだけに収めた感があるので恥ずかしいですが）。
+　実装としては、パーマネントなクラスと（実はObjectAccessorなど定義として保管しなければいけないものもるため）、テンポラリなクラスとを切りわけられるようにしたという感じです。デフォルトでは全てはパーマネントなクラスとしますが、テンポラリクラスであることを示す正規表現パターンでクラス名とマッチしたものは、ある一定期間キャッシュされたままで参照がなければEntryを削除するということを行っています。
+　Tapestryの場合は、ApplicationServlet(の派生クラス)で、OgnlRuntimeに対して以下のイニシャル処理を書き加える必要があります。
+>|java|
+    public void init() throws ServletException {
+        OgnlRuntime.addTemporaryCacheClassNamePattern(".+\\$Enhance_[0-9]+$");
+        super.init();
+    }
+||<
+　これは、Tapestryはコンポーネントクラス（およびページクラス）のabstract classは次のような名前の拡張クラスでjavassistを介して自動生成するためです。
+>||
+org.apache.tapestry.components.Any$Enhance_423
+org.apache.tapestry.components.Conditional$Enhance_421
+org.apache.tapestry.components.Delegator$Enhance_452
+org.apache.tapestry.components.Foreach$Enhance_420
+org.apache.tapestry.components.Insert$Enhance_419
+org.apache.tapestry.contrib.form.FormConditional$Enhance_460
+org.apache.tapestry.contrib.table.components.inserted.SimpleTableColumnFormComponent$Enhance_459
+org.apache.tapestry.contrib.table.components.TableColumns$Enhance_451
+org.apache.tapestry.contrib.table.components.TableFormRows$Enhance_453
+org.apache.tapestry.contrib.table.components.TableValues$Enhance_455
+org.apache.tapestry.contrib.table.components.TableView$Enhance_456
+org.apache.tapestry.link.DirectLink$Enhance_424
+org.apache.tapestry.link.PageLink$Enhance_3635
+||<
+　上記に加え、アプリで作ったabstractなPageクラスも対象になったりします。普通の標準コンポーネントでこれだけ動的クラスとして生成されるので、リセットサービスでやはりどんどん増えちゃうというわけです。

@@ -1,0 +1,2 @@
+　複数のアカウントが使えるようになった模様。https://www.google.com/accounts/MultipleSessions
+　この機能はちょうど２ヶ月前ぐらいから実装された模様。http://www.itmedia.co.jp/enterprise/articles/1008/06/news023.html

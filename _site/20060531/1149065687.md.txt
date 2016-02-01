@@ -1,0 +1,12 @@
+　今まで自然に書いていたのですが、何気にwith構文の代替機能っぽいなと気付いたのでメモしときます。誰か気に入るかもしれないし。どこかで既出かもしれないけど個人的には発見した感じだったので。
+>|java|
+_thread = new Thread(this) {
+    {
+        setDaemon(true);
+        setName("mayaa.AutoPageBuilder");
+        setPriority(Thread.NORM_PRIORITY - 2);
+        start();
+    }
+};
+||<
+どんなクラスでもいけますがテンポラリな派生クラスになるので注意が必要ですけどね。

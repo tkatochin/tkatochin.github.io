@@ -1,0 +1,2 @@
+　Dokuwikiが使っている標準design.cssのfont-familyに、"Lucida Grande" が設定されていたためだった。
+　対策されている人もいるようで。→ http://pyotr.guru.ru/lucida.html

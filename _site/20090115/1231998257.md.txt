@@ -1,0 +1,1 @@
+　eclipseのデバッガが起動しなくなる。エラーメッセージは「Exception occurred executing command line.」とか、Vistaで。別のXpマシンでは大丈夫。なんでだろう。それにしても Moon Secure Antivirusはよく落ちる。

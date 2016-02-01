@@ -1,0 +1,1 @@
+　javaのclassは32bitでも64bitでも同じで、64bitのJITが頑張るって話をid:ashigeruさんに聞いた。JNIに踏み込まなければclassだけ差し替えればそのまま行けるようだ。やるなぁ。

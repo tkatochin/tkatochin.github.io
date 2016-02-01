@@ -1,0 +1,1 @@
+　数GBのログをどうにかしたかったので、ついでにsplitも作成しました。今のところ行単位での分割はできません。[http://sites.google.com/site/tkatochin/home/programs/split010.zip:title=→ダウンロード←]

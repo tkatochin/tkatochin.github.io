@@ -1,0 +1,19 @@
+いつかのために残しておく。
+>|sh|
+# unzip wordpress-me220.zip -d /var/www/html
+# chown -R apache.apache /var/www/html/wordpress
+# yum -y install mysql-server
+# service mysqld start
+# mysqladmin -u root password ******
+# mysql -u root -p
+Enter password: ******
+
+mysql> create database wordpress;
+mysql> grant all privileges on wordpress.* to "wordpress"@"localhost" identified by "********";
+mysql> \q
+
+# yum -y install php-mysql
+# service httpd restart
+||<
+
+…をやったら http://サーバー/wordpress/ で初期設定。

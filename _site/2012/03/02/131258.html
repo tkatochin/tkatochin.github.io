@@ -1,0 +1,12 @@
+<p>詳細まじめに見ようとしたら、
+&gt;http://download.oracle.com/otn-pub/jcp/servlet-2.5-mrel2-eval-oth-JSpec/servlet-2_5-mrel2-spec.pdf:title=Java Servlet 2.5 Maintenance Release 2&gt;</p>
+<h4>SRV.11.2 Specification of Mappings</h4>
+<p>In the Web application deployment descriptor, the following syntax is used to define 
+mappings:</p>
+<ul><li>A string beginning with a ‘/’ character and ending with a ‘/*’ suffix is used for path mapping.
+<li>A string beginning with a ‘*.’ prefix is used as an extension mapping.
+<li>A string containing only the ’/’ character indicates the "default" servlet of the application. In this case the servlet path is the request URI minus the context path and the path info is null.
+<li>All other strings are used for exact matches only
+&lt;&lt;
+たったこれだけだったっけ？ /*/abc とか /*/*.ext とか面倒見てくれないなんて、もうちょっと柔軟性持てよー。
+</li></li></li></li></ul>

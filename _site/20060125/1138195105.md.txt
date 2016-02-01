@@ -1,0 +1,29 @@
+　途方にくれていたけど、http://www.kbmj.com/tech/index.php?itemid=16&catid=2 で解決しそうな予感。
+　おんなじようにハマってググッたらココにあたるように、ログを置いときます。
+>|
+An unexpected exception has been detected in native code outside the VM.
+Unexpected Signal : 11 occurred at PC=0x400EE14C
+Function=memcpy+0x1C
+Library=/lib/libc.so.6
+
+Current Java thread:
+	at sun.awt.color.CMM.cmmLoadProfile(Native Method)
+	at java.awt.color.ICC_Profile.getInstance(ICC_Profile.java:706)
+	at
+com.sun.imageio.plugins.jpeg.JPEGImageReader.setImageData(JPEGImageReader.java:585)
+	at com.sun.imageio.plugins.jpeg.JPEGImageReader.readImageHeader(Native Method)
+	at
+com.sun.imageio.plugins.jpeg.JPEGImageReader.readNativeHeader(JPEGImageReader.java:543)
+	at
+com.sun.imageio.plugins.jpeg.JPEGImageReader.checkTablesOnly(JPEGImageReader.java:298)
+	at com.sun.imageio.plugins.jpeg.JPEGImageReader.gotoImage(JPEGImageReader.java:420)
+	at
+com.sun.imageio.plugins.jpeg.JPEGImageReader.readHeader(JPEGImageReader.java:536)
+	at
+com.sun.imageio.plugins.jpeg.JPEGImageReader.readInternal(JPEGImageReader.java:869)
+	at com.sun.imageio.plugins.jpeg.JPEGImageReader.read(JPEGImageReader.java:853)
+	at javax.imageio.ImageIO.read(ImageIO.java:1384)
+	at javax.imageio.ImageIO.read(ImageIO.java:1306)
+                :
+             (以下略) 
+|<

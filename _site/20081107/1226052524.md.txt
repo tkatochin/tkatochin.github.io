@@ -1,0 +1,19 @@
+　うーんWebCoreのビルドで失敗する。エラーだけまとめると以下のような感じ。
+>||
+c1xx : fatal error C1083: ソース ファイルを開けません。'..\..\WebKitBuild\obj\WebCore\DerivedSources\HTMLNames.cpp': No such file or directory
+c1xx : fatal error C1083: ソース ファイルを開けません。'..\..\WebKitBuild\obj\WebCore\DerivedSources\JSSVGElementWrapperFactory.cpp': No such file or directory
+c1xx : fatal error C1083: ソース ファイルを開けません。'..\..\WebKitBuild\obj\WebCore\DerivedSources\SVGNames.cpp': No such file or directory
+c1xx : fatal error C1083: ソース ファイルを開けません。'..\..\WebKitBuild\obj\WebCore\DerivedSources\XLinkNames.cpp': No such file or directory
+c1xx : fatal error C1083: ソース ファイルを開けません。'..\..\WebKitBuild\obj\WebCore\DerivedSources\XMLNames.cpp': No such file or directory
+fatal error C1083: include ファイルを開けません。'ColorData.c': No such file or directory
+fatal error C1083: include ファイルを開けません。'CSSPropertyNames.h': No such file or directory
+fatal error C1083: include ファイルを開けません。'CSSValueKeywords.h': No such file or directory
+fatal error C1083: include ファイルを開けません。'HTMLNames.h': No such file or directory
+fatal error C1083: include ファイルを開けません。'JSHTMLElementWrapperFactory.h': No such file or directory
+fatal error C1083: include ファイルを開けません。'JSJavaScriptCallFrame.h': No such file or directory
+fatal error C1083: include ファイルを開けません。'JSRGBColor.lut.h': No such file or directory
+fatal error C1083: include ファイルを開けません。'SVGNames.h': No such file or directory
+fatal error C1083: include ファイルを開けません。'SVGNames.h': No such file or directory
+fatal error C1083: include ファイルを開けません。'XMLNames.h': No such file or directory
+||<
+　症状的にはgperfがない人と似ているように見えるけど、WebKitビルド用に提供されているcygwinなのでgperfがあることも確認しているんだが。

@@ -1,0 +1,13 @@
+UNICODE表が欲しいなぁと思って作成したのが[http://throw.gluegent.com/~kato/share/unicode_list.html:title=コチラ]にあります。
+
+<!--
+[http://www29.atwiki.jp/katochin/pub/tech_utils/weblauncher.html:title=ランチャページ]です。
+最近履歴管理を行えるようにしたのでアップしました。Windowsでいう「普通のComboBox」をHTMLだけで実現するのは辛いですが、DHTMLでなんとかしました。
+ついでなので同じURL内にある他のDHTMLツールも。
+-->
+
+<!--
+テキストエディタ上でタブだけで区切った階層を示すテキストを用意し、コピペして入力することで、罫線でツリー化装飾してくれるツールが[http://www29.atwiki.jp/katochin/pub/tech_utils/treeTextMake.html:title=コチラ]にあります。
+コピペしたら、「変換後」タブをクリックするだけで結果が取得できます。メールや掲示板でのやりとりなどでは、重宝するんじゃないかなと思ってます。
+どれも手前味噌ですが良かったら。
+-->

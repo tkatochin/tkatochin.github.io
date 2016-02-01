@@ -1,0 +1,3 @@
+　objectタグで「Windows only」という制限ではあるがActiveXもいけた。試しに適当なFlashコンテンツを貼ってみたら表示された！…が、Flashのコンテンツがマウス入力を受け付けないみたい。しかも「objectタグがある場合はGUIエディタ使えない！」と、デザインツールが強制的にテキストエディタのみにしちゃう。
+　他に方法はないかと探していたら、google codeに[http://code.google.com/apis/gadgets/docs/gs.html:title=サンプル集とガジェットエディタ]なんてぇのを発見。でもModuleタグというのが分からない。しかもFlashコンテンツからではなく別のボタンから操作しているだけだからマウスが効くかどうかこれも怪しい。
+　デスクトップガジェットとiGoogleで動くガジェットはAPIが全然違うってことかも。いちおうiGoogleで作ったものはそのxmlモジュールのURLを「ガジェットを追加」で直接入力することでサイドバーにも入ることは確認した。[http://www.tkrb.jp/gadgets/pepper/gd/pepper.xml:title=ここのもの]とか。でもこれデスクトップガジェットがiGoogleがジェットの場合だけWebブラウザをコンテナとしているだけかな。

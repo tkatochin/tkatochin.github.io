@@ -1,0 +1,2 @@
+　touchから定期的にPCに対してpingしないと、PC側からtouchを認識しなくなるのだが、IPアドレスが煩わしくなってきたので、結局WindowsマシンにBonjour for Windowsを入れることにした。iTunesと違ってWin2000にも入るし。
+　これでtouchからは、ping xxxx.local でWinでもMacでもいけるようになった。

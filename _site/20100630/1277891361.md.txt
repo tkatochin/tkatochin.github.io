@@ -1,0 +1,2 @@
+　もーなんだよー。Processは p.StandardOutput.EndOfStreamとかロック上等なので絶対見ちゃダメ。よくよく見れば、p.OutputDataReceived、p.ErrorDataReceivedというちゃんとしたイベントハンドラが用意されているじゃなぁ〜い！
+　ぐぐって上位に来るのがアンチパターンだったから、ずっとはまっていた。id:rokugenさんが見つけてくれたおかげで、やっとデッドロックの問題を解決できた。やれやれ。

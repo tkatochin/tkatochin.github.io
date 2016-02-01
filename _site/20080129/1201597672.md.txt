@@ -1,0 +1,1 @@
+　これでだいぶストレス解消。Winからきた私は Option+Page Up/Downと、Page Up/Downを入れ替えないと気が済まない。Home,Endも行頭、行末にした。カット、ペーストには、Shift + Insert/Deleteを割り当てたかったが、前述したようにinsertキーがないのでダメだった。

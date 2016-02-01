@@ -1,0 +1,35 @@
+　毎回作ってはどこかにやっちゃうのでコピペ用。
+>|java|
+package com.gluegent.common.collect;
+
+import java.util.Enumeration;
+import java.util.Iterator;
+
+public class Iterables {
+    
+    public static <T> Iterable<T> from(final Enumeration<T> from)
+    {
+        return new Iterable<T>() {
+            public Iterator<T> iterator() {
+                final Enumeration<T> collection = from;
+                return new Iterator<T>() {
+                    @Override
+                    public boolean hasNext() {
+                        return collection.hasMoreElements();
+                    }
+                    @Override
+                    public T next() {
+                        return collection.nextElement();
+                    }
+                    public void remove() {
+                        throw new UnsupportedOperationException();
+                    }
+                };
+            }
+        };
+    }
+}
+||<
+
+*** 追記(11/2/25)
+はぁ〜ん！Collections.list() で十分ジャーーん。超いらねー。Collections.list()よりはメモリ食わないけれども。

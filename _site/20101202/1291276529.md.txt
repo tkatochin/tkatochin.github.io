@@ -1,0 +1,23 @@
+　GWTはモジュール毎に、JSにコンパイルされるクライアントコード領域を切ることになるが、サーバーサービスが同じ場合、モジュール毎にRPCのコピーを持つのは、なんとも愚策。
+　で、これの回避は、別プロジェクトで共通モジュールを作成すれば良い事が分かった。
+　web.xmlに書く場合も、url-patternを複数用意すれば良い。
+>|java|
+package ....common.client.service;
+
+@RemoteServiceRelativePath("shareService")
+public interface ShareService extends RemoteService {
+  // ...
+}
+||<
+>|xml|
+<servlet>
+  <servlet-name>shareService</servlet-name>
+  <servlet-class>....common.server.service.ShareServiceImpl</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>shareService</servlet-name>
+  <url-pattern>/gadget1/shareService</url-pattern>
+  <url-pattern>/gadget2/shareService</url-pattern>
+</servlet-mapping>
+||<
+　ちなみに別のプロジェクトでは、jarを作成する時に、copy-resourcesでクライアントjavaソースコードのtarget/classesへのコピーが必要。なんで別プロジェクトにするかというと、GWTビルドがソースパス上のモジュールだとentry-pointを探そうとして無い！とエラーを吐くため。無いなら放っておきゃ良いのに。

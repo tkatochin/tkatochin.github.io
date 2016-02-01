@@ -1,0 +1,1 @@
+最適化したかったので、[http://sites.google.com/site/tkatochin/home/programs/MDBOptimizer.xls:title=ここ]に転がしておく。MS stress tool のMDBがやたら重くなってきたので作成。

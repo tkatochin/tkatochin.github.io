@@ -1,0 +1,91 @@
+　COM Interfaceは、呼び出す側と呼ばれる側の２つの側面で取り扱う。便宜上、一方をinvoker、もう一方をdelegaterと呼称する。呼び出す側はinvoker。呼ばれる側の場合は自身がCOM Interfaceを実装していることを知らせるIUnknownを提供する立場（CoClass相当クラスの実装者）の場合はdelegaterとして取り扱う。
+　eclipseの実装流儀があるので以下にまとめる。
+　delegaterはCOMObjectクラスというものを扱う。COMObjectクラスではmethod0〜method79というメソッドが設けられていて、メソッド分のメソッドアドレステーブルを作り並びの位置ごとにCallbackのインスタンスを作成してOSネイティブのメソッドアドレスをマッピングしている。これでCOMの仕様に沿ったものができるのでこのテーブルへのポインタを、他言語のIUnknownポインタが引数として必要なメソッドなどに渡すことが可能となる。IUnknownではvtable offset 0がQueryInterface、1がAddRef、2がReleaseになっているが問い合わせられるとそれぞれmethod0,method1,method2が呼び出されるということになる。method0〜method79は下位クラスでオーバーライドされることを前提として設けられている。なにもしなければ hresultは COM.E_NOTIMPLが返される。
+　で、CoClass相当となる自身が実装すべきJavaクラスでは、COMObjectをanonymousクラスで継承実装しインターフェース名の先頭を小文字にしたフィールドをCoClass相当の自身のJavaクラス内に設けてデリゲート。メソッドはデリゲートしても実装は自身のクラス内で置きたいために、anonymousクラスでアクションリスナのようにしているようだ。複数のインターフェースを持たせた場合、各インターフェース実装で個別にQueryInterfaceを実装するよりも、全てを握っているCoClass相当のJavaクラスの１メソッドに集中させる方が都合が良いためだろう。
+　CoClass相当の実装クラスは特別なベースクラスは必要とせず自由。例えばBrowserのIE実装の場合はOleControlSiteを継承したWebSiteクラス内でdelegaterが使われている。もっと元をたどればWin32ウィンドウハンドルを持ち且つコンテナとして機能できるeclipse内では取り回しやすいCompositeとなっている。他にはIDataObjectのdelegaterを持つ、D&D関連のClipboardクラスは特に何かに依存する必要もないので唯のObject継承になっている。DragSource, DropTargetはWidgetを継承している。ドラッグ対象、ドロップ先のControlをparentにしてぶら下がる。それが都合が良かったのだろう。
+　例としてWebKitのIWebUIDelegateの実装(javaScriptのpromptで呼び出される画面の実装と、右クリックでポップアップメニューを出させない実装をしているもの)を作って登録するものを以下に示す。
+>|java|
+public class WebUIDelegate {
+  :
+    private COMObject iWebUIDelegate;
+  :
+    private void createCOMInterfaces() {
+        // 作成
+        iWebUIDelegate = new COMObject(new int[] { ...メソッド毎のパラメータ数を列挙する。IWebUIDelegateには51個ものメソッドがあるので大変だった。割愛... }) {
+          :
+            @Override
+            public int /*long*/ method24(int /*long*/ [] args) {
+                // テキスト入力画面で入力された文字列を返す。
+                String message = OSUtil.pszToString(args[1]);
+                String defaultText = OSUtil.pszToString(args[2]);
+                InputDialog dialog = new InputDialog(getShell(), DIALOG_TITLE,
+                        message, defaultText, null);
+                if (dialog.open() != Window.OK || defaultText.equals(dialog.getValue())) {
+                    OS.MoveMemory(args[3], new int /*long*/ [] { args[2] }, OS.PTR_SIZEOF);
+                    return COM.S_OK;
+                }
+                String result = dialog.getValue();
+                int /*long*/ psz = COM.SysAllocString((result + "\0").toCharArray());
+                OS.MoveMemory(args[3], new int /*long*/ [] { psz }, OS.PTR_SIZEOF);
+                return COM.S_OK;
+                /* 24. runJavaScriptTextInputPanelWithPrompt(
+                [in] IWebView* sender,
+                [in] BSTR message,
+                [in] BSTR defaultText,
+                [out, retval] BSTR* result); */
+            }
+          :
+            @Override
+            public int /*long*/ method28(int /*long*/ [] args) {
+                OSUtil.setToPHandle(args[3], OSUtil.INVALID_HANDLE_VALUE);
+                return COM.S_OK;
+                /* 28. contextMenuItemsForElement(
+                [in] IWebView* sender,
+                [in] IPropertyBag* element,
+                [in] OLE_HANDLE defaultItemsHMenu,
+                [out, retval] OLE_HANDLE* resultHMenu); */
+            }
+          :
+        };
+  :
+    }
+  :
+    public int /*long*/ getAddress() {
+        return iWebUIDelegate.getAddress();
+    }
+}
+||<
+　invokerは、12/3も示したとおり、VtblCallというメソッドが大量に、COMとOSにいくつもの引数パターンで定義されている。共通するのは、メソッドのオフセット位置と、Vtableの存在するアドレス（先に示したCOMObject.getAddress()が相当）の２つで、残りはそのインターフェースメソッドが必要とする引数パターンとなる。使用例はorg.eclipse.swt.internal.ole.win32.IUnknownクラスが分かりやすい。コードは昨日示した。上記で作成したIWebUIDelegateのインスタンスを渡すメソッドがIWebViewにあるが、そのメソッドをコールするinvokerの例を以下に示す。
+
+>|java|
+public class IWebView extends IUnknownWrap {
+
+    public static final String IID_STR = "{174bbefd-058e-49c7-91DF-6F110AA4AC28}";    //$NON-NLS-1$
+    public static final GUID IID = COMObject.IIDFromString(IID_STR);
+    private static final int VTI_SET_UI_DELEGATE = 10;
+  :
+  
+    public IWebView(int /*long*/ address) {
+        super(address);
+    }
+  :
+    public void setUIDelegate(WebUIDelegate webUIDelegate) {
+        /* 10. setUIDelegate([in] IWebUIDelegate *d); */
+        report(COM.VtblCall(VTI_SET_UI_DELEGATE, address, webUIDelegate.getAddress()));
+    }
+}
+||<
+
+　IUnknownはそのまま使えない（addressがセキュアjarでアクセス不能なので）のでIUnknownWrapというクラスを使っている。
+
+>|java|
+public class IUnknownWrap extends IUnknown {
+	
+    protected int /*long*/ address;
+	
+    public IUnknownWrap(int /*long*/ address) {
+        super(address);
+        this.address = address;
+    }
+}
+||<

@@ -1,0 +1,4 @@
++ [Properties/Settings] で [Plugins] の中に Other plugins の [Postscript Options]をクリック
++ Set DPI がデフォルトで96x96になっている。印刷用などに設定したEPSファイルであれば300dpiとか指定されているので修正する。
+EPSファイルからdpiを自動的に取得できないのかな？Photoshopで開くとちゃんと再現できるんだけどなぁ。
+　

@@ -1,0 +1,3 @@
+　うちはMS-Projectを使ってない。けど仕事で他社からmppが送られてきたのでビューアを探して試したところ、[http://www.kadonk.com/FreeProjectViewer.aspx:title=LiveProject] というのが一番良かった。他に[http://www.highlydeveloped.net/:title=HD Projette]というのがあったけど印刷できないし、フォントやレイアウトで横幅使いすぎてスクロールしないと全体が見にくい。使い勝手が悪くてたまらなかった。というよりは、HD Projetteは製品がビューア、LiveProjectは製品がほぼMS-Projectという差があるので、削った結果に差が出るのは仕方ない。でもビューアから大事な機能削ると、見えることは見えるオモチャ程度にしかならないので残念。そんなわけでLiveProject viewerお勧めです。
+***追記
+　あれ？家に帰ってインストールしたら、タイトルバーに(Trial: 7days left)って書いてる！ガーン。あれれ？最初から試用版だったっけ？明日会社でインストールしたのも確認しよ。

@@ -1,0 +1,14 @@
+　昨日の続き
+>>
+13:35 r_i* > jsapiのAuthSubでなく、他のライブラリでAuthSubのサンプルを動かしてみて、だめであれば今AuthSubが死んでいるということになりますね。
+13:36 r_i* > ただ、他のサンプルが動いた場合は、jsapiが変わったのか、jsapi用のAuthSubがあってそこが死んでいるのか、特定はできなさそうです。。
+15:14 r_i* > PHP版AuthSubは正常に動作しています。http://googlecodesamples.com/calendar/php/Calendar.php
+15:14 r_i* > 残念ながら、JSのAuthSubのサンプルはありませんでした。。http://googlecodesamples.com/
+15:16 r_i* > JS版のAuthSubサンプルありました。同じ死に方をしています。http://gdata-javascript-client.googlecode.com/svn/trunk/samples/calendar/meeting_notes/meeting_notes.html
+15:16 r_i* > そういえばこんなサイトありましたね。http://code.google.com/intl/ja/apis/gdata/samples.html#JavaScript
+15:19 r_i* > このサンプルは、安定版でなく、最新版のjsapiを使うように指定してありました。google.load("gdata", "2.x", {packages: ["calendar"]});
+15:20 r_i* > apiのバージョンについて http://code.google.com/intl/ja/apis/ajax/documentation/#Versioning
+17:01 r_i* > Googleグループ「Google Data Javascript Client」で、スレッドがたっています。http://groups.google.com/group/google-data-javascript-client/browse_thread/thread/ff197e2b66626631
+<<
+　で、今し方アクセスしたらちゃんと動作。どうやら復旧した模様。
+　実は単にGAEで動いていてQuotaに達したというオチだったりして。やめてー。

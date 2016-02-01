@@ -1,0 +1,9 @@
+　rhinoで"java"や"Packages"からの参照がundefinedで落ちていた原因は、mayaa内の実装に問題があったからだった。
+　VirualNativeObjectという "__global__" 識別子のためだけに用意したラッパークラスが新しいNativeObject型に追随できなかったから。そんなことをしなくても、普通のグローバルスコープに対して、defineProperty("__global__", globalScope, READONLY) とすれば良いだけだった。
+　1.7から実装されたコンストラクタのレイジーローディング機能（"java", "Packages" などの記述を検知してから初めて対応クラスとメソッドをロードする仕組み。この例であれば、NativeJavaTopPackageクラスが必要に応じてロードされる。）は、おかしな実装のVirualNativeObjectでは正しくハンドリングしきれないからというオチだった。orz
+
+　rhino-1.7系に対応したことでGAE上で動作させるために必要な対策はひととおり終わった。mayaaのsvnの最新リビジョン(いまのところ3411)からビルドするとできるmayaa-1.1.25-SNAPSHOTで、いけます。trunkに、mayaa-getting-start-gae プロジェクトもあります。
+
+　いろいろ制限もありますので、[https://www.seasar.org/issues/browse/MAYAA-63:title=JIRA]を参照のこと。もう少しテストを重ねていってから、-SNAPSHOTを取るつもりです。
+
+　さあて明日は mayaa+Cubby on GAEだ。

@@ -1,0 +1,8 @@
+　camelizeの反対の良い言葉が出ない。uncamelize, decamelize どちらも50歩100歩のGoogleヒット数なので一般的じゃないようだ。語源を考えるとformalizeなんだろうけど。
+>|java|
+formalize("camelCaseWords", " ") == "camel case words"
+upperFormalize("camelCaseWords", "_") == "CAMEL_CASE_WORDS"
+||<
+でもformalの語の示す範囲が広くて「言い当てた感」がない。その点では一般的ではなくでもdecamelizeなどのほうが良さげだ。英語圏の人が眉をひそめそうな気がしてならないが。うーん。
+***追記
+id:rtsさんにgeronimoでもdecamelizeらしいと聞いたので、decamelizeでfix。

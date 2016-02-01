@@ -1,0 +1,8 @@
+　探したけどサクっと見つからなかったのでサクっと作成。[http://sites.google.com/site/tkatochin/download/whereis.zip:title=→ダウンロード←]
+
+***<ins datetime="2007-06-27T19:46:02+09:00">2007/6/27追記</ins>
+ よくさがしたらwhich.batがあった。シェル１行だなんてスマート。
+<blockquote cite="http://www.atmarkit.co.jp/fwin2k/win2ktips/319which/which.html" title="whichコマンドを作る">
+@echo off
+for %%I in (%1 %1.com %1.exe %1.bat %1.cmd %1.vbs %1.js %1.wsf) do if exist %%~$path:I echo %%~$path:I
+</blockquote>

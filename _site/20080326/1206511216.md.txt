@@ -1,0 +1,2 @@
+　Web検索結果をCoverFlowイメージで表示するsearchme.comのβテスターになったので試したところ、なんとseasar2はちゃんとcomputer programmingのカテゴリになっていました。
+[f:id:t-katochin:20080326134538p:image:left:w640]

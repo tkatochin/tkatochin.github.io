@@ -1,0 +1,2 @@
+　DeltaManager使うとセッションが無制限に増える。DeltaManagerクラスのプロパティにmaxActiveSessionsがあり、これが-1がデフォルトでその場合に無制限ということなんだけど、server.xmlでどうやって設定すればいいんだろ…と悩んでいたところ、よく見たら何のことはなく属性で「manager.xxx] と書けば良いだけだった。簡単簡単。
+  [http://po2.realtimematrix.net/tomcat-docs/cluster-howto.html#Simple%20Cluster%20Configuration:title=Clustering/Session Replication HOW-TO]

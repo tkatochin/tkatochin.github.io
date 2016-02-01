@@ -1,0 +1,65 @@
+　eclipse swtのバグっぽい。XPCOMの、nsIPromptService(xulrunner-sdk/include/windowwatcherにあるよ)で、入力された文字列は PRUnichar **aValueに返却するようになっているが、ここに書き込む内容次第で落ちることが判明。swtではC.Mallocを使って返却する文字列のコピー領域を返しているが、これだと落ちる。XPCOMのメモリマネージャである、nsIMemoryを使ってMallocすることで落ちなくなる。MacやLinuxで落ちないのは、メモリマネージャの実装がWindowsと違うということだろうと推測する（確かめてないが、WindowsはWin32APIでグローバルメモリを取得・解放する関数があるし、そのメモリハンドルとmallocとは互換性はないし。）。
+　よくよく見ればaValueにdefaultValueが入っていたらnsiMemoryを使ってFreeしているんだから、nsiMemoryでMallocしないとやっぱり駄目ジャン。だってdefaultValueのままであろうと書き換えられようと、解放する責任はPromptの呼び出し側に任せる仕組みにどうしたってなるんだからさ。
+　Eclipse SWT Mozilla/common/org.eclipse.swt.browser.PromptService2.javaの Promptメソッドの中で、aValueに書き戻している箇所を修正することでなんとかなるにはなる。
+
+>|java|
+//これが既存 (swt v3449c) の死ぬパターン
+	cnt = valueLabel[0].length ();
+	buffer = new char[cnt + 1];
+	valueLabel[0].getChars (0, cnt, buffer, 0);
+	size = buffer.length * 2;
+	ptr = C.malloc (size);          // ←これがMozilla内に返ると死ぬ
+	XPCOM.memmove (ptr, buffer, buffer.length/*size*/);
+	XPCOM.memmove (aValue, new int /*long*/[] {ptr}, C.PTR_SIZEOF);   
+
+	if (valueAddr[0] != 0) {
+		int rc = XPCOM.NS_GetServiceManager (result2);
+		if (rc != XPCOM.NS_OK) SWT.error (rc);
+		if (result2[0] == 0) SWT.error (XPCOM.NS_NOINTERFACE);
+	
+		nsIServiceManager serviceManager = new nsIServiceManager (result2[0]);
+		result2[0] = 0;
+		byte[] aContractID = MozillaDelegate.wcsToMbcs (null, XPCOM.NS_MEMORY_CONTRACTID, true);
+		rc = serviceManager.GetServiceByContractID (aContractID, nsIMemory.NS_IMEMORY_IID, result2);
+		if (rc != XPCOM.NS_OK) SWT.error (rc);
+		if (result2[0] == 0) SWT.error (XPCOM.NS_NOINTERFACE);		
+		serviceManager.Release ();
+		
+		nsIMemory memory = new nsIMemory (result2[0]);
+		result2[0] = 0;
+		memory.Free (valueAddr[0]);
+		memory.Release ();
+	}
+||<
+>|java|
+// 対策後。
+// valueAddr[0](aValueが指し示していたdefaultText)の解放で使っているメモリマネージャを流用して獲得したところ解決した。
+	int rc = XPCOM.NS_GetServiceManager (result2);
+	if (rc != XPCOM.NS_OK) SWT.error (rc);
+	if (result2[0] == 0) SWT.error (XPCOM.NS_NOINTERFACE);
+
+	nsIServiceManager serviceManager = new nsIServiceManager (result2[0]);
+	result2[0] = 0;
+	byte[] aContractID = MozillaDelegate.wcsToMbcs (null, XPCOM.NS_MEMORY_CONTRACTID, true);
+	rc = serviceManager.GetServiceByContractID (aContractID, nsIMemory.NS_IMEMORY_IID, result2);
+	if (rc != XPCOM.NS_OK) SWT.error (rc);
+	if (result2[0] == 0) SWT.error (XPCOM.NS_NOINTERFACE);		
+	serviceManager.Release ();
+	
+	nsIMemory memory = new nsIMemory (result2[0]);
+	result2[0] = 0;
+	
+	cnt = valueLabel[0].length ();
+	buffer = new char[cnt + 1];
+	valueLabel[0].getChars (0, cnt, buffer, 0);
+	size = buffer.length * 2;
+	ptr = memory.Alloc(size);          // ← はい、これが肝です。
+	XPCOM.memmove (ptr, buffer, size);
+	XPCOM.memmove (aValue, new int /*long*/[] {ptr}, C.PTR_SIZEOF);
+	if (valueAddr[0] != 0) {
+		memory.Free (valueAddr[0]);
+	}
+	memory.Release ();
+||<
+しかし、swt本体変えてるから、複数プラットフォームごとにビルドしなきゃならないってことじゃん。さあてどうしたもんか。昨日のあのジェネレータかけるしかないか…。頼むよeclipse。
+　しかも同様のロジックが、ユーザー、パスワードを入力する画面でも存在するのでそっちも対応しなきゃならない。

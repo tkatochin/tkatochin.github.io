@@ -1,0 +1,13 @@
+日常的にLinuxさわっていない弱者のせいか、新鮮なこと多し。aptまで打ってタブキーしたらコマンド一覧でるんですね。
+>|sh|
+root@ttyp0[~]# apt
+apt                   apt-cdrom             apt-extracttemplates  apt-get               apt-sortpkgs          
+apt-cache             apt-config            apt-ftparchive        apt-show-versions
+||<
+それは驚き度10ビックラぐらい。「んふ」って言いました。
+本当に驚いたのは apt-get install eclipse-n でのタブキーの方。
+>|sh|
+root@ttyp0[~]# apt-get install eclipse-nls-sdk   ←勝手に補完された！！
+||<
+びびった。installできるものをリストアップするんですね。50ビックラ。
+驚き度ってなんだよ。意味わかんねーよ・冬

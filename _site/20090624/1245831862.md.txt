@@ -1,0 +1,19 @@
+　使える機能をうまく選択することで制限付きながらGAE/JでJavassistが扱えます。
+
+GAEではクラスパスが無いのでルックアップがうまくいきません。サーブレットやフィルタのinit()で以下のようにクラスパスを登録しておきます。
+>|java|
+    ClassPool pool = ClassPool.getDefault();
+
+    pool.appendClassPath(getServletContext().getRealPath("WEB-INF/classes"));
+
+    for (File file:
+            (new File(getServletContext().getRealPath("WEB-INF/lib")).listFiles())) {
+        String jarPath = file.getAbsolutePath();
+        if (jarPath.toLowerCase().endsWith(".jar")) {
+            pool.appendClassPath(jarPath);
+        }
+    }
+||<
+
+javassist3.1から追加されたクラスのファイル書き込み（CtClassのwriteFile()）はGAE内では使えないので、toClass()だけ使うようにします。
+そんなわけでプールから追い出されるたびに、毎回改造処理を走らせてtoClass()を得る必要があります。

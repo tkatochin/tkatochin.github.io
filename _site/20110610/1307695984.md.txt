@@ -1,0 +1,2 @@
+　マルチドメインのスコープが無いのはともかく、基本的なやつ、https://apps-apis.google.com/a/feeds/domain/#readonly ぐらいは用意しておくれよ〜。
+　organaization nameぐらい教えてくれー。

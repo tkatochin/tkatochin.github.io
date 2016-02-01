@@ -1,0 +1,23 @@
+　いい加減にnative2asciiから解放されたい。UTF-8対応してくれーと思っていたら、Properties#loadFromXMLなんてのが5から出ていた。こんな感じ↓。
+>|java|
+    @Test
+    public void xmlPropertyCheck() throws Throwable {
+        Properties properties = new Properties();
+        URL resource =
+            getClass().getClassLoader().getResource(
+                    "com/gluegent/commons/util/PropertyXmlTest.xml");
+        InputStream stream = resource.openStream();
+        properties.loadFromXML(stream);
+        assertEquals("ホゲ太朗", properties.getProperty("氏名"));
+    }
+||<
+   PropertyXmlTest.xml
+>|xml|
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties version="1.0">
+    <entry key="氏名">ホゲ太朗</entry>
+</properties>
+||<
+
+　けどResourceBundleで使えないじゃーんと思っていたら、6からはResourceBundle.Controlのカスタマイズというようなことで対応できるらしい。http://java.sun.com/developer/JDCTechTips/2005/tt1018.html#2
+　でも案件で6はしばらくないなぁ。。。

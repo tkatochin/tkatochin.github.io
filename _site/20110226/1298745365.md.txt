@@ -1,0 +1,6 @@
+　IPhoneサファリから[http://bit.ly/AZIHO:title]で測ってみた。
+
+|平均速度|Wi-Fi|3G|
+|下り|800kbps|1.15Mbps|
+|上り|242kbps|375kbps|
+　WiFiの方が遅いって... だめだホワイトBB終わってる。orz

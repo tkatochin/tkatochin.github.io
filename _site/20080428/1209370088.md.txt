@@ -1,0 +1,2 @@
+　を実現する方法探したけど、[http://sourceforge.net/projects/dqsd:title=DQSD]のソース読む限り、IOleControl,IDockingWindow,IDeskBandなどを実装したCOMにしないとならないので、C#でWPFだと絶望的なかんじ。とりあえず調査保留。
+　[http://blogs.dion.ne.jp/surviveplus/archives/6414106.html:title=こちらのハマリ情報]も参考になりました。IE上でのDeskBandはとりあえず要件にならなそうなので問題ないけど、やっぱC++でWPFとは別のモジュール書かないとだめだよね。

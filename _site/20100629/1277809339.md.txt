@@ -1,0 +1,10 @@
+　TextBlockの既定スタイルを作ると、そのForegroundが利いてしまい、TabItemのテンプレート（Expression Blendでスタイルを展開したものをベースにしたもの）で設定した選択時、非選択時にトリガしたForegroundが反映されない。
+　ぐぐったら[http://stackoverflow.com/questions/1130116/wpf-styling-tabitem-text-foreground-upon-trigger-such-as-isenabled-ismouseover:title=ありました]。
+>|xml|
+   <ContentPresenter.Resources>
+    <Style TargetType="{x:Type TextBlock}">
+         <Setter Property="Foreground" Value="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type TabItem}}}"/>
+    </Style>
+   </ContentPresenter.Resources>
+||<
+　上記のコードをTabItemのHeaderのContentPresenterのテンプレートの定義内に配置すればOKということで。なるほど。

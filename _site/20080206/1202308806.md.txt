@@ -1,0 +1,73 @@
+LeopardではObjective-C 2.0のコンパイラの恩恵が得られるので、対応するランタイム関数さえ用意すればiPod touchでもガベコレできそうな勢い。
+特別Objective-C2.0で追加されたもの（__weakや@propertyなど）を使わなければ、最低限２つの関数さえ実装できれば良いようだ。((ダウンキャストなどの強制的な型キャストを使っている場合は、更に objc_assign_strongCastも実装する必要がある))
+>|objcpp|
+id objc_assign_global(id val, id *dest);
+id objc_assign_ivar(id value, id dest, ptrdiff_t offset)
+||<
+ObjectiveC2.0のコンパイラに、-fobjc-gc-onlyを渡すとこれら関数を呼び出す.oファイルに変換される。ldには-mmacosx-version-min=10.5も渡さなければならない。crt1.10.5.oがundefとなるので、あらかじめ、cd /usr/local/arm-apple-darwin/lib;ln -s crt1.o crt1.10.5.oをしておく。
+参照は代入(assign)時に起こるので、そこがガベコレのフックポイントになるということなのだろう。グローバル変数用とインスタンス変数用に分けられている。
+ivarの方は、destからのoffset位置のメモリアドレスにポインタがあるものとしvalue相当のものを指し示すようにすれば良さそうだ。それぞれの戻り値に何を返せば良いか謎だがvalue相当のものだろうか((これは後にADCからDarwinのobjectiveCのソースコードを得たので判明。予想通りだった。))。
+一番面倒なところはコンパイルなので、これらの関数で適切に処置((ガベコレのためのメモリマネージャに登録したり抹消したりすること))すればいけそうな勢い。（もちろんその実装は自前で作らないとならない）
+これらの関数は、/Developer/SDKs/MacOSX10.5.sdk/ のlibobjc.dylibに含まれている。touchのファーム内のlibobjc.dylibには含まれていない。
+Leopardの公開ソースコード(Darwin9.0 objc4-371)が参考になるが、auto_zone.hがなくてコンパイルできない。どうもCoreFoundationのソース(CF-476)にありそうなんだけど、ADCからのダウンロードがnot found扱いになってる。だめじゃんADC。(([http://journal.mycom.co.jp/column/objc/097/index.html:title=こちら]によれば敢えてオープンソースにしていないらしいが…))
+
+仕方ないので古いCF-368.28を取得したがやはり内容が違うようだ。とりあえずobj-auto.mの内容を見て２つの関数がやりたいことは分かったので、GC効かないけど通すだけのコードを書いてテストしてみた。
+>|c|
+id objc_assign_global(id val, id *dest)
+{
+	printf("objc_assign_global start. val=%lx dest=%lx\n",(long)val, (long)dest);
+	*dest = val;
+	printf("objc_assign_global set dest after. *dest=%lx dest=%lx\n",(long)dest,(long)*dest);
+	printf("objc_assign_global end. ret=%lx\n",(long)*dest);
+	return *dest;
+}
+
+id objc_assign_ivar(id value, id dest, ptrdiff_t offset)
+{
+	printf("objc_assign_ivar start. dest=%lx offset=%u value=%lx\n", (long)dest, offset, (long)value);
+
+	id *slot = (id*) ((char *)dest + offset);
+	*slot = value;
+
+	return *slot;
+}
+||<
+
+すると、ほとんど問題なく動作することが確認できた。
+しかし、本当はobjc_assign_globalでルートとなるメモリマネージャに「到達する」ということを登録しなければならないようなので、それをしていないせいかある特定の条件では、クラスメソッド内で使用しているローカルインスタンスが誰も代入していないのにヌルになるという不思議な現象が起きた。((ObjectiveCのコンパイル結果で処理が加えられているのだろう。))
+>|objcpp|
++ (void)load: path:(NSString*)path target:(Preferences*)target
+{
+	@try {
+		NSDictionary* dictionary;
+		dictionary = [[NSDictionary alloc] initWithContentsOfFile:path];
+		@try {
+			// (1)…この位置でメモリを使う処理をどれだけ書くか否かがポイントになる。
+			NSMutableData *dummy = [[NSMutableData alloc] initWithCapacity:0];
+			int i;
+			for (i = 0; i < 1024; i++) [dummy appendBytes:(const void*)"\0" length:1];
+			[dummy release];
+		} @finally {
+			[dictionary release];
+		}
+	} @finally {
+		// ... 後処理
+	}
+}
+
++ (Preferences*)preferencesWithPath:(NSString*)path
+{
+	Preferences* preferences = [[Preferences alloc] init];
+NSLog(@"1 preferences=%lx",(long)preferences);
+	[preferences retain];	// ←コメントアウトしてもしなくても結果は変わらない
+NSLog(@"2 preferences=%lx",(long)preferences);
+	[Preferences load:path target:preferences];
+NSLog(@"3 preferences=%lx",(long)preferences);     // …(2) このログ出力で、preferencesの中身がゼロになることが！
+	return preferences;
+}
+||<
+上記のNSLogの3つ目で、誰も代入していないのにも拘らずpreferences=0 になってしまうのだ。ところが、1024回バイト拡張をしているループで数を減らすと、preferencesが0にならない。ある程度のメモリ確保があるとGCが成されるということが考えられる。ガベージコレクトが効かせられる土台が出来ているということは想像に難くない。
+ただ、どうやれば到達性のあるものかを通知できるのか、その手段が今のところ分からない。これが解決できれば、参照があるインスタンスが勝手にヌルになることを防げると思うのだが…。オープンでない、libauto.dylibのauto_zone_add_root関数が追えれば手っ取り早いのだが…。
+
+***追記
+ObjectiveCはコンパイラなのでプリプロセスという表現は微妙（コンパイラのフロントエンドから吐き出されるCソースコードのような中間形式の解析結果を想像して書いた）なので消した。中間形式ってどうやって見れるのかな？id:ashigeruさんに後で聞いてみよう。

@@ -1,0 +1,4 @@
+　アフィン変換の理解が曖昧なままなので、 CATransform3D構造体の要素を適当に弄って上手くいったに過ぎない感じに。
+参考になるところが結構あるので後で読む。
+http://www.ceres.dti.ne.jp/~ykuroda/oyaj/bone/basic3d.html
+http://ft-lab.ne.jp/cgi-bin/wiki.cgi?page=%A5%A2%A5%D5%A5%A3%A5%F3%CA%D1%B4%B9_3DCG

@@ -1,0 +1,4 @@
+　WebUtils.py の中でエラーになっている。そこで見つかったのが JSESSIONID_BLD なるもの。え？JSESSIONID以外にあるの？ 他にも <font color="green"># TODO replace JSESSIONID_ECH</font> というのも見つかる。なんだろう。なんか新しい仕様なんだろうか。
+　↑収集したテストケースがでかすぎて(tcpproxyで取得したら4MBほどの.pyに)、原因がつかめない。先頭から一部小分けにしたらちゃんと動いたのでJSESSIONどーのは関係なさげ。問題箇所を特定するために小分けしていくことにする。
+  
+　<del datetime="2006-08-01T10:39:10+09:00">仕方ないので、-newhttpplugin はあきらめてみる。</del> ←deprecatedって書いてる。でもフィルタ設定はどうすればできるんだろーと思ったら、どうも -httpでXSLTを渡せるからそれでOutputをカスタマイズしろということらしい。これってhttpToJythonScript.xslを改造しろということだろうか。うーん気が重くなってきた。

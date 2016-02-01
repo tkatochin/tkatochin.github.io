@@ -1,0 +1,1 @@
+　十中八九、Prettyビルドしてるか、gwt-maven-pluginで、gwt.draftCompileプロパティをtrueにしているかだ。

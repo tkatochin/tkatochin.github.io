@@ -1,0 +1,32 @@
+　3.3以降ではMacもトレイアイコンが使えるようになったが（swt.snippets.Snippet225がWinでもMacでも動作する）、イベントリスナの使い方をちょっとだけ気をつけないとならない。次のコードはトレイアイコンをダブルクリックするとプログラムを終了することを期待しているが、リスナから復帰してから呼び出し元でshellが閉じられていないことを前提としたプログラムが存在するようで、Windowsでは問題ないがMacではメモリアクセスエラーでクラッシュする。SWT.DefaultSelectionではタイミングが悪い。
+>|java|
+    :
+  final ToolTip tip = new ToolTip(shell, SWT.BALLOON | SWT.ICON_INFORMATION);
+    :
+  Tray tray = shell.getDisplay().getSystemTray();
+  if (tray != null) {
+    final TrayItem item = new TrayItem(tray, SWT.NONE);
+    item.setToolTip(tip);
+    item.addListener(SWT.DefaultSelection, new Listener() {
+        public void handleEvent(Event event) {
+          shell.close();
+        }
+      });
+  }
+    :
+||<
+　ダブルクリックではトレイアイコンを閉じ、トレイアイコンが閉じられる際にシェルを閉じるように先送りすればMacでも問題なく終了する。
+>|java|
+    :
+    item.addListener(SWT.DefaultSelection, new Listener() {
+        public void handleEvent(Event event) {
+          item.setVisible(false);
+        }
+      });
+    item.addListener(SWT.Hide, new Listener() {
+        public void handleEvent(Event event) {
+          shell.close();
+        }
+      });
+    :
+||<

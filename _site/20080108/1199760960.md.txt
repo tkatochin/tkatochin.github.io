@@ -1,0 +1,1 @@
+　フォアグラウンド実行だと動作するのに、-fを取ったとたん、CrashReportが吐かれて死ぬ。Mac OS X で。synergys, synergycとも。SynergyOSXに入っているsynergycでも同じ。TigerじゃなくLeopardなせいかも。

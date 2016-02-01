@@ -1,0 +1,1 @@
+　エフェクト関連の機能が変わっている。で、UIElement.BitmapEffectを使っていたのだが、「パフォーマンスすっげえ悪いからそのうち無くなるよ。UIElement.EffectにShaderEffectを組み合わせな」とObsolete警告がいちいち出る。でもそれってSP1入れてないとビルドできなくなるでしょ。

@@ -1,0 +1,1 @@
+　ショートカットの引数にuser.name定義しているたけど、よく忘れてexeを直接起動するので、きづくと @author katochin になっちゃう。-Duser.name=@author Taro Kato (Gluegent, Inc.) をiniに書きましたがどうでしょねー。user.nameに対する正式表示名のマップがあってそれを使えるようにならないかなー。

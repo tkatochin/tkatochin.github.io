@@ -1,0 +1,4 @@
+　Google AppsでGmailのその他メニューがfirefox4にあげた途端展開されなくなった。しばらくしたらGoogleの方が対策したようだけど。
+　
+　それ以外に、text-overflow: ellipsis; が効かなくなった感じ。
+　http://mattsnider.com/css/css-string-truncation-with-ellipsis/ ←これに従えば3.6までは動いていたんだけど、4.0では表示されているデモも動かない。

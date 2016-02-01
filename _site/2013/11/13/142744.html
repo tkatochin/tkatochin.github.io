@@ -1,0 +1,14 @@
+<p>eclipse.iniの -Dfile.encoding=utf-8
+でもなく、何かな〜と思っていたら、↓これをしろってゆーオチだった。
+[f:id:t-katochin:20131113142525p:plain]</p>
+
+<p>Java7からLANG環境変数で判断でき、JAVA_OPTIONSでの指定が要らなくなる（mvnコマンドなどでエラー扱いになるのでJava7にしたら定義しないほうが良い）。</p>
+
+<p>ただ、Eclipse内のコンソールにはLANGが未定義の状態となるので文字化けしまっていたようだ。</p>
+
+<p>***2013/11/18追記</p>
+
+<p>んで、LANGは .profileや.bashrcなどのターミナルでexportするんじゃダメで、GUIアプリには環境変数が渡されない。
+かと言って以前のOSXからあった ~/.MacOSX/environment.plistの定義は効かない。で、/etc/launchd.confってところまで辿り着いたんだけど修正しても効果が無い…。
+…で、こちら ↓ にはちゃんと書かれていて、ようやくLANGの定義が解決。ハマった。リブートすれば良いってことだったのねー。
+[http://osx.miko.org/index.php/Beginning_OS_X_Mavericks/%E3%82%A4%E3%83%B3%E3%83%95%E3%83%A9%E6%95%B4%E5%82%99%E7%B7%A8#.E7.92.B0.E5.A2.83.E5.A4.89.E6.95.B0.E3.81.AE.E8.A8.AD.E5.AE.9A:title=Beginning OS X Mavericks/インフラ整備編#環境変数の設定]</p>

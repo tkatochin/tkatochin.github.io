@@ -1,0 +1,4 @@
+そうだったのか。
+>http://insideflag.blogspot.com/2009/08/autorelease.html:title>
+なのでイベントループが一周するごとにautoreleaseされたオブジェクトは解放されることになる。XCodeのテンプレートだと、main関数の最初にNSAutoreleasePoolを作って最後にreleaseしていたので、autoreleaseされたオブジェクトはプログラムの終了時まで解放されないと勘違いしていた。
+<<

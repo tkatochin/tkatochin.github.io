@@ -1,0 +1,25 @@
+　SynergyサーバーとなるWindowsマシンよりiMacの立ち上がり速度が断然速いので、出社してマシンの電源を入れるとsynergyしない。
+　サーバーIP直指定の場合はsynergycが定期的にリトライしてつながるまで頑張るが、[http://d.hatena.ne.jp/t-katochin/20080110/1199949307:title=1/10に書いた]、nmbaddressコマンドを使うと引数の指定がないことになるのでsynergycが起動失敗する…ということが、その原因。というわけでログイン項目のスクリプトを以下のように修正。
+***SynergycStart
+>||
+do shell script "/usr/local/bin/kick_synergyc > ~/log/synergyc.log 2>&1 &"
+||<
+***kick_synergyc
+>|sh|
+#!/bin/sh
+while [ "" == "`/usr/local/bin/nmaddress Winのコンピュータ名`" ]
+do
+  echo " Winのコンピュータ名 not found. this program do retry at 20 seconds after."
+  sleep 20
+done
+/usr/local/bin/synergyc -f `/usr/local/bin/nmaddress  Winのコンピュータ名`
+||<
+　しかしなんだか煩雑。AppleScript使う意味があるのだろうか。というかLogoutHookを使っているのに対になるものがLoginHookじゃないのも気持ち悪いので、アカウントのログイン項目から設定するのをやめることにする。
+　LoginHookは[http://docs.info.apple.com/article.html?artnum=301446:title=この辺]にやり方があり、LogoutHookの時と要領が同じなので問題なくいけそう。
+
+***追記
+　LoginHookもOKだったが１点注意が必要だった。ユーザアカウントではなくrootで実行されるようで、$HOME/.loginHookというような感じでユーザー別にシェルファイルを用意することはできなかった。
+　ま、以下のような説明もあるので想像はつくが。
+>>
+(where /path/to/script is the full path to the script that you want to execute when a user logs in).
+<<

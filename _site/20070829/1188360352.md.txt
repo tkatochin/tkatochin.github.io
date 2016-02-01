@@ -1,0 +1,1 @@
+　SIのプロジェクトで使っていたeclipseEEで、そのままirenkaに移行したら非常にやりづらい。プラグインのソースが入っていないからだった。eclipse RCP/Pluginじゃないとダメか。Classicに戻るのもめんどいしなぁ。

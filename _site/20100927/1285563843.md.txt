@@ -1,0 +1,14 @@
+　[http://www.google.com/support/forum/p/apps-apis/thread?tid=09548d3cc19c871c&hl=en:title=こちらのスレッド]をヒントに、以下を試したところうまくいった。
+>|java|
+@FeatureName({"opensocial-0.8", "google.calendar-0.5", "google.calendar-0.5.read"})
+interface NeedsCalendarSet {
+	//
+}
+
+@ModulePrefs( ... // サンプルのまま
+)
+public class HelloGadgets extends Gadget<HelloPreferences> implements NeedsCalendarSet {
+  ...
+}
+||<
+やれやれ。やっとスタートラインについた。

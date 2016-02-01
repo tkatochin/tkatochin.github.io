@@ -1,0 +1,5 @@
+　2.1.0から2.1.1にしたら消えた。Deprecatedだったわけでもないのに酷過ぎる。setTextでHTMLをセットしたらエンコードされると思うんだけど代替策どうすりゃいいのさ。
+　getElement().setInnerHTML(); にしろってことかな？
+
+***11/07/05追記
+　Labelではなく、Labelを継承したHTMLを使えば、ぜんぜんOK！！HTML#setHTMLできます。

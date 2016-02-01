@@ -1,0 +1,1 @@
+ この間のVMware+debianより簡単。sources.listが充実していたので、普通にjava-packageが入った。knoppixに焼いて納品する予定。

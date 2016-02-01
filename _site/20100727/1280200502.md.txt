@@ -1,0 +1,26 @@
+　よく[http://developers.facebook.com/docs/authentication/permissions:title=Extended Permissions]の仕様を見ると、user_photos, user_videosというのがありますが、なんと、Facebook.Schema.Enums.ExtendedPermissionsには定義がありません。なので、Facebook.dllをバイナリそのままで使わずに、ソースコードでプロジェクト参照して、パッチを当てちゃいます。これらは実文字列として扱われるので、これだけのパッチでいけます。
+>|cs|
+    public enum ExtendedPermissions
+    {
+        :
+        user_photos,    // ← append
+        user_videos,    // ← append
+    }
+||<
+　で、DesktopSessionに、追加した列挙値を追加し、ようやくアルバム一覧が取れるようになりました。
+>|cs|
+    DesktopSession session = new DesktopSession(
+        AppKey,
+        FacebookSessionSecret,
+        FacebookSessionKey,
+        true,
+        new List<Enums.ExtendedPermissions>() { 
+            Enums.ExtendedPermissions.publish_stream,
+            Enums.ExtendedPermissions.share_item,
+            Enums.ExtendedPermissions.photo_upload,
+            Enums.ExtendedPermissions.video_upload,
+
+            Enums.ExtendedPermissions.user_photos,
+            Enums.ExtendedPermissions.user_videos,
+        });
+||<

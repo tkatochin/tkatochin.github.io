@@ -1,0 +1,4 @@
+[f:id:t-katochin:20070910130916p:image:right]
+　ディスティラもいきなりPDFもいらなくなった。注意点としては、GPL Ghostscript Setupの画面で「Use Windows TrueType fonts for Chinese, Japanese and Korean」にチェックを付けるぐらい（外すことを試してないけど）。
+　しかしXpマシンではすんなりいったBullZipPDFPrinterのセットアップが、Win2000ではインストール画面がいきなり謎な国で自動判断された。とりあえず自宅ではEnglishを選択していたはずなので、Englishで続行すればOK。
+　ファイル名やタイトルの入力ボックスでは化けるけど、暗号化もできるしイイ。

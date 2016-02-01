@@ -1,0 +1,4 @@
+　ISO絡みのツールに善し悪しがあったので備忘メモ。
+　ファイルからISOを作るのは、[http://senbee.up.seesaa.net/html/kijidukuri.htm:title=せんべえの生地作り] <del datetime="2010-09-01T19:35:14+09:00">「Free Create-Burn ISO Image」((最悪。Freeと言いながら数回使うと購入しないと使えなくなる。「MINIDVDSoft Free ISO Creator」と一緒じゃん))</del>。「MINIDVDSoft Free ISO Creator」はだめ。
+　DVDからISO作るのには「DVD Decrypter」。「DVD Shrink」はだめ。
+　

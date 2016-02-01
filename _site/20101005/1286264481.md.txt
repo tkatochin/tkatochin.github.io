@@ -1,0 +1,18 @@
+　なんとか動き出したので、手順を忘れないようにまとめておく。尚2.3は未だリリースされていない開発中のもの。しかし2.2より強力なので使う。私が特に欲しかったのはポップアップメニューがブラウザの表示領域を超えそうになる場合に高さを丸めて、スクロールバーが自動的に付くという改善点。これがないと見えない領域にメニュー項目が表示されて触れないという哀しいことになる。
+[f:id:t-katochin:20101005160937j:image:w520]
+
+** 1. ダウンロード
+　http://www.smartclient.com/builds/SmartGWT/2.x/LGPL/ から最新の日付のディレクトリを選択し、
+smartgwt.jarとsmartgwt-skins.jarをダウンロードしておく。全体が欲しい場合やShowCaseのコード全部を見たい場合はsmartgwt-2.3.zipをダウンロードすると良い。いずれにしても、適当なディレクトリに展開しておく。
+** 2. プロジェクトの作成
+　[File]-[New]-[Project...]で、WindowBuider/GWT Designer/Model/GWT Java Projectを使い作成。
+[f:id:t-katochin:20101005160938p:image:w520]
+　ウィザードの最後のページで Create GWT moduleを有効にして、Smart GWT を選択してFinish。
+[f:id:t-katochin:20101005160939p:image:w520]
+　すると、SmartGWTの場所を示すようにディレクトリ選択が表示されるので、2.3のsmartgwt.jarとsmartgwt-skins.jarを展開した場所を選ぶ。
+[f:id:t-katochin:20101005160942p:image:w520]
+** 3.<entry-point>の移動
+　必ずやらなきゃいけないのが、*.gwt.xmlを開いて、entry-pointを、smartGwtのinheritsよりも後に配置しなければならないということ。2.2では問題なかったが、2.3ではこれをしないと、ずっと謎のJavaScriptエラーに悩まされることになる。結構な時間これにハマった。orz
+[f:id:t-katochin:20101005160941p:image:w520]
+
+　後は普通にSmartGWTを使って作成していけば良い。

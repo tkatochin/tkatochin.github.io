@@ -1,0 +1,2 @@
+　deprecatedコメントで、epsilon が必要とかいう。これは final double EPSION = 0.0000000001; を宣言しておいて、題３引数 deltaに渡せばいいらしい。
+　rhino-js内でテストケース書いてて気づいた。Numberだからint比較できず全部doubleになっちゃうから仕方ないね。

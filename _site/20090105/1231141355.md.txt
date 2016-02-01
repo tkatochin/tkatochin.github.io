@@ -1,0 +1,27 @@
+　VC6.0SP6＋Plat form SDK for Windows Server 2003 R2のインストールと環境変数への設定でちょっと進んだが、${JAVA_HOME}\jre\bin\jawt.libが無いとかでビルドが引っかかる。JDKを見たら${JAVA_HOME}\libにしかなかったので、make_win32.makを修正してリトライ。
+>|make|
+#AWT_LIBS   = "$(JAVA_HOME)\jre\bin\jawt.lib"
+AWT_LIBS   = "$(JAVA_HOME)\lib\jawt.lib"
+||<
+それが解決したら、今度はXulrunnder周りが駄目な感じで引っかかる。includeパスやライブラリ関数が見つからない。SWTが想定しているディレクトリ構成と違う。ちょい調べたらなんとなく理由を発見。
+>http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg41948.html:title:bookmark>
+FWIW swt's xulrunner library is still (still == 3.5 stream) compiled against
+the xulrunner 1.8.0.4 SDK.  But as you say, as of 3.4 there is runtime
+support for xulrunner 1.9.x.
+<<
+なるほど。最新を取ってしまっていたのが駄目だったみたい。[http://mirrors.linux.edu.lv/mozilla.org/xulrunner/releases/1.8.0.4/sdk/:title=この辺]から1.8.0.4をダウンロードしてパスをセット。
+　で、ようやくビルド成功した。
+>||
+    :
+        [exec] 	copy *.dll ..\..\..\org.eclipse.swt.win32.win32.x86
+        [exec] swt-awt-win32-3449.dll
+        [exec] swt-gdip-win32-3449.dll
+        [exec] swt-wgl-win32-3449.dll
+        [exec] swt-win32-3449.dll
+        [exec] swt-xulrunner-win32-3449.dll
+        [exec]         1 個のファイルをコピーしました。
+[eclipse.refreshLocal] Warning: project org.eclipse.swt.win32.win32.x86 does not exist and cannot be refreshed.
+BUILD SUCCESSFUL
+||<
+イェスッ！って、5つ目のdllがorg.eclipse.swt.win32.win32.x86というファイル名でワークスペース直下にコピーされただけに。。。あらかじめワークスペース直下に、org.eclipse.swt.win32.win32.x86という名前のディレクトリを作っておかなければならないようだ。同じように各プラットフォームごとに集めるんだろうなと思うけど今のところWin32以外のパッチはないのでこれで以上か。
+　さて次は、swtのplugin-jarを作る方法を調べないと。[http://www.eclipse.org/swt/faq.php#howbuildplugin:title]に従ってみたけどswtの.classもネィティブdllも含まれない空っぽのjarができるだけ。ええっ！？copyやらjavacやらantタスク自分で書くの？絶対自動化しているやつ何処かにあると思うけどなー。

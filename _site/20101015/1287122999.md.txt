@@ -1,0 +1,3 @@
+　ヘビーに使っていると年老いてくるかのような重さになってくるので、SQLiteにvacuumかけてくれる[http://hitaaki.blog47.fc2.com/blog-entry-10.html:title=こちら]を使うと、いい感じに漲る若さ溢れるFirefoxに復活しやす。
+　ちなみにWindowsの場合は[http://www.padmacolors.org/entry/20090318/685/:title=こちら]で紹介されています。
+ 

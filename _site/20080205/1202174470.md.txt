@@ -1,0 +1,6 @@
+　以下を参考にしてアクセスに成功。
+>>
+http://hmdt.jp/archives/2004_12.html#sec2004120101
+http://ericasadun.com/iPhoneDocs/_n_s_u_r_l_request-_n_s_h_t_t_p_u_r_l_request_8h-source.html
+<<
+　手元で使っている勝手インクルードはerikaさんのじゃないのでNSHTTPURLRequest.hは無かった。iPod touchでも隠しAPIということかな。

@@ -1,0 +1,29 @@
+　昨夜行った際の手順をメモ。ちなみに自宅なのでWindowsで行った。
++ iLiberty+のWinodws版をインストール。私のところではiLiberty+の最初の実行でアップデートが通知されたのでそれに従った。
++ iLiberty+を使う前に、あらかじめiTunesで「このiPod接続時にiTunesを開く」をオフにしておいた。ちなみにiTunesは最新(7.6.2)でも問題なし。
++ iLiberty+のWindows版を実行すると、iPod touchは「Normal」モードで接続されている状態になっている(画面のステータスバーの右端)。
++ jail Breakと、AppTappのチェックを入れておいた（どうもAppTappのチェックはあってもなくても関係ないかも）。で「Go for it!」ボタンを実行
++ 最初に「リカバリモードにするから、一旦コネクタを抜いて差し直せ」という旨のメッセージが表示されるのでそれにしたがう。正常にリカバリモードになるが、iLiberty+がそれを認識できないらしく「失敗したから次の１&#12316;３のどれかでやり直せ」という旨のメッセージが表示される。３の「abort」で一旦終わらせ、iLiberty+を終了する。
++ iLiberty+をもう一度起動すると、iPod touchが「Recovery」モードとちゃんと認識するので（なんのこっちゃ）、再び「Go for it!」。
++ iPod touchがコンソール画面のようになって、改造していく様子が見える。最後にリブートされるまで待つ。終わったらiLibertyを終了（終わったともなんとも言わないので、iPod touchの画面で確認する。）
++ iTunesを起動すると新規のiPodか以前のものかを聞いてくる。WiFiなどの設定情報が復元できるので[新規]を選ばない方がよい。
++ で、このままだとInstallerを使っているうちにが「Main Script Execution Failed」というエラーを出し続けるようになる（インストーラのキャッシュをクリアしても復帰しない）のでInstallerを入れ替えるようにしなければならない。そのエラーが出るようになると何も入れられなくなるので、あらかじめ先に以下を取得しておく。
+-- コミュニティソースのアップデート（あれば）
+-- BSD Subsystemsのインストール
+-- openSSHのインストール
+-- BossPrefsのインストール
++ 「Main Script Execution Failed」エラーを解決する方法が[http://www.youtube.com/watch?v=fucVT7WPpQo:title=Yoububeにあるので参照]。ビデオのコメント（About This Video）にSSHで叩くコマンド一式があるのでコピペして使う。
++ コマンド一式に記述されているwgetコマンドは存在しないのでWindowsでInstaller.zipをダウンロードしておいてiPod touchにscp(WinSCPなど)すればよい。
+
+　Youtubeから消えたらアウトなので念のためコマンド一式を引用しておく。
+>>
+ssh root@YOUR IP ADDRESS
+cd /
+cd Applications/
+wget http://repository.apptapp.com/packages/System/Installer.zip
+rm -rf Installer.app
+unzip Installer.zip
+chmod +s Installer.app/Installer
+chown -R root:wheel Installer.app
+rm Installer.zip
+<<

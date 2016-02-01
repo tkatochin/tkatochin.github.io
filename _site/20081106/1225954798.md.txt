@@ -1,0 +1,1 @@
+　WindowsとLinuxでまずビルドまでは手をつけようと。先達さん情報で難なくいけそうです。Windowsは[http://www.fraction.jp/log/archives/2007/12/19/Build_WebKit_on_Windows:title=こちら]。Linuxでは[http://d.hatena.ne.jp/amachang/20081019/1224418506:title=こちら]。

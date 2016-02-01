@@ -1,0 +1,48 @@
+　自分の作業記録だけに絞り込みたかったので改造してみた。ベースはTrac-0.11.4.ja1-py2.6。
+***timeline/templates/timeline.html
+　送信ボタンの前に１行挿入。
+>|html|
+          :
+       </fieldset>
+       <div><label>author: <input type="text" size="10" name="author" value="$author" /></label></div>
+       <div class="buttons">
+          :
+||<
+***timeline/web_ui.py
+　process_requestメソッドを改造
+>|python|
+        :
+        stop = fromdate
+        start = stop - timedelta(days=daysback + 1)
+
+        # ここから...
+        if 'author' in req.args:
+            author = req.args.get('author')
+        else:
+            author = "";
+        data['author'] = author;
+        # ...ここまで挿入
+
+        # gather all events for the given period of time
+        events = []
+        for provider in self.event_providers:
+            try:
+                for event in provider.get_timeline_events(req, start, stop,
+                                                          filters):
+                    # ここから...
+                    event_data = self._event_data(provider, event)
+                    if author == "":
+                        events.append(event_data)
+                    else:
+                        if event_data.get('author') == author:
+                            events.append(event_data)
+                    # ...ここまで挿入
+                    # 削除→ events.append(self._event_data(provider, event))
+            except Exception, e: # cope with a failure of that provider
+                self._provider_failure(e, req, provider, filters,
+                                       [f[0] for f in available_filters])
+
+        # prepare sorted global list
+        :
+||<
+　

@@ -1,0 +1,18 @@
+　チェックボックス問題とは、checkedでない項目はHTTPでは送信されないために、一度セッション上のフォームでONになったチェック状態をOFFにできないことを指します。
+　mayaa + cubby でも起きますが、解決方法が簡単。
+*** html
+>|html|
+  <input id="hogeFlag" name="hogeFlag" type="checkbox">
+||<
+*** mayaa
+  <!-- こっちはダメ。
+    <t:input m:id="hogeFlag" name="hogeFlag" value="true" type="checkbox" />
+  -->
+>|xml|
+  <m:with m:id="hogeFlag">
+    <t:input name="hogeFlag" value="true" type="checkbox" />
+    <t:input name="hogeFlag" value="false" type="hidden" />
+  </m:with>
+||<
+　同じフォームの名前でhiddenをcheckboxより後に用意しておくだけ。Cubbyは最初に送られた方を拾ってくれるので、チェックされない場合はhiddenからfalseが送られるのでOFFへの消しこみがうまく効きますし、チェックされていれば先にtrueのパラメータが渡るので、そちらが優先されます。
+　セオリーなんでしょうけど一応書いておきます。

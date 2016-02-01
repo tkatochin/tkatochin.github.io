@@ -1,0 +1,6 @@
+　ぐぐって見つかった[http://www.gracix.com/modules/tinyd2/:title=こちら]を使っていたが、コンテナ・ブロックのディレクティブが一色になるので改良した。[http://package.gluegent.com/~kato/share/Apache-Conf.hilight:title=ここ]に転がしておく。コンテナ・ブロックディレクティブの中まで見るので、未登録の識別子かどうかが入力しながら判断できる。[http://httpd.apache.org/docs/2.2/ja/mod/directives.html:title=Apache2.2のディレクティブ一覧]で取り込みなおした。
+
+ お勧めの色設定は以下の画像を参照。写真にないが「普通の文字」には暗い水色を指定して、文字定数の黒と区別している。
+[f:id:t-katochin:20081017141844p:image:w480]
+　コメント強調表示の正規表現があったが定義から削除した。以下のように秀丸の言語機能を使えば良いからだ。
+[f:id:t-katochin:20081017141845p:image:w480]

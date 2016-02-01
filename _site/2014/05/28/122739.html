@@ -1,0 +1,12 @@
+<p>mvnでビルドして成功したらGAEにデプロイってシェルを作って使ってるんだけど、appcfg.shに渡すパスワードが $GAE_PASSWORDってゆー環境変数なんて定義しちゃってて、丸わかりすぎじゃんって感じだったので変えてみた。</p>
+
+<p>.profileか.bashrcにGAE_USERが定義されていることを前提としている。
+[https://gist.github.com/52599fea6825480aae4f:embed#appcfgh.shで認証するGAE_USERのパスワードをセットするシェル]
+[https://gist.github.com/52599fea6825480aae4f:title=appcfgh.shで認証するGAE_USERのパスワードをセットするシェル]</p>
+
+<p>ビルドのところは色々ごちゃごちゃやってるのでシンプルにデプロイの部分だけ抜粋したシェルが以下。
+実行するディレクトリには warがあること前提。もしくは target/war があればそちらを優先する。
+[https://gist.github.com/ca8fe5e73e46c5badcb2:embed#GAE_USERに対応するパスワードを使って自動的に認証してappcfg.shにデプロイするシェル]
+[https://gist.github.com/ca8fe5e73e46c5badcb2:title=GAE_USERに対応するパスワードを使って自動的に認証してappcfg.shにデプロイするシェル]</p>
+
+<p>おわり</p>

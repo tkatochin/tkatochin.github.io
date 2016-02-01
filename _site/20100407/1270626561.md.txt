@@ -1,0 +1,16 @@
+>|cs|
+DeleteSelection(object StartTime, object EndTime);
+||<
+とあるけど、実際は、
+>|cs|
+DeleteSelection(object StartTime, object Duration);
+||<
+
+QuickTime Control 7.65.17.80調べ。
+>|cs|
+QTMovie movie = axQTControl1.Movie;
+// × 選択領域を超えて後ろの部分まで消えちゃう。
+movie.DeleteSelection(movie.SelectionStart, movie.SelectionEnd);
+// ○ 選択領域のみ消える。
+movie.DeleteSelection(movie.SelectionStart, movie.SelectionDuration);
+||<

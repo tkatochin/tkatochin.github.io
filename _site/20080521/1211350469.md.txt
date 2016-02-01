@@ -1,0 +1,10 @@
+***TODO
+　IE上でのFormsクラスライブラリやXBAPでも使えるか（SecuriyExceptionにならないか）調査する。
+ http://www.microsoft.com/japan/msdn/thisweek/step7/remoting/server_02.aspx
+　↑このサンプルは酷い嘘(プロセス間通信の例になっていない)であることが判明。
+
+***追記
+　tcp localhost だとWindowsファイヤウォールが生きていると許可を得る必要が出てしまうので、ipcを使うのが吉。http://d.hatena.ne.jp/PoohKid/20071226/ipc
+
+***追記
+　プロセス間通信はやっぱりSecurityException。残念。

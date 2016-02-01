@@ -1,0 +1,4 @@
+>|xml|
+　<arg>@class.of.enum@CONST</arg>
+||<
+こんな感じでやると怒られる。実行時はもちろん動く。Tigerでkijimunaコンパイルすれば良いんだろうなぁとは思うけど試す時間が…。

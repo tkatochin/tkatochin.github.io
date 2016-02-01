@@ -1,0 +1,4 @@
+>|xml|
+　<connector URIEncoding="UTF-8"> こっちかー。
+||<
+　参考になりました。→https://hudson.dev.java.net/i18n.html

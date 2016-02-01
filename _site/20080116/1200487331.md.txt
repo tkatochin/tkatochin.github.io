@@ -1,0 +1,79 @@
+　OS再インストールで、ビルドパスの環境がよくなったのと、toolchain helperの実行も失敗しながらも意味があったようで、順調にビルドしているようだ（しかし全然終わらない）。
+最初は以下のようなエラーだったが、toolchain helperを一度実行したら改善した。
+>|sh|
+sudo port install arm-apple-darwin-binutils arm-apple-darwin-cc arm-apple-darwin-runtime
+--->  Configuring arm-apple-darwin-binutils
+--->  Building arm-apple-darwin-binutils with target all
+Error: Target org.macports.build returned: shell command " cd "/opt/local/var/macports/build/_opt_local_var_macports_sources_rsync.macports.org_release_ports_cross_arm-apple-darwin-binutils/work/iphone-binutils-r118" && make all DESTDIR=/opt/local/var/macports/build/_opt_local_var_macports_sources_rsync.macports.org_release_ports_cross_arm-apple-darwin-binutils/work/destroot USE_DEPENDENCY_FILE=NO " returned error 2
+Command output: libtool: can't open file: version_number.o (No such file or directory)
+libtool: can't open file: get_toc_byte_sex.o (No such file or directory)
+libtool: can't open file: best_arch.o (No such file or directory)
+  :
+(中略)
+  :
+libtool: can't open file: unix_standard_mode.o (No such file or directory)
+make[3]: *** [libstuff.a] Error 1
+make[2]: *** [static] Error 2
+make[1]: *** [all] Error 1
+make: *** [cctools] Error 2
+
+Error: Status 1 encountered during processing.
+||<
+
+　…と思ったらやっぱりダメだった。めちゃくちゃビルド時間かかったのに。
+>|sh|
+sudo port install arm-apple-darwin-binutils arm-apple-darwin-cc arm-apple-darwin-runtime
+--->  Building arm-apple-darwin-binutils with target all
+--->  Staging arm-apple-darwin-binutils into destroot
+Warning: arm-apple-darwin-binutils requests to install files outside the common directory structure!
+--->  Installing arm-apple-darwin-binutils r118_2
+--->  Activating arm-apple-darwin-binutils r118_2
+--->  Cleaning arm-apple-darwin-binutils
+--->  Fetching llvm
+--->  Attempting to fetch llvm-2.1.tar.gz from http://llvm.org/releases/2.1/
+--->  Verifying checksum(s) for llvm
+--->  Extracting llvm
+--->  Configuring llvm
+--->  Building llvm with target tools-only
+--->  Staging llvm into destroot
+--->  Installing llvm 2.1_0
+--->  Activating llvm 2.1_0
+--->  Cleaning llvm
+--->  Fetching arm-apple-darwin-cc
+--->  Attempting to fetch iphone-binutils-r118.tar.gz from http://landonf.bikemonkey.org/static/iphone/
+--->  Verifying checksum(s) for arm-apple-darwin-cc
+--->  Extracting arm-apple-darwin-cc
+--->  Applying patches to arm-apple-darwin-cc
+--->  Configuring arm-apple-darwin-cc
+--->  Building arm-apple-darwin-cc with target driver
+--->  Staging arm-apple-darwin-cc into destroot
+Warning: arm-apple-darwin-cc requests to install files outside the common directory structure!
+--->  Installing arm-apple-darwin-cc r118_2
+--->  Activating arm-apple-darwin-cc r118_2
+--->  Cleaning arm-apple-darwin-cc
+--->  Fetching arm-apple-darwin-runtime
+--->  Attempting to fetch iphone-binutils-r118.tar.gz from http://landonf.bikemonkey.org/static/iphone/
+--->  Verifying checksum(s) for arm-apple-darwin-runtime
+--->  Extracting arm-apple-darwin-runtime
+--->  Applying patches to arm-apple-darwin-runtime
+--->  Configuring arm-apple-darwin-runtime
+--->  Building arm-apple-darwin-runtime with target includes csu libarmfp
+Error: Target org.macports.build returned: shell command " cd "/opt/local/var/macports/build/_opt_local_var_macports_sources_rsync.macports.org_release_ports_cross_arm-apple-darwin-runtime/work/iphone-binutils-r118" && make includes csu libarmfp DESTDIR=/opt/local/var/macports/build/_opt_local_var_macports_sources_rsync.macports.org_release_ports_cross_arm-apple-darwin-runtime/work/destroot " returned error 2
+Command output: include/UIKit/UIWebPlugInView-Private.h -> /opt/local/var/macports/build/_opt_local_var_macports_sources_rsync.macports.org_release_ports_cross_arm-apple-darwin-runtime/work/destroot//opt/local/arm-apple-darwin/include/UIKit/UIWebPlugInView-Private.h
+include/UIKit/UIWebPlugInView.h -> /opt/local/var/macports/build/_opt_local_var_macports_sources_rsync.macports.org_release_ports_cross_arm-apple-darwin-runtime/work/destroot//opt/local/arm-apple-darwin/include/UIKit/UIWebPlugInView.h
+       :
+     (中略)
+       :
+include/math.h -> /opt/local/var/macports/build/_opt_local_var_macports_sources_rsync.macports.org_release_ports_cross_arm-apple-darwin-runtime/work/destroot//opt/local/arm-apple-darwin/include/math.h
+cd Csu-71 && make
+/opt/local/arm-apple-darwin/bin/arm-apple-darwin-cc -c -DMACH_HEADER_SYMBOL_NAME=__mh_execute_header -U__PIC__ -o arm-start_nopic.s.o arm-start.s
+make[1]: *** [arm-start_nopic.s.o] Error 1
+make: *** [csu] Error 2
+
+Error: Status 1 encountered during processing.
+||<
+
+iTunesを削除してバンドルソフトウェアの再インストールするしかないかな。
+
+<b>追記:</b>
+MacPortsをインストールし直して最初からやったら、toolchain helperの実行は関係ないことが分かった。１回目のビルドが、「libtool: can't open file: *****.o (No such file or directory)」の嵐となり、何もせずに同じコマンドを再実行すると、ヘッダのエラー「***.h not overwritten」の嵐が出るようだ。前者はarm-apple-darwin-binutilsで出て、後者はarm-apple-darwin-runtimeのport installで出るらしい。

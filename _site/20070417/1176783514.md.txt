@@ -1,0 +1,11 @@
+　tracもmantisも仕事で使ったけど、結局どっちがいいのよと相談を受けたことから見直してみた。scm連携がmantisは無いけど工夫次第でOKなこの方法を試したかったな（http://www.alles.or.jp/~sogabe/mantis/article/article1.html）。
+　そもそも開発版(1.1.0a2)を使ったのが間違いの元なのか、ちょっと長いテキストを入れるとすぐバグる。リクエストパラメータに含まれているのにbug_idがありません。などのエラーになる。で戻ると書いた苦労が水の泡と消えるという…。ちゃんと設定しているのにadminの設定でFileUploadについて、以下のように出てるし。8M,5MほどのサイズなのになぜSMALLESTなのよと。まさか2バイト整数じゃあるまいな。
+>||
+The following size settings are in effect. Maximum upload size will be whichever of these is SMALLEST.
+
+PHP variable 'upload_max_filesize': 8000000 bytes
+PHP variable 'post_max_size': 8000000 bytes
+Mantis variable 'max_file_size': 5000000 bytes
+
+There may also be settings in your web server that prevent you from uploading files or limit the maximum file size. See the documentation for those packages if you need more information.
+||<

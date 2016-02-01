@@ -1,0 +1,36 @@
+　しかたがないのでcommons.langをバンドルすることにした。
++SWT/XMLをアンインストールする。これによりfeatures/com.swtxml.feature_0.0.5が消える。
++eclipseを終了する。
++plugins/com.swtxml.ide_0.0.5.jarとplugins/com.swtxml_0.0.5.jarをdropins/に移動
++apache commonsのサイトに行って、commons-lang-2.3.jarをダウンロード。
++com.swtxml_0.0.5.jarを[http://www.ponsoftware.com/archiver/:title=explzh]で開く。
++jar内のルートにcommons-lang-2.3.jarをドロップして追加。
++jar内の、META-INF/MANIFEST.INFを選択して[CTRL+T]でエディタを開く(こうすると編集後自動的に差し替えてくれて便利）
++Bundle-ClassPathの行末に、「,commons-lang-2.3.jar」を追記。
++Require-Bundleから、org.apache.commons.lang;bundle-version="2.3.0"を削除し、体裁を整える。
++エディタを保存終了してexplzhに戻ると「中身を更新するか？」と聞かれるので「はい」。
++explzhを終了して、eclipseを起動する。
+　これでswt/xmlが使えるようになる。↑の編集によりMANIFEST.INFは↓のようになる。「体裁を整える」がわかりにくいだろうからコピーを以下に。
+
+>||
+Manifest-Version: 1.0
+Bundle-Name: SWT/XML Runtime
+Bundle-ClassPath: .,commons-lang-2.3.jar
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+：
+(略)
+：
+Export-Package: com.swtxml.adapter,com.swtxml.definition,com.swtxml.de
+ finition.impl,com.swtxml.extensions,com.swtxml.swt,com.swtxml.swt.byi
+ d,com.swtxml.swt.metadata,com.swtxml.swt.types,com.swtxml.tinydom,com
+ .swtxml.util.context,com.swtxml.util.lang,com.swtxml.util.parser,com.
+ swtxml.util.proposals,com.swtxml.util.types,com.swtxml.views
+Require-Bundle: org.eclipse.core.runtime,org.eclipse.swt,org.eclipse.j
+ face,org.eclipse.ui,org.junit4;resolution:=optional,easymock;bundle-v
+ ersion="1.0.0";resolution:=optional
+Bundle-Version: 0.0.5
+||<
+
+
+***追記
+　こんなんしなくてもeclipse classicじゃなく eclipse rcp/plugin開発用のものをダウンロードすれば入っているということなので(id:taichitaichiさん調査済み)それを使えばいいさ。

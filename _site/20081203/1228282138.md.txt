@@ -1,0 +1,10 @@
+　いやぁ〜長かった。いろんな方法で試したが、swt.win32x86だけでなんとか実現できた。IUnknown, IOleWindowなど(もちswt.internal.ole.win32のね)を参考にしながら、WebKit内の最低限必要なDispatchさせるクラス(IWebView,IWebFrame,IWebURLRequest)のメソッドを実装((WebKit.dll内の全部となるとコードジェネレータがないとしんどい。))しCOM.VtblCallにマッピングした。
+　jawinがVTableを使った呼び出しに独自のinstructionsを提供しているのと異なり、swt.win32x86の場合は、swtが必要とするメソッド型だけ、COM.VtblCallというnativeのオーバーライドメソッドで実現している。有限なためWebKitのインターフェース内のメソッド型と合わないものは使えない。最低限必要なメソッド型にも合わないものがあった。IWebURLRequestのinitWithURL(BSTR, int, double)だが、COM.SysAllocStringやC.MoveMomory,C.malloc,C.freeなどをうまく使い VtblCall(int, int, int, int)のパラメータにマッピングさせた。スタック内容さえ一致させられればいけるためだ。しかしかなり強引な実装。
+　先々機能を拡張するとなると危ない橋で、引数が一致しないVtblCallが必要な場合は、swt.win32x86のJNIを改修しなければならなくなる。
+　終わったことだが他に検討したものを振り返ると以下のような感じ。
+:jawin:codegenではDistachPtrの場合は親切なのに、comInvokeを呼び出す実装は全部「TODO 自分で書いてね」攻撃で撃沈。最も重要なinstructionsの仕様がコードに埋もれている内容だけで把握するのは悲惨なので諦めた。
+:jacob:codegenがぜんぜん動かんかった。IDispatchがないCOMをサポートしているのかどうかも調べきれていない。
+:C# COM相互運用機能でWebKit Bridge作成:IDispatchにすることが何も辛いことがなく超楽。強引さもなくメンテナンスを考えると最も開発はスマート。が.NETランタイムやアセンブリのCOM登録などインストール手順への負担も大きい。たぶんこのやりかたが主流だとは思う。
+:C++ WebKitへのBridgeするOCXを開発:SWTのControlSiteがそのまま使えるのでProgIdを変えるだけでいける。ライブラリの利用側には最もスマート。インストールも。しかしメンテナンスする人間が増えなさそう。結局JNI触るのが重い〜と言っている今と同じ結果に陥るのでやめた。jawin/jacobの開発状況を見れば推して知るべし。
+　とりあえず実現した今の強引ぐmyway実装は、難はありつつも他のアーキテクチャと違って余計なものが一切ない。同じswtを使っているだけなので良いんじゃないかな。
+[f:id:t-katochin:20081203145844p:image:w500][f:id:t-katochin:20081203145527p:image:w500]

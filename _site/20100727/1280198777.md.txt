@@ -1,0 +1,5 @@
+　[http://facebooktoolkit.codeplex.com/releases/view/42224:title]で、フォトアルバム一覧の取得が出来ない。フォトもビデオもアップロードできるところまで漕ぎ着けたのに。。。
+　フォトのアップロードではアルバムIDを指定しないとならないので、アルバムが取れないとフォトのアップロードはどうしようもなくなる。新規にアルバムを作成してその作成したばかりのアルバムIDへのアップロードはできたんだけど、フォトアップロードの度にアルバムを無限増殖させるわけにもいかないし。
+　[http://facebooktoolkit.codeplex.com/Thread/View.aspx?ThreadId=215775:title=これ]は正に同じだし、 [http://facebooktoolkit.codeplex.com/Thread/View.aspx?ThreadId=212975:title=こっち]の問題も近い。でも、結局解決していないし。。。Microsoftやる気なくなっちゃったのかな。それかFacebookの方のインターフェースが変わったのかな。
+
+　あ！あと今気付いたけど、3.0.2のバイナリをダウンロードしても、3.0.1のバイナリがダウンロードされる。ひどい。ちなみに3.1BETAを使ってもアルバムは取得できません。

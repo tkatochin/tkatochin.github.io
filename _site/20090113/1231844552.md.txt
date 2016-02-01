@@ -1,0 +1,2 @@
+　12/16に起きていた問題。pdeのワークベンチデバッガでは、[Software Updates...]とちゃんと表示されるので、configurationを比較したところ、eclipse/configuration/config.ini の、osgi.bundlesの値が空だと古い形式になることが判明。ワークベンチデバッガのconfigurationから該当する値を書き戻したところ、ちゃんと戻った。
+　ただしインポートできるbookmarks.xmlがないとManager Siteが空のまま。

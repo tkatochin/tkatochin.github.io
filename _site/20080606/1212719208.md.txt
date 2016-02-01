@@ -1,0 +1,9 @@
+[f:id:t-katochin:20080606111656p:image:w300:right]
+　[http://vsug.jp/tabid/63/forumid/53/threadid/2604/scope/posts/threadpage/1/Default.aspx:title=こちら]でも、[http://bytes.com/forum/thread489569.html:title=こちら]でも起きています。でもどちらもVS2005で起きている問題のよう。後者は[http://support.microsoft.com/kb/908002/en-us/:title=MSのパッチ]をあてたら解決したとあるけど、VS2008の方はないのかねー。
+　これがExcel2003だとちゃんとインスタンスを作成できちゃいます。それもあるからパッチは望み薄かな。
+
+　プロジェクトの参照設定から「Microsoft Excel 9.0 Object Library」を取り込むとビルド時になんかちゃんとタイプライブラリの定義をインポートしきれていないような警告が出るので最初はこれが原因かなーと思っていたのですが、
+[f:id:t-katochin:20080606111657p:image:w400:left]
+　そもそもExcelライブラリを参照しない唯のHelloWorldでも同じでした。タイプライブラリインポータの失敗はVS2008 Express Editionだけの問題で、VS2008 StandardやProでは起きないことが分かりました。
+
+　C#COMライブラリのほうでExcel.Applicationオブジェクトを扱えるようにインターフェースを切るだけでちゃんとCOMとInteropの受け渡しまで自動的にやってくれるのはスゲエですけどね。貼り付けたガメシャで見ると分かりますがAssignExcelの定義はたったこれだけの記述で、うまくやり取りできしまいます。

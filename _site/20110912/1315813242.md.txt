@@ -1,0 +1,11 @@
+　Doc List APIでは、コピー元ドキュメントのキーを指定して、コピーを作成できる。[http://code.google.com/intl/ja/apis/documents/docs/3.0/developers_guide_protocol.html#CopyingDocs:title=APIはこちら]
+　しかし実はいきなり直接コピーができない。過去に相手ユーザーのドキュメントを参照した経験があるユーザーであればコピーが成功し、初めて関係を持とうとしたユーザーではUnknown errorが発生した((ひょっとしたら他に理由があるのかもしれない。ここで記述するのはあくまで少ないサンプルでの経験則。))。
+　これを解決するには配布先メンバーの閲覧権限をドキュメントのACLに[http://code.google.com/intl/ja/apis/documents/docs/3.0/developers_guide_protocol.html#ACLUpdateSharing:title=追加すれば]良い。私の場合は両ドメイン共にアプリ(Marketplaceアプリ)の登録者であることが前提だったので、2LOでそれぞれのドメイン用のDocsServiceのインスタンスに順に操作（一方に権限設定後もう一方にコピー実行）すれば良かった。その後にACLから配布先メンバーの[http://code.google.com/intl/ja/apis/documents/docs/3.0/developers_guide_protocol.html#ACLRemoveSharing:title=権限を削除]しても、そのドキュメントに「リンクを知っているユーザーなら誰でもリードオンリーで開ける」権限を設定しているため、２回目以降はACL操作は行わずにコピーAPIを動作させられるようになった。
+　これを行えるようにするには、Appsのドキュメント設定が以下を満たしていなければならない。
+１．配布先は「共有オプション」が「共有できます」にチェックがあるか、「共有できません」でも「組織の外部からドキュメントを受け取ることを許可する」にチェックが入っていること。そうでなければ最初のACL追加APIは下記の非常に分かりやすい例外を吐いて失敗する。Unknown errorじゃないので助かる。
+>>
+com.google.gdata.util.InvalidEntryException: The administrator for {target domain} has disabled the ability to receive docs from outside their domain. If those you're attempting to share with would like more information, they should contact their domain administrator directly.
+<<
+２．配布元は「共有できます」にチェックがある上に「ユーザーがドキュメントをウェブに公開したり、一般公開や限定公開のドキュメントとして一般に公開したりできるようにします。」もチェックが必要。
+
+　ちなみにコピー作成時間はドキュメントのサイズに比例するので、GAEでこれをやるのであればURLフェッチの10秒タイムアウトなんてすぐに到達する。タスクキューとメール通知で回避するのがヨサゲ。

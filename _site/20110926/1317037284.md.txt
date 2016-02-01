@@ -1,0 +1,96 @@
+　時間がないから作れないけど頭の中のイメージを書いておく。
+・appengineのアプリと別のappengineのアプリでのRPC。サーバーとサーバーの通信。
+・URLFetchの10秒制限から離れて実現する。GWT-RPCのように要求側（あくまでもappengineサーバー）から見てレスポンスはAsyncCallbackする。そんなわけで10分以内であればTaskQueueを、それも超えるような場合はBackendsのTaskQueueを使うようにサーバー側が調整できる。要するにサーバー側からクライアントに返すデータはHTTPのResponseではなくRequestで「後で」返す。
+・クライアント（あくまでもappengineサーバーの）側は、CPUを占有したくない。Backendsに常駐しちゃってもいいじゃん的なことではなく。単発的に起きる事象にも対応したいため。なので応答をcronでポーリングなんて無駄なのでしない。
+　で、これを実現するために、要求者には自身をDatastoreにシリアライズした上で「死んでもらう」。
+
+
+...なんかごちゃごちゃするので、取説から書いてみよう。このヘンテコRPCのハローワールドを。名前考えてないからとりあえずHenteko。とりあえず利用者の手数が少なくなるアノテーション前提で書いてみる。ただアノテーションプロセッサ、自分で書く気が起きないけど。オーバーヘッドが少なければリフレクションでもいいかな。必要に応じてなにかをextendsしたり、その辺りはまあどうとでも。
+
+１．まずweb.xmlにHentekoを登録（フィルタなりサーブレットなりコントローラを登録することになるんだろうけど割愛）。
+２．とりあえずGWT-RPCみたいにインターフェースとAsyncインターフェースを用意する感じで。
+>|java|
+
+@HentekoService
+public interface GreetingService {
+
+    String getMessage(String myName);
+
+}
+||<
+
+>|java|
+public class GreetingServiceImpl implements GreetingService {
+
+    @Queue
+    public String getMessage(String myName) {
+        // すっげー時間が掛かってなんとか処理が終わったりすることもあれば、
+        // 一瞬で終わることもあってもOKな感じで。
+        return "Hello " + myName;
+    }
+
+}
+||<
+　@Queueアノテーションでそのメソッドをどのキューで実行するかを決める。@Queue("キューの名前")のように。これによりBackendsのキューも使える（Target指定の定義をしたキューにより）。引数なしはデフォルトキュー。Queueアノテーションを書かない場合は、そもそもTaskQueueにしない？（要検討。面倒ならデフォルトキュー）。
+
+３．クライアント側の作成。GWT-RPCのようにペアとなるAsyncインターフェースとしておきましょうか。
+
+>|java|
+public interface GreetingServiceAsync {
+
+    @Server("サーバーのID")
+    void getMessage(String myName, @Queue AsyncCallback<String> callback);
+
+}
+||<
+　メソッドごとにサーバーを指定することも。どっかにConfigがあって識別子に対応する サーバーを指定できる。
+　server1=https://xxxx.appspot.com のように。設定はxmlでもJsonでもどーでも。あ、違う。運用時にサーバーを差し替えとかできるようにするために、Datastoreとハイブリッドが良い。
+　で、クライアントの制御クラスを作成。かならず Serializableとすること。
+　それと callbackにも@Queueアノテーションを付けられる。付けなければ通常リクエストだが、付けた場合は
+　コールバックメソッドの実行はTaskQueue内で実行となる。もちろんこちらも引数でキュー名を指定できるようにし、
+　長時間の処理であればBackendsも利用可能。
+　@Serverに複数のサーバーIDを渡してレスポンスをリストで連結して戻してもらいたいという要求もあったりするけど、
+　とりあえずそれはいいや。突き詰めるとHadoopになりそうだし目的が違う感じ。
+
+
+>|java|
+@HentekoClient
+public class Greeting implements Serializable {
+
+    private transient GreetingServiceAsync service = Henteko.get(this, GreetingServiceAsync.class);
+
+    // シリアライズしたフィールドでステートを持てる
+
+    public void helloWorld() {
+  
+        // この辺りで final なローカル変数とか使われてもコールバックに渡らないからダメ。
+
+
+        :
+        serivce.getMessage("Japan!!", new AsyncCallback<String>() {
+            
+           public void onSuccess(String result) {
+               // finalなローカル変数は使えないけど、Greetingクラスのフィールド（デシリアライズできたもの）は扱える。
+               
+               // ここのコードでは、helloWorldを呼び出されたときのHttp requestはアテにならない(最初のリクエスト時の情報を一書に保存してエミュレートしても良いけど...)。
+           }
+            
+        }); 
+
+    }
+
+}
+||<
+　
+　と、まあ、使い方はGWT-RPCっぽい。Henteko.get() で、要求者を把握。サービスメソッドの実装内でシリアライズ。
+
+
+** 通信
+通信内容の仕様もXmlだろうとJsonだろうと復元できればどうとでも。
+１．要求者→サーバー。
+　メソッド指定とパラメータをpostして依頼。
+　応答は、ユニークな受け付けキー。要求者はそれとともにデータストアに要求クラスのインスタンスをシリアライズ。
+
+２．サーバー→要求者
+　受け付けキーとメソッドの戻り値をpostして応答。
+　要求側は受け付けキーを元にデータストアからクラスインスタンスを復元し、コールバックメソッドを呼び出す。

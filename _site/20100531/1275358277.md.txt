@@ -1,0 +1,133 @@
+　WPFのカスタムコントロールを作る場合は、プロパティとイベントをなるべくDependencyPropertyやRoutedEventにするべき。煩雑な代入処理やオブジェクトのライフサイクル管理、状態による表示変更など、直接アプリケーションロジックに関係しない多くのことをXamlに任せられるようになるため。
+　DependencyPropertyにしておきさえすれば、そのプロパティの変更監視を利用側から追加することもできる。DependencyPropertyはコードスニペットにも用意されている。デフォルトのキーバインドであれば CTRL+K,CTRL+X でコード補完が現れるので、「NetFX30 > DependencyPropertyを定義します。」を選択することで、ちょいちょい直せば良いだけのコードができる。イベントの方は無いのでマイコードスニペットを用意した。以下をドキュメントフォルダ\Visual Studio 2008\Code Snippets\Visual C#\My Code Snippets に、routevt.snippetという名前で置くと良い。エディタのエンコードには注意が必要。
+>|xml|
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+        <Header>
+            <Title>RoutedEvent を定義します</Title>
+            <Shortcut>routevt</Shortcut>
+            <Description>RoutedEventの定義</Description>
+            <Author>katochin</Author>
+            <SnippetTypes>
+                <SnippetType>Expansion</SnippetType>
+            </SnippetTypes>
+        </Header>
+        <Snippet>
+            <Declarations>
+                <Literal>
+                    <ID>eventName</ID>
+                    <ToolTip>イベント名</ToolTip>
+                    <Default>MyEvent</Default>
+                </Literal>
+                <Literal>
+                    <ID>ownerclass</ID>
+                    <ToolTip>このプロパティを所有しているクラスです。通常は、対応する宣言が存在するクラスです。</ToolTip>
+                    <Function>ClassName()</Function>
+                    <Default>ownerclass</Default>
+                </Literal>
+            </Declarations>
+            <Code Language="csharp">
+                <![CDATA[public event RoutedEventHandler $eventName$
+  {
+    add
+    {
+        base.AddHandler($eventName$Event, value);
+    }
+    remove
+    {
+        base.RemoveHandler($eventName$Event, value);
+    }
+  }
+  
+  public static readonly RoutedEvent $eventName$Event = 
+    EventManager.RegisterRoutedEvent("$eventName$", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof($ownerclass$));
+  
+  $end$]]>
+            </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>
+||<
+　上記のスニペットでは、$ownerclass$に、現在記述中のクラス名が自動で入力される。これは「<Function>ClassName()</Function>」という定義のおかげ。しかし「NetFX30 > DependencyPropertyを定義します。」の方には無いので、そっちも直接編集してしまうと良い。
+
+　さらに、DependencyPropertyとそのプロパティのRoutedPropertyChangedイベントを定義するスニペットも用意した。これで大分Xamlと相性の良いカスタムコントロールを生産しやすくなった。
+***pdprevt.snippet
+>|xml|
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+        <Header>
+            <Title>RoutedPropertyChangedEvent を定義します</Title>
+            <Shortcut>pdprevt</Shortcut>
+            <Description>DependencyPropertyとそのRoutedPropertyChangedEventの定義</Description>
+            <Author>katochin</Author>
+            <SnippetTypes>
+                <SnippetType>Expansion</SnippetType>
+            </SnippetTypes>
+        </Header>
+        <Snippet>
+            <Declarations>
+                <Literal>
+                    <ID>type</ID>
+                    <ToolTip>プロパティの型</ToolTip>
+                    <Default>int</Default>
+                </Literal>
+                <Literal>
+                    <ID>property</ID>
+                    <ToolTip>プロパティ名</ToolTip>
+                    <Default>Value</Default>
+                </Literal>
+                <Literal>
+                    <ID>ownerclass</ID>
+                    <ToolTip>このプロパティを所有しているクラスです。通常は、対応する宣言が存在するクラスです。</ToolTip>
+                    <Function>ClassName()</Function>
+                    <Default>ownerclass</Default>
+                </Literal>
+                <Literal>
+                    <ID>defaultvalue</ID>
+                    <ToolTip>このプロパティの既定値です。</ToolTip>
+                    <Default>0</Default>
+                </Literal>
+            </Declarations>
+            <Code Language="csharp">
+                <![CDATA[public $type$ $property$
+  {
+    get { return ($type$)GetValue($property$Property); }
+    set { SetValue($property$Property, value); }
+  }
+  
+  public static readonly DependencyProperty $property$Property =
+    DependencyProperty.Register("$property$", typeof($type$), typeof($ownerclass$),
+    new FrameworkPropertyMetadata($defaultvalue$, new PropertyChangedCallback(On$property$Changed)));
+  
+  public static readonly RoutedEvent $property$ChangedEvent =
+    EventManager.RegisterRoutedEvent("$property$Changed", RoutingStrategy.Bubble, typeof(RoutedPropertyChangedEventHandler<$type$>), typeof($ownerclass$));
+  
+  [EditorBrowsable(EditorBrowsableState.Always)]
+  [Browsable(true)]
+  public event RoutedPropertyChangedEventHandler<$type$> $property$Changed
+  {
+    add
+    {
+      base.AddHandler($property$ChangedEvent, value);
+    }
+    remove
+    {
+      base.RemoveHandler($property$ChangedEvent, value);
+    }
+  }
+  
+  private static void On$property$Changed(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+  {
+    $ownerclass$ self = ($ownerclass$)obj;
+    RoutedPropertyChangedEventArgs<$type$> e = new RoutedPropertyChangedEventArgs<$type$>(
+      ($type$)args.OldValue, ($type$)args.NewValue, $property$ChangedEvent);
+      self.RaiseEvent(e);
+  }
+  $end$]]>
+            </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>
+||<

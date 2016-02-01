@@ -1,0 +1,1 @@
+<del datetime="2009-07-17T12:06:56+09:00">[http://www29.atwiki.jp/katochin/pub/tech_utils/regexsort.html:title=とりあえずJavaScript版です]。ANTLRの吐き出す定数がソートされてないので作成。行の中の一部を示す正規表現を用いて、他行の同じマッチ部分を文字列比較または数値比較で昇順ソートする。本当はeclipseプラグイン作っても良かったけど。</del>((移設した時に忘れて消しちゃった。。。orz))

@@ -1,0 +1,2 @@
+　antで予め実装コードを作成するようなものを考えてみているけどリフレクションだけじゃ引数の宣言名とか取れないのでjavaCCを試してみることに。最新（javaCC 4.0）には、javaGrammerに1.5もあるようでtiger使った案件のソースでチェックした。ほぼ成功するけど、interface内でのアノテーション定義はparse errorだった。まあでも許容範囲かな。吐き出されるコードは特別綺麗ではないけど閉じられた世界だからでしょうね。これに手を加えてリスナを作るかなぁ。jjtreeとの組み合わせはちょっと私の今の腕じゃ重いので（jjやらjjtやら書けんです）直接いくしかないな。
+　[http://www.cobase.cs.ucla.edu/pub/javacc/:title=JavaCC Grammar Repository]を見ると、SQLやVisualBasicもあるし。頑張ればmayaaも、ECMAScript Grammarでプラグインがいけそうな勢い（いかないけど）。個人作者が多すぎてライセンスがどうなのよということと微妙に古いのは気になるけど。aptの中身が空なのはjavaCCがあるからなのねと妙に納得。

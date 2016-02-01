@@ -1,0 +1,10 @@
+<!--
+　Poderosa よく落ちると思っていたら、ダウンロードページでちゃんと書いていました。
+<blockquote cite="http://ja.poderosa.org/download/binary.html" title="Poderosa ダウンロード">
+　VaraTerm のときからあった問題ですが、.NET Framework 1.1 SP1 適用環境においては、環境により Poderosa がクラッシュしやすくなる問題があります。これは .NET Framework の問題なのですが、有効な回避方法は見つかっていません。
+　SP1 の適用されていない .NET Framework 1.1 ではこの問題は起きませんので、SP1 を適用済みの方はこれを削除することを推奨します。
+　なお、.NET Framework 1.1 SP1 のみのアンインストールは行えませんので、一度 .NET Framework 1.1 (SP1) をアンインストールして、再び .NET Framework 1.1 (SP なし) をインストールするという手順になります。
+</blockquote>
+　他にもSP1をあてると動かなくなるソフトが、あるようですね。[http://www.borland.co.jp/delphi/devsupport/d8issues.html#0:title=Delphi8もIDEがまともに動かなくなる]って酷すぎるなぁ。で、やっぱりそちらでも、「SP1をアンインストールせい」って言われているわけですが、.NET Frameworkの脆弱性を解決したセキュリティパッチなんですよね？自分の方でパッチを作れよオイって感じ。どうかと思う。
+　やっぱりランタイムが必須のものは厳しいですね。JREはまだOSを選ばないから意義があるけど、基本Winしかまともに動かない前提なのに、FrameworkというかOSのVMに近いこの.NETで、さらにWinでもまともに動かせないソフトがあるって、どういうことかと思う。
+-->

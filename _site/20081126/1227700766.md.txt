@@ -1,0 +1,5 @@
+　ActiveXDocumentかActiveXControlしかサポートしておらず((OleControlSite,OleClientSiteの話))、そうでないWebkit.WebViewクラスは扱えない。"interfaces not implements" で落ちる。[http://hp.vector.co.jp/authors/VA035113/activex_support_in_swt/activex_support_in_swt.html:title=こちらのとおり]にやってエラーにならないのはShell.ExplorerやWord.Documentとかちゃんと実装しているやつらだけ。WebKit.WebViewは、COMらしくないインターフェースなので（ウィンドウハンドルを外からセットしなきゃならないなど）だめな感じ。
+　落ちる理由は[http://dev.eclipse.org/newslists/news.eclipse.tools/msg37634.html:title=こちらのスレッド]が参考になった。というわけで明日[http://sourceforge.net/projects/jawinproject/:title=Jawin]を試そう。
+
+***追記(11/28)
+　jawin付属のtypebrowserツールでようやく理解。DispachインターフェースはWebKitは一切持っていないので、名前でinvokeなんて出来ないからということだった。vtblとバイトストリームでcomInvokeしてやらないとならない。jawinのtypebrowserツールでの自動生成では中途半端な枠だけしか吐かないので、骨が折れそうだ。

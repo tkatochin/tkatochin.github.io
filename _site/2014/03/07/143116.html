@@ -1,0 +1,44 @@
+<p>Google Siteにいくら設定して保存しても何も変わらないもう一度設定を見ると default_value に戻ってるという怪奇現象にハマった。</p>
+
+<p>試行錯誤で何とか解決したので謎のノウハウとしてメモ。</p>
+
+<p>まず、以下のUserPrefのセットだと、enumをいくら変更しても 2にされてしまう。</p>
+
+<blockquote>
+  <p>|xml|
+    <userpref name="v1" default_value=""></userpref>
+    <userpref name="v2" data_type="hidden"></userpref>
+    <userpref name="v3" datatype="enum" default_value="2">
+        <enumvalue value="1" display_value="1"></enumvalue>
+        <enumvalue value="2" display_value="2"></enumvalue>
+        <enumvalue value="3" display_value="3"></enumvalue>
+    &lt;/UsaerPref&gt;
+||&lt;</userpref></p>
+</blockquote>
+
+<p>なんと hiddenより後ろにあると無視されてしまうらしい。
+以下にするとちゃんと保存されるようになる。</p>
+
+<blockquote>
+  <p>|xml|
+    <userpref name="v1" default_value=""></userpref>
+    <userpref name="v3" datatype="enum" default_value="2">
+        <enumvalue value="1" display_value="1"></enumvalue>
+        <enumvalue value="2" display_value="2"></enumvalue>
+        <enumvalue value="3" display_value="3"></enumvalue>
+    &lt;/UsaerPref&gt;
+    <userpref name="v2" data_type="hidden"></userpref>
+||&lt;</userpref></p>
+</blockquote>
+
+<p>なんのこっちゃ！ hiddenは最後に置きましょう。</p>
+
+<p>もしかすると Google Siteだけの問題かもしれない。なんでかってゆーと、そもそも
+<span style="color: #ff2600; font-size: 3em">setprefsが効かない</span>
+という恐るべき仕様っぽいから。なんやそらー。
+実際hiddenの項目を用意してsetprefsしても保存されない！保存した風な顔してリロードしてみると保存されてないってゆー状態。サイトは利用者に紐付くのではなくページに紐付くためなのかもね。
+でもそんな特殊な仕様、どこにも見当たらないんだけどっ！</p>
+
+<p>だから「hiddenなんてオレしらねー。」って感じでXML内の定義も読むの途中から放棄して、それ以降に存在するhiddenじゃないものまでシカトこいてるんじゃないかしら。</p>
+
+<p>まあ、そんなわけだからSiteに置く専用のガジェットなら、そもそもhiddenなんて定義する意味ないってコトですわね。とほほーい。</p>

@@ -1,0 +1,98 @@
+<p>親テーブルの 2項目をUNIQUE KEYにして、参照テーブルはこのセットが更新されたら自身の2項目も更新するようUPDATE CASCADEにしたんだけど、親が2項目のどちらかをヌルにしたら、その後更新しても伝搬されないのね！！！ビビった。</p>
+
+<p>僕の言語能力の限界で、なに言ってるのか分からないかもしれないから図解すると…</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>*Parent</td>
+      <td>pid</td>
+      <td>like</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>*</td>
+      <td>1</td>
+      <td>cat</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>*Child</td>
+      <td>…</td>
+      <td>pidRef</td>
+      <td>likeRef</td>
+    </tr>
+    <tr>
+      <td>*</td>
+      <td>…</td>
+      <td>1</td>
+      <td>cat</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>って状態から、likeにヌルをセットすると、</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>*Parent</td>
+      <td>pid</td>
+      <td>like</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>*</td>
+      <td>1</td>
+      <td>NULL</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>*Child</td>
+      <td>…</td>
+      <td>pidRef</td>
+      <td>likeRef</td>
+    </tr>
+    <tr>
+      <td>*</td>
+      <td>…</td>
+      <td>1</td>
+      <td>NULL</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>…とちゃんと反映されるんだけど、一度ヌルになると、親の項目を再セットしても、</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>*Parent</td>
+      <td>pid</td>
+      <td>like</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>*</td>
+      <td>1</td>
+      <td>dog</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>*Child</td>
+      <td>…</td>
+      <td>pidRef</td>
+      <td>likeRef</td>
+    </tr>
+    <tr>
+      <td>*</td>
+      <td>…</td>
+      <td>1</td>
+      <td>NULL</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>…と、子テーブルの方はヌルのまま！！ってことです。
+ヌルにセットされるケースがある場合はダメってことなのかー。いい方法ないかな。
+素直にJOINかな…。</p>

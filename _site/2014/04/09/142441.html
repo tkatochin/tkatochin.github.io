@@ -1,0 +1,73 @@
+<p>理由は自分でメモってなくても作業時間報告書を自動的に書けるようにしたいからw</p>
+
+<p>MarvericksになったらSnow Leopardの時とシスログが変わっちゃって訳わからん。
+lastコマンドはなぜか１ヶ月もたなくなったし、/var/log/wtmp* 見当たらないし。なんだよもー。</p>
+
+<p>なので模索中。</p>
+
+<p>まず良さ気だったツール SleepWatcherをゲット。http://www.bernhard-baehr.de/ から SleepWatcher2.2をダウンロード（デスクトップに）して展開したら、まずは入ってるReadMe.rffの「Installation for new SleepWatcher users」を参考に以下を実施（だいたい書いてる通りだけどね）。</p>
+
+<ul>
+  <li>~/.sleep と ~/.wakeup をエディタで新規作成して保存。
+»
+<em>** .sleepの内容
+&gt;|sh|
+#!/bin/sh
+/bin/echo <code>/bin/date "+%Y-%m-%d %H:%M:%S"</code> ネルーーー！ » /var/log/powerlog/power-<code>/bin/date +%Y%m</code>.log
+/usr/bin/say -Kyoko ‘そろそろ ねますぅ’
+||&lt;
+**</em> .wakeupの内容
+&gt;|sh|
+#!/bin/sh
+/bin/echo <code>/bin/date "+%Y-%m-%d %H:%M:%S"</code> 起きた！ » /var/log/powerlog/power-<code>/bin/date +%Y%m</code>.log
+/usr/bin/say -Kyoko ‘おきましたぁ’
+||&lt;
+«</li>
+  <li>実行権を与える。
+chmod +x ~/.sleep ~/.wakeup</li>
+  <li>/var/log/powerlogに保存するようにしたので、ユーザーが書けるようにしておく。
+&gt;|sh|
+$ sudo mkdir /var/log/powerlog
+$ sudo chmod 777 /mkdir/var/log/powerlog
+||&lt;</li>
+  <li>launchdに登録して自動起動されるようにする。展開したフォルダ内にあるconfig内のものを使用。
+&gt;|sh|
+sudo cp ~/Desktop/sleepwatcher_2.2/config/de.bernhard-baehr.sleepwatcher-20compatibility.plist /System/Library/LaunchDaemons/
+sudo cp ~/Desktop/sleepwatcher_2.2/config/rc.* /etc/
+||&lt;</li>
+  <li>いったん手でロード
+&gt;|sh|
+sudo launchctl load /System/Library/LaunchDaemons/de.bernhard-baehr.sleepwatcher-20compatibility.plist
+||&lt;</li>
+  <li>ps ax | grep sleepwatcherで起動されてることが確認できる。
+&gt;|sh|
+0000   ??  Ss     0:00.11 /usr/local/sbin/sleepwatcher -V -s /etc/rc.sleep -w /etc/rc.wakeup
+||&lt;
+この rc.sleepとrc.wakeupは各ユーザーのホームに実行権付きの .sleep .wakeup があれば順次実行していくスクリプトになっているので起動されるようになる。</li>
+</ul>
+
+<p>次は昔からある起動時（というかログイン時）と終了時（というかログアウト時）のフックの登録。
+&gt;|sh|
+$ vi ~/.poweron.sh ~/.shutdown.sh
+…編集内容は後述…
+$ chmod +x ~/.poweron.sh ~/.shutdown.sh
+$ sudo defaults write com.apple.loginwindow LoginHook ~/.poweron.sh
+$ sudo defaults write com.apple.loginwindow LogoutHook ~/.shutdown.sh
+||&lt;</p>
+
+<p>それぞれの内容はこんな感じ。
+<em>** ~/.poweron.sh
+&gt;|sh|
+#!/bin/sh
+/bin/echo <code>/bin/date "+%Y-%m-%d %H:%M:%S"</code> 生き返ったーーー！ » /var/log/powerlog/power-<code>/bin/date +%Y%m</code>.log
+/usr/bin/say -v Kyoko ‘生き返った’
+||&lt;
+**</em> ~/.shutdown.sh
+&gt;|sh|
+#!/bin/sh
+/bin/echo <code>/bin/date "+%Y-%m-%d %H:%M:%S"</code> しぬーーー！ » /var/log/powerlog/power-<code>/bin/date +%Y%m</code>.log
+/usr/bin/say -v Kyoko ‘しぬーーーー！さようなら’
+||&lt;</p>
+
+<p>あとディスプレイのOFFやキーやマウス操作されなくなってから一定時間たったら「席にいないかも」って記録したいんだよなー。
+でディスプレイONやキーやマウスが操作され始めたら「はたらき始めた！」って記録したいんだよなー。</p>

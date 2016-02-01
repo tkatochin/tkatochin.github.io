@@ -1,0 +1,2 @@
+　以前は利用がかなりグレーだったIPAフォントが、フォントの内容を改変しない限りぜんぜんOKになったようです。http://ossipedia.ipa.go.jp/ipafont/
+　さあtouchに入れてみよう。

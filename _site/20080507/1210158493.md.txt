@@ -1,0 +1,7 @@
+　Window内でのUIElementの移動コードに続けてPointFromScreen,PointToScreenなどを実行すると、表題の示す例外が発生することがある。
+　または例外が発生しないまでも、正しい座標が取れなくなることがある。正しい座標でない例としては、StackPanelにUIElementを挿入した直後にそのスクリーン座標を取得しようとするなど。
+　これらはコード内でのプロパティの変更が先送りされていることに起因する問題である。PointFromScreen,PointToScreenを行う前に、UpdateLayout()を実行すれば解決する。UpdateLayoutはツリーを辿って解決されるのでParentをわざわざ指定しなくてよい。
+>|cs|
+  target.UpdateLayout();
+  return target.PointToScreen(new Point(0,0));
+||<

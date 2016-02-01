@@ -1,0 +1,6 @@
+　GWTで作成した画面がひどいことにfirefoxで何も出ないという現象に出くわした。
+>||
+$wnd.console.onScriptLoad is not a function
+||<
+　なんだろうかと思ったらなんとfireBugを無効化しておけば正常に動いて、fireBugが有効だと起きるエラーだった。googleが悪いのかfirefoxが悪いのかしらないけど相性悪いなー。
+　そういえば、firebugが生きていると、gmailとかで「パフォーマンスに影響しますよ！」的な警告出ますよね。googleもいろいろチェックしすぎ。

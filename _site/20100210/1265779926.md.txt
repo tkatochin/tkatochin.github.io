@@ -1,0 +1,4 @@
+　<del datetime="2010-02-10T16:14:01+09:00">ガセかな。</del>
+　ガセではなかった。できない理由が判明。以下の手順をあらかじめ行うことで、うまくいく。
+ 1. iTunes, QuickTime, Apple Mobile Device Support, Apple Software Update の４つをアンインストール。
+ 2. iTunes 7.5をインストール。 

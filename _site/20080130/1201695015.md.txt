@@ -1,0 +1,4 @@
+　BSD Subsystem, installerなどをアップデートしたら、sambaが動かなくなったり、lsが--color=ttyを受け付けなくなったり、screenshotが動かなくなったりと、寒い状況に。。。
+
+***追記
+　諸悪の根源はどうもDock。[http://www.yamayama.biz/?p=183:title=こちら]の通り行ったら解決しました。lsコマンドは治らないけど。

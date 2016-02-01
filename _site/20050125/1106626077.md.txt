@@ -1,0 +1,54 @@
+　ついでにインナークラスから、属するエンクロージングインスタンスの取り方もついでに残しておきます。これも意外と最近知りました。
+　エンクロージングインスタンスのメンバーやメソッドは、インナークラスに同じ識別子が無い限り、直接使うことができますが…
+>|java|
+class ClassA {
+    private String member;
+    private void method() {}
+
+    class InnnerA {
+        void innnerMethod() {
+            // 以下はどちらもClassAのものにアクセス
+            member = "hoge";
+            method();
+        }
+    }
+}
+||<
+　…それではインナークラスにも同じ名前のフィールドやメソッドがある場合はどうすれば指定できるでしょう？エンクロージングインスタンスを取得するには？
+　ローカル変数名とフィールド変数名が重複する場合であれば、thisを付加することで区別できますよね。これはsetterなどでも、よく使われます。
+>|java|
+class ClassA {
+    private String member;
+    private void setMember(String member) {
+        this.member = member;      /* 自身のフィールド変数は
+                                      this. で補完することで、
+                                      パラメータ変数を代入している。 */
+    }
+}
+||<
+　インナークラスからthisを参照しようにも、インナークラスのインスタンス自身を指すことになるわけですが、エンクロージングインスタンスもthisがキーワードになります。
+　はい。それでは正解です。
+>|java|
+class ClassA {
+    private String member;
+    private void method() {}
+
+    class InnnerA {
+        private String member;
+
+        void innnerMethod() {
+            System.out.println(ClassA.this);
+            this.member = "inner";           // InnnerAのmember
+            ClassA.this.member = "outer";    // ClassAのmember
+        }
+    }
+}
+||<
+　どうでしょう。狐につままれた感じでしょうか？私はこれを知るまでは、いちいちインナークラスのコンストラクタにthis引数を使って、インナークラスではエンクロージングインスタンスへの参照変数メンバを用意していました。
+
+　ついでにもう１つインナークラスの外部からの作成方法も紹介します。
+>|java|
+ClassA  instance = new ClassA();
+instance.new ClassA.InnerA();
+||<
+　こちらは数年前から知っていたのでイマサラなんですが、はじめて知った人は不思議に見えるでしょう。newキーワードが、ClassAのメンバーかのような記述をしなければなりませんからね。

@@ -1,0 +1,1 @@
+　どうもこちらの記事（[http://d.hatena.ne.jp/neuromancer_sho/20090825/1251204192:title]）と同じ現象で、同記事の対策を行うと治ります。よく見るとSyntax Highlighterを使っています。Syntax Highlighterに原因があるのかも。

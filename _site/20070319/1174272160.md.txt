@@ -1,0 +1,6 @@
+　pomのdependencyでs2-tigerを指定しているのに、s2-framework が優先されて、genericsを使ったgetComponentができない〜。何かいい手はないかな。
+　↓
+　って今確認したところ、s2-tigerのpomがs2-frameworkにdependしているんだから永久にs2-frameworkが優先じゃーん。で、クラス名一緒なんだから先勝ちで絶対s2-frameworkになっちゃうという。。。orz
+　それにtomcatだと名前順で負けるし…
+
+　shot6さんのツッコミいただきましてありがとうございます。ほんとだー！名前、被っているというのは勘違いでした。失礼しました〜。

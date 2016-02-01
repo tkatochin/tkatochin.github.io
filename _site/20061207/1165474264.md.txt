@@ -1,0 +1,3 @@
+どうもこの辺が原因くさい。
+http://digilib.silkroad.net/modules/bwiki/index.php?Subversion#ba04835e
+httpとhttps両方を許容しているリポジトリでは問題が無かった。

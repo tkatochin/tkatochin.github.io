@@ -1,0 +1,35 @@
+<p>Marvericsで使えていたlaunchdが死んだ。
+で、DockやFinderから起動したアプリに /usr/local/bin のPATHが通らない。</p>
+
+<p>しばらくは[[http://retlet.net/log/2014/10/yosemite-launchd.html:title=このあたり]]のやり方で回避出来てたんだけど、ちょっと前だかのYosemiteアップデートでとうとうそれも死んだ。</p>
+
+<p>自分はEclipseからの外部実行で色々叩けるようにしている（たとえばFirefoxのAdmin SDKでブラウザ拡張をmvn内のantrunからビルドしたり）ので不便極まりない。</p>
+
+<p>おこだよ激おこ。←死語</p>
+
+<p>んで、そういえば元々自分はEclipseを複数起動したい人なので、
+MultiEclipse.app というのを作って使っていた。
+２度めのEclipse起動は、すでに立ち上がってるEclipseがアクティブになるだけなので、ワークスペース毎に起動したい時に便利っす。</p>
+
+<p>そいつの実体は只のシェル
+&gt;|sh|
+#!/bin/sh
+open -n /Applications/eclipse/Eclipse.app
+||&lt;
+なので、このopen前にPATH仕込めばいいじゃん！って結論になった。</p>
+
+<p>というわけで、MultiEclipse.app のインストーラ置いときますわ。
+[http://googledrive.com/host/0B08z9gnby8YQflJuRmwxVzhGWmFUNDJ6OVkxTXctZHRZZ3puQk1wa2dwWmx0SU5IZjhtQ3M/Multiple%20Eclipse.pkg:title=Multi Ecplise.pkg]</p>
+
+<p>入れたら、
+&gt;|sh|
+vi /Applications/Multi\ Eclipse.app/Contents/MacOS/multiEclipse
+||&lt;
+で、以下のように修正すればOK。
+&gt;|sh|
+#!/bin/sh
+export PATH=/usr/local/bin:$PATH
+open -n /Applications/eclipse/Eclipse.app
+||&lt;</p>
+
+<p>openの中身はkeplerでもlunaでも自由にEclipseの実パスにしてくださいな。</p>

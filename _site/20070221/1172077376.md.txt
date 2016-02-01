@@ -1,0 +1,7 @@
+<del datetime="2009-07-17T12:11:53+09:00">
+　今までいくつかのサイトで見辛い表を見させられてきたので勢い作成。colspanやrowspanを使わない単純構造のtableのみ対応。[http://www29.atwiki.jp/katochin/pub/tech_utils/tableSorter.js:title=このスクリプト]をhtmlに組み込んでおけば、
+>|javascript|
+new TableSorter(対象となるtableエレメントオブジェクト);
+||<
+とするだけで、各列にソートコントロールが付きます。
+</del>((移設した時に忘れて消しちゃった。。。orz))

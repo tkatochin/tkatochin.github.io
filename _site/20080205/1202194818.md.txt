@@ -1,0 +1,9 @@
+　NSString の持つメソッドで、URL encode（%hex変換）するのが、
+>|objcpp|
+- (NSString *)stringByAddingPercentEscapesUsingEncoding:(NSStringEncoding)enc;
+||<
+　URL decodeするのが、
+>|objcpp|
+- (NSString *)stringByReplacingPercentEscapesUsingEncoding:(NSStringEncoding)enc;
+||<
+　だ。分かりやすいんだか分かりにくいんだか。

@@ -1,0 +1,8 @@
+　プロトコルの例がおかしい。NSObjectはプロトコルじゃなくクラス（とみるのが普通）だろうに。
+…と思ったら、NSObjectはプロトコルとしてのNSObjectもあるということだった。しらんかった。よく見ると、
+>|objc|
+@protocol NSObject
+   :
+@interface NSObject <NSObject>
+||<
+となっている。紛らわしいなー。

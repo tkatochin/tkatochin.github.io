@@ -1,0 +1,10 @@
+>>
+Modified Sun Apr 19 15:17:49 2009 UTC (41 hours, 58 minutes ago) by cypher256 
+・configuration が破損していた場合の自己復元機能を強化
+<<
+すばやい対応ありがとうございます。
+
+>>
+・Google Plugin For Eclipse (Google App Engine) の訳を新規追加
+<<
+おおっ！GAEにっ！これもすばやい。

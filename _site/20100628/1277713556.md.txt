@@ -1,0 +1,3 @@
+　標準入力と標準出力それぞれにReadToEndしているスレッドをスタートさせてから、process.WaitForExit();してプロセスが終わっただろうから、readStdOutThread.join() とかしているんだけどたまにReadToEndから復旧しない。
+　ググったら。こんな情報が。http://aoiruka.blog8.fc2.com/blog-entry-24.html
+　まじ？
