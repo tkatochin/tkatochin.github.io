@@ -63,11 +63,29 @@ def fallback_slug(path)
   basename.gsub(/[^0-9A-Za-z_-]+/, "-").gsub(/\A-|-\z/, "")
 end
 
+def markdown_link_text(text)
+  text.gsub("\\", "\\\\").gsub("]", "\\]")
+end
+
+def normalize_hatena_link_token(token)
+  if (match = token.match(/\A(https?:\/\/.+):title=(.+)\z/))
+    [match[1], match[2]]
+  else
+    url = token.sub(/(?::(?:title|embed|cite|image|movie|bookmark|detail|small|medium|large))+\z/, "")
+    [url, url]
+  end
+end
+
 def normalize_hatena_markup(body)
-  body.gsub(/^>\|([^|]*)\|\n(.*?)^\|\|<\s*$/m) do
+  normalized = body.gsub(/^>\|([^|]*)\|\n(.*?)^\|\|<\s*$/m) do
     language = Regexp.last_match(1).strip
     code = Regexp.last_match(2).sub(/\n\z/, "")
     "```#{language}\n#{code}\n```"
+  end
+
+  normalized.gsub(/\[(https?:\/\/[^\]\n]+)\]/) do
+    url, label = normalize_hatena_link_token(Regexp.last_match(1))
+    "[#{markdown_link_text(label)}](<#{url}>)"
   end
 end
 
