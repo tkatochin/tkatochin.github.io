@@ -27,6 +27,8 @@ author :
 production_url : https://tkatochin.github.io
 timezone: Asia/Tokyo
 markdown: kramdown
+kramdown:
+  hard_wrap: true
 highlighter: rouge
 
 # All Jekyll-Bootstrap specific configurations are namespaced into this hash
