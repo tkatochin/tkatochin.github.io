@@ -76,11 +76,38 @@ def normalize_hatena_link_token(token)
   end
 end
 
+def hatena_image_path(user, image_id, kind)
+  extension = { "j" => "jpg", "p" => "png", "g" => "gif" }[kind]
+  return nil unless extension
+
+  "/assets/hatena/images/#{user}/#{image_id[0, 8]}/#{image_id}.#{extension}"
+end
+
+def hatena_image_html(user, image_id, kind, options)
+  path = hatena_image_path(user, image_id, kind)
+  return "[f:id:#{user}:#{image_id}#{kind}:#{options.join(":")}]" unless path
+
+  classes = ["hatena-fotolife"]
+  classes << "hatena-fotolife-left" if options.include?("left")
+  classes << "hatena-fotolife-right" if options.include?("right")
+  attributes = [%(src="#{path}"), %(alt=""), %(class="#{classes.join(" ")}")]
+  width = options.find { |option| option.match?(/\Aw\d+\z/) }
+  height = options.find { |option| option.match?(/\Ah\d+\z/) }
+  attributes << %(width="#{width[1..]}") if width
+  attributes << %(height="#{height[1..]}") if height
+  "<img #{attributes.join(" ")} />"
+end
+
 def normalize_hatena_markup(body)
   normalized = body.gsub(/^>\|([^|]*)\|\n(.*?)^\|\|<\s*$/m) do
     language = Regexp.last_match(1).strip
     code = Regexp.last_match(2).sub(/\n\z/, "")
     "```#{language}\n#{code}\n```"
+  end
+
+  normalized = normalized.gsub(/\[?f:id:([^:\]]+):(\d{14})([a-z]):((?:image|plain)(?::[^\]\s]+)*)\]?/) do
+    options = Regexp.last_match(4).split(":")
+    hatena_image_html(Regexp.last_match(1), Regexp.last_match(2), Regexp.last_match(3), options)
   end
 
   normalized.gsub(/\[(https?:\/\/[^\]\n]+)\]/) do

@@ -42,6 +42,19 @@ h1, h2, h3, h4 {
   margin-bottom: 20px;
   font-weight: bold; }
 
+.hatena-fotolife {
+  max-width: 100%;
+  height: auto;
+  margin: 4px 0 12px; }
+
+.hatena-fotolife-left {
+  float: left;
+  margin-right: 16px; }
+
+.hatena-fotolife-right {
+  float: right;
+  margin-left: 16px; }
+
 /* tag_box */
 .tag_box {
   list-style: none;
