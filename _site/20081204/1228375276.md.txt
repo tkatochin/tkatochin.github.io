@@ -1,1 +1,0 @@
-　エラーログを見たら「org.apache.commons.lang/;bundle-version="2.3.0"」が無いからcom.swtxmlがロードできないということだった。たしかにrequiredなようだが、eclipseの中に入っていない。どこから入手すればいいんだ？

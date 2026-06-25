@@ -1,1 +1,0 @@
-　なんでもなかった。-(NSString*)description をオーバーライドするだけだった。

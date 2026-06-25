@@ -1,2 +1,0 @@
- ずーっとWin2000ではTerminalClientを我慢して使ってたよ。。。
-[http://www.forest.impress.co.jp/article/2004/09/06/remotedesktop.html:title=米Microsoft、「リモート デスクトップ接続」のクライアントをWeb上で公開 ]

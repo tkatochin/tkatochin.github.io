@@ -1,1 +1,0 @@
-　HKEY_LOCAL_MACHINE\Software\Clients\StartMenuInternetの下のキー一覧があり、それぞれのshell\open\commandを覗けば良さそう。

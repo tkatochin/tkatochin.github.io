@@ -1,2 +1,0 @@
-http://www2s.biglobe.ne.jp/~dat/java/project/jvm/index.html
-すごい。JNIまでいくつかサポートしているし。

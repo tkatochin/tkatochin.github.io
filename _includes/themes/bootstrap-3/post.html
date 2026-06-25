@@ -5,11 +5,15 @@
 <div class="row post-full">
   <div class="col-xs-12">
     <div class="date">
-      <span>{{ page.date | date_to_long_string }}</span>
+      <span>{{ page.date | date: "%Y/%m/%d" }}</span>
     </div>
     <div class="content">
       {{ content }}
     </div>
+
+  {% if page.source_url %}
+    <p class="source-link"><a href="{{ page.source_url }}">元の記事</a></p>
+  {% endif %}
 
   {% unless page.categories == empty %}
     <ul class="tag_box inline">
@@ -30,15 +34,15 @@
     <hr>
     <ul class="pagination">
     {% if page.previous %}
-      <li class="prev"><a href="{{ BASE_PATH }}{{ page.previous.url }}" title="{{ page.previous.title }}">&laquo; Previous</a></li>
+      <li class="prev"><a href="{{ BASE_PATH }}{{ page.previous.url }}" title="{{ page.previous.title }}">&laquo; 前の記事</a></li>
     {% else %}
-      <li class="prev disabled"><a>&larr; Previous</a></li>
+      <li class="prev disabled"><a>&larr; 前の記事</a></li>
     {% endif %}
-      <li><a href="{{ BASE_PATH }}{{ site.JB.archive_path }}">Archive</a></li>
+      <li><a href="{{ BASE_PATH }}{{ site.JB.archive_path }}">アーカイブ</a></li>
     {% if page.next %}
-      <li class="next"><a href="{{ BASE_PATH }}{{ page.next.url }}" title="{{ page.next.title }}">Next &raquo;</a></li>
+      <li class="next"><a href="{{ BASE_PATH }}{{ page.next.url }}" title="{{ page.next.title }}">次の記事 &raquo;</a></li>
     {% else %}
-      <li class="next disabled"><a>Next &rarr;</a>
+      <li class="next disabled"><a>次の記事 &rarr;</a>
     {% endif %}
     </ul>
     <hr>

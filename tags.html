@@ -1,11 +1,13 @@
 ---
 layout: page
-title: Tags
-header: Posts By Tag
-group: navigation
+title: タグ
+header: タグ別記事
 ---
 {% include JB/setup %}
 
+{% if site.tags == empty %}
+<p>タグはありません。</p>
+{% else %}
 <ul class="tag_box inline">
   {% assign tags_list = site.tags %}  
   {% include JB/tags_list %}
@@ -19,3 +21,4 @@ group: navigation
     {% include JB/pages_list %}
   </ul>
 {% endfor %}
+{% endif %}
